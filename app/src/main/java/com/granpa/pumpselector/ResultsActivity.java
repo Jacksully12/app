@@ -54,7 +54,7 @@ public class ResultsActivity extends Activity {
         Ui.mb(this, actions, 10);
         root.addView(actions);
 
-        TextView empty = Ui.text(this, "No matching model for this fixed-head rule. Try another pump type, phase, or flow range.", 15, Ui.MUTED, 0);
+        TextView empty = Ui.text(this, "No matching model within the strict ±10% flow rule. Try another flow value, pump type, phase, or range mode.", 15, Ui.MUTED, 0);
         if (all.isEmpty()) root.addView(empty);
 
         adapter = new PumpListAdapter(this);

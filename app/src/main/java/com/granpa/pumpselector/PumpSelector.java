@@ -22,7 +22,7 @@ public class PumpSelector {
         u = u.toUpperCase(Locale.US).trim();
         if (u.equals("LPH") || u.equals("LPM") || u.equals("LPS") || u.equals("M3H")) return u;
         if (u.contains("M3") || u.contains("M³")) return "M3H";
-        return "LPM";
+        return "LPH";
     }
 
     public static double toLPH(double v, String u) {
@@ -86,10 +86,12 @@ public class PumpSelector {
             r.label = "Range " + formatFlow(r.min, unit) + "–" + formatFlow(r.max, unit);
             r.rule = "estimated flow must be inside " + formatFlow(r.min, unit) + "–" + formatFlow(r.max, unit) + " at the fixed head";
         } else {
+            double lower = x * 0.90d;
+            double upper = x * 1.10d;
             r.min = x;
             r.max = Double.NaN;
-            r.label = "Fixed flow " + formatFlow(x, unit);
-            r.rule = "estimated flow must be at least " + formatFlow(x, unit) + " at the fixed head";
+            r.label = "Fixed flow " + formatFlow(x, unit) + " ±10%";
+            r.rule = "strict rule: estimated flow must be between " + formatFlow(lower, unit) + " and " + formatFlow(upper, unit) + " at the fixed head";
         }
         return r;
     }
@@ -115,10 +117,19 @@ public class PumpSelector {
                 x.diff = Math.abs(q - (req.min + req.max) / 2d);
                 x.status = "Inside range";
             } else {
-                if (q < req.min - 1e-4) continue;
-                x.diff = q - req.min;
-                x.status = x.diff < 1 ? "Exact" : "+" + formatFlow(x.diff, req.unit);
-                if (q > req.min * 3d) x.status = "Oversized • +" + formatFlow(x.diff, req.unit);
+                double lower = req.min * 0.90d;
+                double upper = req.min * 1.10d;
+                if (q < lower - 1e-4 || q > upper + 1e-4) continue;
+
+                x.diff = Math.abs(q - req.min);
+                double signed = q - req.min;
+                if (Math.abs(signed) < 1d) {
+                    x.status = "Exact";
+                } else if (signed > 0) {
+                    x.status = "+" + formatFlow(signed, req.unit);
+                } else {
+                    x.status = "-" + formatFlow(Math.abs(signed), req.unit);
+                }
             }
             out.add(x);
         }

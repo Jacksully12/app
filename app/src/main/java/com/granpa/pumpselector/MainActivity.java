@@ -139,7 +139,7 @@ public class MainActivity extends Activity {
         flow2Box.setVisibility(r ? View.VISIBLE : View.GONE);
         hint.setText(r
                 ? "Range mode uses " + u + ". You can enter either order, for example 4500 to 1200."
-                : "Fixed mode uses " + u + ". Results show pumps with equal or more water at the selected head.");
+                : "Fixed mode uses " + u + ". Strict rule: only pumps within 10% less to 10% more of the searched flow are shown.");
     }
 
     void openResults() {

@@ -102,3 +102,10 @@ v2.9.0 LPH default update:
 - Kept LPM available in the unit dropdown.
 - Default main screen flow value is 1,200 LPH.
 - Unit propagation still works across app screens and share/download image.
+
+
+v3.0.0 strict ±10% fixed-flow rule:
+- Fixed-flow search now filters to searched flow ±10% only.
+- No model above +10% or below -10% is shown.
+- The strict rule works with LPH and LPM because conversion happens internally.
+- Result labels and rule text display in the selected unit.

@@ -49,3 +49,12 @@ See `AGENTS.md` for full project rules.
 - Main screen default flow is back to 1,200 LPH.
 - Catalogue/details/share/chart fallback unit is LPH when no unit is passed.
 - User-selected unit still controls all displayed values across results, details, chart, zoom, share image, download image and CSV.
+
+
+## v3.0.0 strict ±10% fixed-flow rule
+- Fixed-flow search now uses a strict tolerance band only.
+- A model is shown only if estimated flow at the fixed head is between 10% less and 10% more than the searched flow.
+- Nothing above +10% and nothing below -10% is shown in fixed-flow mode.
+- The rule works for LPH, LPM, LPS and m³/hour because the app converts internally and displays back in the selected unit.
+- Result sorting now uses closest flow difference within the ±10% band.
+- LPH remains the default unit; LPM remains available in the dropdown.
