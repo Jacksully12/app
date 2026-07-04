@@ -67,3 +67,9 @@ v2.4.0 grid + zoom update:
 - Added minor grid lines alongside major grid lines.
 - Added a closer chart view with zoom in, zoom out and reset controls.
 - Kept the natural curve style and selected-point guides.
+
+
+v2.5.0 pinch zoom update:
+- Added two-finger pinch zoom support on the closer chart screen.
+- Kept the chart as a clean line-only curve with the selected point and guide lines.
+- Major and minor grid lines remain enabled.

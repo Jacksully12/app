@@ -65,7 +65,7 @@ public class PumpDetailsActivity extends Activity {
     LinearLayout chartCard() {
         LinearLayout c = Ui.card(this);
         c.addView(Ui.text(this, "Performance curve", 20, Ui.TEXT, 1));
-        TextView n = Ui.text(this, "Smooth catalogue curve with major and minor grid lines. Orange point is the selected operating point.", 13, Ui.MUTED, 0);
+        TextView n = Ui.text(this, "Smooth catalogue curve with major and minor grid lines. Orange point is the selected operating point. Open closer to pinch-zoom with two fingers when required.", 13, Ui.MUTED, 0);
         Ui.mb(this, n, 8);
         c.addView(n);
 
@@ -73,7 +73,7 @@ public class PumpDetailsActivity extends Activity {
         chart.setData(rec.curve, has ? head : null, has ? flow : null);
         c.addView(chart, new LinearLayout.LayoutParams(-1, Ui.dp(this, 330)));
 
-        Button zoom = Ui.secondary(this, "View closer / Zoom chart");
+        Button zoom = Ui.secondary(this, "Open closer / Pinch zoom");
         LinearLayout.LayoutParams zp = new LinearLayout.LayoutParams(-1, -2);
         zp.topMargin = Ui.dp(this, 10);
         c.addView(zoom, zp);

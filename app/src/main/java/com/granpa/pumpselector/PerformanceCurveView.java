@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -19,6 +21,9 @@ public class PerformanceCurveView extends View {
     Paint grid = new Paint(1), minorGrid = new Paint(1), axis = new Paint(1), txt = new Paint(1), curvePaint = new Paint(1), selected = new Paint(1);
     double[][] curve;
     Double sh, sf;
+    private final ScaleGestureDetector scaleDetector;
+    private float zoomFactor = 1f;
+    private boolean pinchZoomEnabled = false;
 
     public PerformanceCurveView(Context c) {
         super(c);
@@ -42,6 +47,17 @@ public class PerformanceCurveView extends View {
         curvePaint.setStrokeJoin(Paint.Join.ROUND);
         selected.setColor(Color.rgb(255, 132, 0));
         selected.setStyle(Paint.Style.FILL);
+
+        scaleDetector = new ScaleGestureDetector(c, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                if (!pinchZoomEnabled) return false;
+                zoomFactor *= detector.getScaleFactor();
+                zoomFactor = Math.max(1f, Math.min(3f, zoomFactor));
+                invalidate();
+                return true;
+            }
+        });
     }
 
     public void setData(double[][] c, Double h, Double f) {
@@ -49,6 +65,23 @@ public class PerformanceCurveView extends View {
         sh = h;
         sf = f;
         invalidate();
+    }
+
+    public void setPinchZoomEnabled(boolean enabled) {
+        pinchZoomEnabled = enabled;
+    }
+
+    public void resetZoom() {
+        zoomFactor = 1f;
+        invalidate();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (!pinchZoomEnabled) return super.onTouchEvent(event);
+        if (event.getPointerCount() > 1 && getParent() != null) getParent().requestDisallowInterceptTouchEvent(true);
+        scaleDetector.onTouchEvent(event);
+        return true;
     }
 
     @Override
@@ -77,9 +110,20 @@ public class PerformanceCurveView extends View {
         double axisH = roundUp(maxH * 1.08, 10);
         RectF plot = new RectF(dp(62), dp(24), getWidth() - dp(22), getHeight() - dp(78));
 
+        c.save();
+        if (pinchZoomEnabled && zoomFactor != 1f) c.scale(zoomFactor, zoomFactor, plot.centerX(), plot.centerY());
         drawGrid(c, plot, axisF, axisH, hasSelected ? sf : null);
         drawCurve(c, pts, axisF, axisH, plot);
         if (hasSelected) drawSelectedPoint(c, plot, axisF, axisH, sf, sh);
+        c.restore();
+
+        if (pinchZoomEnabled) {
+            Paint hint = new Paint(txt);
+            hint.setColor(Color.rgb(88, 101, 119));
+            hint.setTextSize(sp(11));
+            String msg = "Pinch with two fingers to zoom";
+            c.drawText(msg, getWidth() - hint.measureText(msg) - dp(8), dp(14), hint);
+        }
     }
 
     void drawSelectedPoint(Canvas c, RectF plot, double axisF, double axisH, double flow, double head) {
@@ -122,9 +166,7 @@ public class PerformanceCurveView extends View {
         for (double[] p : real) pts.add(new double[]{p[0], p[1]});
         if (selH != null && selF != null && !Double.isNaN(selH) && !Double.isNaN(selF)) {
             boolean duplicate = false;
-            for (double[] p : pts) {
-                if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - selF) < 1) duplicate = true;
-            }
+            for (double[] p : pts) if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - selF) < 1) duplicate = true;
             if (!duplicate) pts.add(new double[]{selH, selF});
         }
         Collections.sort(pts, Comparator.comparingDouble(a -> a[1]));
@@ -228,10 +270,7 @@ public class PerformanceCurveView extends View {
         p.setTextSize(old);
     }
 
-    String formatHead(double v) {
-        return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
-    }
-
+    String formatHead(double v) { return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v); }
     String formatFlow(double v) { return String.format(Locale.US, "%,.0f", v); }
     double niceFlowStep(double maxF) { if (maxF <= 1000) return 200; if (maxF <= 3000) return 500; if (maxF <= 10000) return 1000; if (maxF <= 30000) return 5000; return 10000; }
     double roundUp(double v, double s) { return Math.ceil(v / s) * s; }

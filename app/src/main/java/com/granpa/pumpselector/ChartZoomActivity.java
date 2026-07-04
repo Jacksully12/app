@@ -26,7 +26,7 @@ public class ChartZoomActivity extends Activity {
         LinearLayout root = Ui.root(this);
         root.addView(Ui.text(this, "Zoom chart", 24, Ui.TEXT, 1));
         root.addView(Ui.text(this, rec != null ? rec.model : "Pump model", 18, Ui.BLUE, 1));
-        root.addView(Ui.text(this, "Use the buttons below to inspect the chart more closely.", 14, Ui.MUTED, 0));
+        root.addView(Ui.text(this, "Pinch with two fingers to zoom in or out. You can also use the buttons below for easier control.", 14, Ui.MUTED, 0));
 
         LinearLayout toolbar = Ui.row(this);
         Button minus = Ui.secondary(this, "Zoom out");
@@ -47,6 +47,7 @@ public class ChartZoomActivity extends Activity {
         LinearLayout card = Ui.card(this);
         chart = new PerformanceCurveView(this);
         if (rec != null) chart.setData(rec.curve, has ? head : null, has ? flow : null);
+        chart.setPinchZoomEnabled(true);
         card.addView(chart, new LinearLayout.LayoutParams(-1, Ui.dp(this, currentHeightDp)));
         root.addView(card);
 
@@ -55,7 +56,7 @@ public class ChartZoomActivity extends Activity {
 
         minus.setOnClickListener(v -> changeZoom(-70));
         plus.setOnClickListener(v -> changeZoom(70));
-        reset.setOnClickListener(v -> { currentHeightDp = baseHeightDp; refreshChartSize(); });
+        reset.setOnClickListener(v -> { currentHeightDp = baseHeightDp; chart.resetZoom(); refreshChartSize(); });
         close.setOnClickListener(v -> finish());
 
         setContentView(Ui.scroll(this, root));

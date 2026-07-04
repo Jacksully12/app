@@ -66,3 +66,9 @@ v2.2.0 chart grid visibility update:
 - Added smaller minor grid lines in addition to the main grid lines on app charts and shared images.
 - Added a zoom option so users can open the chart in a closer view and zoom in or out when needed.
 - Natural curve shape, selected orange point and orange guide lines remain unchanged.
+
+
+## v2.5.0 pinch zoom update
+- Added Android-style two-finger pinch zoom support on the closer chart view.
+- The chart remains a clean line-only performance curve with the selected orange point and orange guide lines.
+- Major and minor grid lines remain visible for easier reading.
