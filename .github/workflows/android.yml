@@ -32,7 +32,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.9
+<<<<<<< HEAD
 
+=======
+>>>>>>> e0564e97397422fca4291c034f84703e17a53244
       - name: Build debug APK
         run: gradle assembleDebug
 
