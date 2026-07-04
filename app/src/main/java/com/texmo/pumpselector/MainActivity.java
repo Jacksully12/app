@@ -3,10 +3,12 @@ package com.texmo.pumpselector;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,7 +26,6 @@ public class MainActivity extends Activity {
     private Spinner unitSpinner;
     private Spinner categorySpinner;
     private Spinner phaseSpinner;
-    private Spinner brandSpinner;
     private LinearLayout flowTwoWrapper;
     private TextView ruleHint;
 
@@ -33,10 +34,25 @@ public class MainActivity extends Activity {
         PumpRepository.getRecords(this);
 
         LinearLayout root = Ui.root(this);
+
         LinearLayout header = Ui.card(this);
-        header.addView(Ui.text(this, "Pump Selector", 26, Ui.TEXT, android.graphics.Typeface.BOLD));
-        TextView sub = Ui.text(this, "Native Android app • strict fixed-head calculation • no 10% upper limit", 14, Ui.MUTED, android.graphics.Typeface.NORMAL);
-        header.addView(sub);
+        LinearLayout hero = Ui.row(this);
+        hero.setGravity(Gravity.CENTER_VERTICAL);
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(R.drawable.app_logo);
+        LinearLayout.LayoutParams logoLp = new LinearLayout.LayoutParams(Ui.dp(this, 64), Ui.dp(this, 64));
+        hero.addView(logo, logoLp);
+
+        LinearLayout heroText = new LinearLayout(this);
+        heroText.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams heroTextLp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+        heroTextLp.setMargins(Ui.dp(this, 12), 0, 0, 0);
+        TextView title = Ui.text(this, "Pump Selector", 26, Ui.TEXT, android.graphics.Typeface.BOLD);
+        TextView sub = Ui.text(this, "Strict fixed-head calculation • clean search • chart in every model", 14, Ui.MUTED, android.graphics.Typeface.NORMAL);
+        heroText.addView(title);
+        heroText.addView(sub);
+        hero.addView(heroText, heroTextLp);
+        header.addView(hero);
         root.addView(header);
 
         LinearLayout card = Ui.card(this);
@@ -44,7 +60,8 @@ public class MainActivity extends Activity {
         LinearLayout headRow = Ui.row(this);
         headInput = Ui.input(this, "40", Ui.numberInput());
         headRow.addView(headInput, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        TextView metre = Ui.text(this, "  metre", 15, Ui.MUTED, android.graphics.Typeface.BOLD);
+        TextView metre = Ui.text(this, " metre", 15, Ui.MUTED, android.graphics.Typeface.BOLD);
+        metre.setPadding(Ui.dp(this, 8), 0, 0, 0);
         headRow.addView(metre);
         card.addView(headRow);
 
@@ -77,23 +94,9 @@ public class MainActivity extends Activity {
         categorySpinner = Ui.spinner(this, categoryOptions());
         card.addView(categorySpinner);
 
-        LinearLayout filterRow = Ui.row(this);
-        LinearLayout phaseBox = new LinearLayout(this);
-        phaseBox.setOrientation(LinearLayout.VERTICAL);
-        phaseBox.addView(Ui.label(this, "Phase"));
+        card.addView(Ui.label(this, "Phase"));
         phaseSpinner = Ui.spinner(this, options(new String[][]{{"any", "Any"}, {"S", "Single phase"}, {"T", "Three phase"}}));
-        phaseBox.addView(phaseSpinner);
-        filterRow.addView(phaseBox, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-
-        LinearLayout brandBox = new LinearLayout(this);
-        brandBox.setOrientation(LinearLayout.VERTICAL);
-        brandBox.addView(Ui.label(this, "Brand"));
-        brandSpinner = Ui.spinner(this, brandOptions());
-        brandBox.addView(brandSpinner);
-        LinearLayout.LayoutParams brandLp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-        brandLp.setMargins(Ui.dp(this, 10), 0, 0, 0);
-        filterRow.addView(brandBox, brandLp);
-        card.addView(filterRow);
+        card.addView(phaseSpinner);
 
         card.addView(Ui.label(this, "Model search / keyword"));
         keywordInput = Ui.input(this, "", android.text.InputType.TYPE_CLASS_TEXT);
@@ -145,7 +148,6 @@ public class MainActivity extends Activity {
         i.putExtra("unit", selectedValue(unitSpinner));
         i.putExtra("category", selectedValue(categorySpinner));
         i.putExtra("phase", selectedValue(phaseSpinner));
-        i.putExtra("brand", selectedValue(brandSpinner));
         i.putExtra("keyword", keywordInput.getText().toString().trim());
         startActivity(i);
     }
@@ -165,13 +167,6 @@ public class MainActivity extends Activity {
         out.add(new Option("submersible_all", "All Submersible"));
         out.add(new Option("borewell_all", "All Borewell Submersible"));
         for (String c : PumpRepository.getCategories(this)) out.add(new Option(c, c));
-        return out;
-    }
-
-    private List<Option> brandOptions() {
-        List<Option> out = new ArrayList<>();
-        out.add(new Option("any", "Any"));
-        for (String b : PumpRepository.getBrands(this)) out.add(new Option(b, b));
         return out;
     }
 

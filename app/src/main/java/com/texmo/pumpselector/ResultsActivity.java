@@ -39,11 +39,10 @@ public class ResultsActivity extends Activity {
         unit = in.getStringExtra("unit");
         String category = in.getStringExtra("category");
         String phase = in.getStringExtra("phase");
-        String brand = in.getStringExtra("brand");
         String keyword = in.getStringExtra("keyword");
 
         PumpSelector.FlowRequirement req = PumpSelector.requirement(rangeMode, flow1, flow2, unit);
-        allResults.addAll(PumpSelector.select(PumpRepository.getRecords(this), head, req, category, phase, brand, keyword));
+        allResults.addAll(PumpSelector.select(PumpRepository.getRecords(this), head, req, category, phase, "any", keyword));
 
         LinearLayout root = Ui.root(this);
         LinearLayout summary = Ui.card(this);

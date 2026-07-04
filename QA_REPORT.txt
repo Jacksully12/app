@@ -2,6 +2,11 @@ TEXMO Pump Selector Native Android - QA Report
 
 Build type: Native Android Studio project, Java Activities, no WebView and no HTML UI.
 Data asset: app/src/main/assets/pumps.json
+Update included in this package:
+- Brand filter removed from main search screen.
+- User-provided logo added as app logo and launcher icon.
+- Model details screen upgraded with an in-app performance curve chart.
+- Selected operating point shown on the chart when opened from search results.
 
 Data checks
 - Total catalogue records in data asset: 1782
@@ -23,6 +28,13 @@ Logic checks
 - Range flow rule: estimated flow at fixed head must be inside min/max; reverse entry accepted.
 - Unit conversion: LPH, LPM, LPS and m³/hour converted internally to LPH.
 
+UI / feature checks
+- Main screen no longer shows Brand filter.
+- Main screen shows app logo.
+- Pump details screen shows one performance curve line per model.
+- Curve points are shown in a details card.
+- Selected head/estimated flow point is highlighted if the model was opened from results.
+
 Sample query checks
 1) 40 m + fixed 1,200 LPH + All Monoblock / Centrifugal
    Matches found: 33
@@ -35,8 +47,9 @@ Sample query checks
    Strict estimate at 40 m: 1473 LPH
 
 3) 50 m + flow range 13,500 to 4,500 LPH + All pump types
-   Matches found: 119
-   First result: RF18/10 | 1.5 HP | estimated 5500 LPH if result exists
+   Reverse range accepted: Yes
+   Matching logic: uses min/max after internal normalization
 
 Known note
 - The app uses catalogue curve interpolation. Actual selection should still consider site conditions such as pipe length, friction loss, voltage, borewell yield, and safety requirements.
+- APK itself is not compiled in this environment; this package is an Android Studio / GitHub Actions build-ready source project.

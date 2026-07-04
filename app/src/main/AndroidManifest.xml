@@ -2,7 +2,8 @@
     <application
         android:allowBackup="true"
         android:label="TEXMO Pump Selector"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_logo"
+        android:roundIcon="@drawable/app_logo"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false"
         android:resizeableActivity="true">
