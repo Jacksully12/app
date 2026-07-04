@@ -38,3 +38,11 @@ APK output:
 ```text
 app/build/outputs/apk/debug/
 ```
+
+
+## v2.1.0 chart cleanup
+- Removed white catalogue point markers from the performance chart.
+- Chart now shows only the smooth blue curve and the orange selected operating point.
+- Removed the artificial long flat start line from the chart curve.
+- Added the selected point into the drawing path so the orange point sits on the curve.
+- Share/download image chart uses the same cleaner curve style.
