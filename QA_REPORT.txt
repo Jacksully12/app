@@ -1,0 +1,42 @@
+TEXMO Pump Selector Native Android - QA Report
+
+Build type: Native Android Studio project, Java Activities, no WebView and no HTML UI.
+Data asset: app/src/main/assets/pumps.json
+
+Data checks
+- Total catalogue records in data asset: 1782
+- Usable records loaded by source data: 1782
+- Pages covered: 1–43 (43 unique pages)
+- Missing pages: None
+- Missing HP records: 0
+- Missing curve records: 0
+
+Correction checks
+- Page 31 ESWP sewage/dewatering rows present: 10
+- Page 32 merged HP/kW rows checked: 6 / 6
+- ACS1125 search normalization matches records: 1
+
+Logic checks
+- Strict mode: fixed head only.
+- No 10% upper limit.
+- Fixed flow rule: estimated flow at fixed head must be >= required flow.
+- Range flow rule: estimated flow at fixed head must be inside min/max; reverse entry accepted.
+- Unit conversion: LPH, LPM, LPS and m³/hour converted internally to LPH.
+
+Sample query checks
+1) 40 m + fixed 1,200 LPH + All Monoblock / Centrifugal
+   Matches found: 33
+   Best result: ACS 1125 | 1.5 HP | 1.1 kW | estimated 1473 LPH at 40 m | page 36
+
+2) ACS 1125 catalogue curve
+   Head range: 6 / 42 m
+   Discharge range: 102 / 20 LPM
+   Curve points used: [[6.0, 6120.0], [42.0, 1200.0]]
+   Strict estimate at 40 m: 1473 LPH
+
+3) 50 m + flow range 13,500 to 4,500 LPH + All pump types
+   Matches found: 119
+   First result: RF18/10 | 1.5 HP | estimated 5500 LPH if result exists
+
+Known note
+- The app uses catalogue curve interpolation. Actual selection should still consider site conditions such as pipe length, friction loss, voltage, borewell yield, and safety requirements.
