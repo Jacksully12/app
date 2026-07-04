@@ -1,12 +1,22 @@
 package com.granpa.pumpselector;
 
-import android.content.*;
-import android.graphics.*;
-import android.view.*;
-import java.util.*;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Locale;
 
 public class PerformanceCurveView extends View {
-    Paint grid = new Paint(1), axis = new Paint(1), txt = new Paint(1), curvePaint = new Paint(1), selected = new Paint(1);
+    Paint grid = new Paint(1), minorGrid = new Paint(1), axis = new Paint(1), txt = new Paint(1), curvePaint = new Paint(1), selected = new Paint(1);
     double[][] curve;
     Double sh, sf;
 
@@ -16,6 +26,11 @@ public class PerformanceCurveView extends View {
         grid.setStrokeWidth(dp(1.15f));
         grid.setStyle(Paint.Style.STROKE);
         grid.setPathEffect(new DashPathEffect(new float[]{6, 6}, 0));
+
+        minorGrid.setColor(Color.rgb(232, 238, 245));
+        minorGrid.setStrokeWidth(1f);
+        minorGrid.setStyle(Paint.Style.STROKE);
+
         axis.setColor(Color.rgb(91, 105, 120));
         axis.setStrokeWidth(dp(1.5f));
         txt.setColor(Ui.TEXT);
@@ -36,10 +51,12 @@ public class PerformanceCurveView extends View {
         invalidate();
     }
 
+    @Override
     protected void onMeasure(int w, int h) {
         setMeasuredDimension(MeasureSpec.getSize(w), resolveSize(dp(360), h));
     }
 
+    @Override
     protected void onDraw(Canvas c) {
         super.onDraw(c);
         ArrayList<double[]> real = valid();
@@ -62,7 +79,6 @@ public class PerformanceCurveView extends View {
 
         drawGrid(c, plot, axisF, axisH, hasSelected ? sf : null);
         drawCurve(c, pts, axisF, axisH, plot);
-
         if (hasSelected) drawSelectedPoint(c, plot, axisF, axisH, sf, sh);
     }
 
@@ -94,9 +110,7 @@ public class PerformanceCurveView extends View {
         ArrayList<double[]> p = new ArrayList<>();
         if (curve != null) {
             for (double[] q : curve) {
-                if (q != null && q.length >= 2 && !Double.isNaN(q[0]) && !Double.isNaN(q[1])) {
-                    p.add(new double[]{q[0], q[1]});
-                }
+                if (q != null && q.length >= 2 && !Double.isNaN(q[0]) && !Double.isNaN(q[1])) p.add(new double[]{q[0], q[1]});
             }
         }
         Collections.sort(p, Comparator.comparingDouble(a -> a[1]));
@@ -106,7 +120,6 @@ public class PerformanceCurveView extends View {
     ArrayList<double[]> displayPoints(ArrayList<double[]> real, Double selH, Double selF) {
         ArrayList<double[]> pts = new ArrayList<>();
         for (double[] p : real) pts.add(new double[]{p[0], p[1]});
-
         if (selH != null && selF != null && !Double.isNaN(selH) && !Double.isNaN(selF)) {
             boolean duplicate = false;
             for (double[] p : pts) {
@@ -114,22 +127,7 @@ public class PerformanceCurveView extends View {
             }
             if (!duplicate) pts.add(new double[]{selH, selF});
         }
-
         Collections.sort(pts, Comparator.comparingDouble(a -> a[1]));
-
-        if (pts.size() >= 2) {
-            double[] prev = pts.get(pts.size() - 2);
-            double[] last = pts.get(pts.size() - 1);
-            double df = last[1] - prev[1];
-            double dh = last[0] - prev[0];
-            if (df > 0 && dh < 0 && last[0] > 0) {
-                double slope = dh / df;
-                double zeroFlow = last[1] - last[0] / slope;
-                if (zeroFlow > last[1] && zeroFlow < last[1] * 1.8) {
-                    pts.add(new double[]{0, zeroFlow});
-                }
-            }
-        }
         return pts;
     }
 
@@ -137,6 +135,15 @@ public class PerformanceCurveView extends View {
         Paint gridText = new Paint(txt);
         gridText.setColor(Color.rgb(26, 37, 52));
         gridText.setTextSize(sp(12));
+
+        for (int i = 1; i < 10; i++) {
+            float gx = p.left + i * p.width() / 10f;
+            c.drawLine(gx, p.top, gx, p.bottom, minorGrid);
+        }
+        for (int i = 1; i < 10; i++) {
+            float gy = p.bottom - i * p.height() / 10f;
+            c.drawLine(p.left, gy, p.right, gy, minorGrid);
+        }
 
         for (int i = 0; i <= 5; i++) {
             float gx = p.left + i * p.width() / 5f;
@@ -153,6 +160,7 @@ public class PerformanceCurveView extends View {
         }
         c.drawLine(p.left, p.top, p.left, p.bottom, axis);
         c.drawLine(p.left, p.bottom, p.right, p.bottom, axis);
+
         Paint lab = new Paint(txt);
         lab.setColor(Color.rgb(26, 37, 52));
         lab.setTextSize(sp(13.5f));
@@ -224,18 +232,8 @@ public class PerformanceCurveView extends View {
         return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
     }
 
-    String formatFlow(double v) {
-        return String.format(Locale.US, "%,.0f", v);
-    }
-
-    double niceFlowStep(double maxF) {
-        if (maxF <= 1000) return 200;
-        if (maxF <= 3000) return 500;
-        if (maxF <= 10000) return 1000;
-        if (maxF <= 30000) return 5000;
-        return 10000;
-    }
-
+    String formatFlow(double v) { return String.format(Locale.US, "%,.0f", v); }
+    double niceFlowStep(double maxF) { if (maxF <= 1000) return 200; if (maxF <= 3000) return 500; if (maxF <= 10000) return 1000; if (maxF <= 30000) return 5000; return 10000; }
     double roundUp(double v, double s) { return Math.ceil(v / s) * s; }
     float x(double f, double maxF, RectF r) { return (float) (r.left + (f / maxF) * r.width()); }
     float y(double h, double maxH, RectF r) { return (float) (r.bottom - (h / maxH) * r.height()); }

@@ -20,6 +20,7 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
         <activity android:name=".QAActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ChartZoomActivity" android:screenOrientation="portrait" />
         <activity android:name=".PumpDetailsActivity" android:screenOrientation="portrait" />
         <activity android:name=".CatalogueActivity" android:screenOrientation="portrait" />
         <activity android:name=".ResultsActivity" android:screenOrientation="portrait" />

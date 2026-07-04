@@ -153,10 +153,22 @@ public class ShareImageBuilder {
         grid.setStrokeWidth(2.0f);
         grid.setStyle(Paint.Style.STROKE);
         grid.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
+        Paint minorGrid = new Paint(1);
+        minorGrid.setColor(Color.rgb(232, 238, 245));
+        minorGrid.setStrokeWidth(1.1f);
+        minorGrid.setStyle(Paint.Style.STROKE);
         Paint text = new Paint(1);
         text.setColor(Ui.TEXT);
         text.setTextSize(22);
         text.setTextAlign(Paint.Align.CENTER);
+        for (int i = 1; i < 10; i++) {
+            float gx = plot.left + i * plot.width() / 10f;
+            c.drawLine(gx, plot.top, gx, plot.bottom, minorGrid);
+        }
+        for (int i = 1; i < 10; i++) {
+            float gy = plot.bottom - i * plot.height() / 10f;
+            c.drawLine(plot.left, gy, plot.right, gy, minorGrid);
+        }
         for (int i = 0; i <= 5; i++) {
             float gx = plot.left + i * plot.width() / 5f;
             c.drawLine(gx, plot.top, gx, plot.bottom, grid);
@@ -289,15 +301,6 @@ public class ShareImageBuilder {
             if (!duplicate) pts.add(new double[]{selH, selF});
         }
         Collections.sort(pts, Comparator.comparingDouble(a -> a[1]));
-        if (pts.size() >= 2) {
-            double[] prev = pts.get(pts.size() - 2), last = pts.get(pts.size() - 1);
-            double df = last[1] - prev[1], dh = last[0] - prev[0];
-            if (df > 0 && dh < 0 && last[0] > 0) {
-                double slope = dh / df;
-                double zeroFlow = last[1] - last[0] / slope;
-                if (zeroFlow > last[1] && zeroFlow < last[1] * 1.8) pts.add(new double[]{0, zeroFlow});
-            }
-        }
         return pts;
     }
 

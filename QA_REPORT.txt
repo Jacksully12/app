@@ -55,3 +55,15 @@ v2.2.0 chart grid visibility update:
 - Selected point guide lines remain orange dashed lines to both axes.
 - Added orange value badges for selected head and selected flow on the chart.
 - Kept the chart clean: one blue curve line and one selected orange point only.
+
+
+v2.3.0 natural curve update:
+- Removed artificial extension of the curve to the axis ends.
+- Curve now starts at the first real catalogue point and ends at the last real catalogue point.
+- App chart and share image chart kept aligned.
+
+
+v2.4.0 grid + zoom update:
+- Added minor grid lines alongside major grid lines.
+- Added a closer chart view with zoom in, zoom out and reset controls.
+- Kept the natural curve style and selected-point guides.
