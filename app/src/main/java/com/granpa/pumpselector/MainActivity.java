@@ -84,13 +84,14 @@ public class MainActivity extends Activity {
 
         card.addView(Ui.label(this, "Phase"));
         phase = Ui.spinner(this, opts(new String[][]{{"any", "Any"}, {"S", "Single phase"}, {"T", "Three phase"}}));
+        Ui.mb(this, phase, 18);
         card.addView(phase);
 
         Button find = Ui.primary(this, "Find suitable pumps");
         Ui.mb(this, find, 10);
         card.addView(find);
 
-        Button browse = Ui.secondary(this, "Browse full catalogue");
+        Button browse = Ui.catalogueButton(this, "Browse full catalogue");
         Ui.mb(this, browse, 10);
         card.addView(browse);
 

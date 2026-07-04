@@ -76,7 +76,10 @@ public class PumpDetailsActivity extends Activity {
     LinearLayout catalogueSectionCard() {
         LinearLayout card = Ui.card(this);
         card.addView(Ui.text(this, "Catalogue section", 18, Ui.TEXT, 1));
-        card.addView(Ui.text(this, catalogueSectionText(), 16, Ui.MUTED, 0));
+        TextView source = Ui.text(this, catalogueSectionText(), 14, Ui.MUTED, 0);
+        source.setLineSpacing(Ui.dp(this, 2), 1.0f);
+        source.setTextIsSelectable(true);
+        card.addView(source);
         return card;
     }
 
@@ -167,8 +170,15 @@ public class PumpDetailsActivity extends Activity {
     }
 
     String catalogueSectionText() {
+        String compact = safe(rec.catalogueSectionText);
+        if (!compact.isEmpty()) return compact;
         String title = safe(rec.title);
-        if (!title.isEmpty()) return title;
+        if (!title.isEmpty()) {
+            if (!empty(rec.brand) && !title.toUpperCase(Locale.US).contains(rec.brand.toUpperCase(Locale.US))) {
+                return rec.brand + " | " + title;
+            }
+            return title;
+        }
         if (!empty(rec.brand) && !empty(rec.category)) return rec.brand + " | " + rec.category;
         if (!empty(rec.category)) return rec.category;
         return "Catalogue page " + rec.page;

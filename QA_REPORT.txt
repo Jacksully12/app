@@ -44,3 +44,21 @@ Project context files added
 
 Important note
 - This ZIP is APK-ready Android source. Build the actual APK using GitHub Actions or Android Studio.
+
+## Catalogue section source text rule
+- The in-app model details screen must show the full catalogue/source row text for the selected model so the user can cross-check against the original CSV/Excel/PDF catalogue.
+- Do not remove Page, Brand, Stages, Sheet, head range, discharge range, pipe size, or curve point values from the in-app details.
+- The WhatsApp/share image remains customer-facing and must not show the page number.
+
+V16 update
+- Added fullCatalogueText to each pump record.
+- Catalogue section in model details now displays full source row text for cross-checking against CSV/Excel/PDF data.
+- Share/WhatsApp image remains customer-facing and does not show page number.
+
+
+v17 checks:
+- Top safe padding added through Ui.root.
+- Phase dropdown bottom spacing added.
+- Browse full catalogue button changed to blue filled style.
+- `catalogueSectionText` added to pump records from catalogue page headers.
+- Catalogue section UI is compact and uses data from pumps.json.

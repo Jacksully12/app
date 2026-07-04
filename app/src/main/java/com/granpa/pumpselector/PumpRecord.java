@@ -17,6 +17,8 @@ public class PumpRecord {
     public String size = "";
     public String title = "";
     public String imageUrl = "";
+    public String fullCatalogueText = "";
+    public String catalogueSectionText = "";
     public int page;
     public double hp = Double.NaN;
     public double kw = Double.NaN;
@@ -42,6 +44,8 @@ public class PumpRecord {
         r.size = o.optString("size", "");
         r.title = o.optString("title", "");
         r.imageUrl = o.optString("imageUrl", "");
+        r.fullCatalogueText = o.optString("fullCatalogueText", "");
+        r.catalogueSectionText = o.optString("catalogueSectionText", "");
         r.page = o.optInt("page", 0);
         r.hp = o.optDouble("hp", Double.NaN);
         r.kw = o.optDouble("kw", Double.NaN);

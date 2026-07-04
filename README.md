@@ -75,3 +75,15 @@ The APK will be created at:
 ```text
 app/build/outputs/apk/debug/
 ```
+
+## Catalogue section source text rule
+- The in-app model details screen must show the full catalogue/source row text for the selected model so the user can cross-check against the original CSV/Excel/PDF catalogue.
+- Do not remove Page, Brand, Stages, Sheet, head range, discharge range, pipe size, or curve point values from the in-app details.
+- The WhatsApp/share image remains customer-facing and must not show the page number.
+
+
+## v17 layout/catalogue fixes
+- Added safe top padding to avoid content being cut at the top of all screens.
+- Added spacing between Phase dropdown and the Find suitable pumps button.
+- Browse full catalogue button now uses a clear blue filled style.
+- Catalogue section now uses compact page-header text from the catalogue data in `pumps.json`.
