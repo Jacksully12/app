@@ -1,3 +1,0 @@
-This project is a native Android Java app.
-It does not use index.html, WebView, JavaScript UI, or browser rendering.
-The pump catalogue is stored as JSON in assets/pumps.json and loaded by native Java classes.
