@@ -95,3 +95,10 @@ v2.8.0 unit display + sorting update:
 - Internal LPH conversion remains unchanged for calculation.
 - Results now sort by closest extra flow first, then HP.
 - Very oversized fixed-flow results are labelled.
+
+
+v2.9.0 LPH default update:
+- Changed default display unit from LPM back to LPH.
+- Kept LPM available in the unit dropdown.
+- Default main screen flow value is 1,200 LPH.
+- Unit propagation still works across app screens and share/download image.

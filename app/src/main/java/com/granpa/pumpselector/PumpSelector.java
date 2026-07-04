@@ -14,11 +14,11 @@ public class PumpSelector {
         public double head, flow, diff;
         public String status;
         public boolean estimate;
-        public String unit = "LPM";
+        public String unit = "LPH";
     }
 
     public static String normalizeUnit(String u) {
-        if (u == null) return "LPM";
+        if (u == null) return "LPH";
         u = u.toUpperCase(Locale.US).trim();
         if (u.equals("LPH") || u.equals("LPM") || u.equals("LPS") || u.equals("M3H")) return u;
         if (u.contains("M3") || u.contains("M³")) return "M3H";
@@ -139,7 +139,7 @@ public class PumpSelector {
             if (cat(r, cat) && kw(r, key)) {
                 Result x = new Result();
                 x.r = r;
-                x.unit = "LPM";
+                x.unit = "LPH";
                 out.add(x);
             }
         }

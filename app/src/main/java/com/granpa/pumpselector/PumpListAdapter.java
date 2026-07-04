@@ -9,7 +9,7 @@ import java.util.*;
 public class PumpListAdapter extends BaseAdapter {
     Activity a;
     ArrayList<PumpSelector.Result> items = new ArrayList<>();
-    String displayUnit = "LPM";
+    String displayUnit = "LPH";
 
     public PumpListAdapter(Activity a) { this.a = a; }
 

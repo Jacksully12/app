@@ -68,3 +68,11 @@ Important split:
 - Internal calculations still use LPH for consistency, but all user-facing values follow the selected unit.
 - Fixed result ordering so closest suitable pumps appear first before very oversized pumps.
 - Oversized results are marked as oversized instead of looking like the best recommendation.
+
+
+## v2.9.0 LPH default update
+- LPH is now the default unit everywhere again.
+- LPM remains available as a dropdown option.
+- Main screen default flow is back to 1,200 LPH.
+- Catalogue/details/share/chart fallback unit is LPH when no unit is passed.
+- User-selected unit still controls all displayed values across results, details, chart, zoom, share image, download image and CSV.

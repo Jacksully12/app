@@ -10,7 +10,7 @@ public class ChartZoomActivity extends Activity {
     PumpRecord rec;
     boolean has;
     double head, flow;
-    String unit = "LPM";
+    String unit = "LPH";
     PerformanceCurveView chart;
     TextView zoomInfo;
 

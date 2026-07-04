@@ -94,7 +94,7 @@ public class ShareImageBuilder {
     }
 
     public static Bitmap build(Activity a, PumpRecord r, boolean has, double head, double flow) {
-        return build(a, r, has, head, flow, "LPM");
+        return build(a, r, has, head, flow, "LPH");
     }
 
     static void box(Canvas c, float l, float t, float r, float b, int fill, int stroke) {
@@ -347,7 +347,7 @@ public class ShareImageBuilder {
     }
 
     public static void shareWhatsApp(Activity a, PumpRecord r, boolean has, double head, double flow) {
-        shareWhatsApp(a, r, has, head, flow, "LPM");
+        shareWhatsApp(a, r, has, head, flow, "LPH");
     }
 
     public static void share(Activity a, PumpRecord r, boolean has, double head, double flow, boolean whats, String unit) {
@@ -377,7 +377,7 @@ public class ShareImageBuilder {
     }
 
     public static void share(Activity a, PumpRecord r, boolean has, double head, double flow, boolean whats) {
-        share(a, r, has, head, flow, whats, "LPM");
+        share(a, r, has, head, flow, whats, "LPH");
     }
 
     public static void download(Activity a, PumpRecord r, boolean has, double head, double flow, String unit) {
@@ -411,7 +411,7 @@ public class ShareImageBuilder {
     }
 
     public static void download(Activity a, PumpRecord r, boolean has, double head, double flow) {
-        download(a, r, has, head, flow, "LPM");
+        download(a, r, has, head, flow, "LPH");
     }
 
     static File saveCache(Activity a, Bitmap bm) throws Exception {

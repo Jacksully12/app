@@ -17,7 +17,7 @@ public class PumpDetailsActivity extends Activity {
     PumpRecord rec;
     boolean has;
     double head, flow;
-    String unit = "LPM";
+    String unit = "LPH";
 
     @Override
     protected void onCreate(Bundle b) {

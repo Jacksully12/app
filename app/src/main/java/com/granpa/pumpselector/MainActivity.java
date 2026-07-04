@@ -50,12 +50,12 @@ public class MainActivity extends Activity {
 
         card.addView(Ui.label(this, "Water flow"));
         LinearLayout fr = Ui.row(this);
-        flow1 = Ui.input(this, "20", Ui.numberInput());
+        flow1 = Ui.input(this, "1200", Ui.numberInput());
         fr.addView(flow1, new LinearLayout.LayoutParams(0, -2, 1));
 
         unit = Ui.spinner(this, options(new String[][]{
-                {"LPM", "LPM", "Litres per minute"},
                 {"LPH", "LPH", "Litres per hour"},
+                {"LPM", "LPM", "Litres per minute"},
                 {"LPS", "LPS", "Litres per second"},
                 {"M3H", "m³/hour", "Cubic metres per hour"}
         }));
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         flow2Box = new LinearLayout(this);
         flow2Box.setOrientation(LinearLayout.VERTICAL);
         flow2Box.addView(Ui.label(this, "Second flow value"));
-        flow2 = Ui.input(this, "75", Ui.numberInput());
+        flow2 = Ui.input(this, "4500", Ui.numberInput());
         flow2Box.addView(flow2);
         card.addView(flow2Box);
 
@@ -138,7 +138,7 @@ public class MainActivity extends Activity {
         String u = PumpSelector.unitLabel(sel(unit));
         flow2Box.setVisibility(r ? View.VISIBLE : View.GONE);
         hint.setText(r
-                ? "Range mode uses " + u + ". You can enter either order, for example 75 to 20."
+                ? "Range mode uses " + u + ". You can enter either order, for example 4500 to 1200."
                 : "Fixed mode uses " + u + ". Results show pumps with equal or more water at the selected head.");
     }
 

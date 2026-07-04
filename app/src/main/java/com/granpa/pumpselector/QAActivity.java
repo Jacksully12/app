@@ -20,9 +20,9 @@ public class QAActivity extends Activity {
         card.addView(Ui.text(this, "Granpa QA Report", 26, Ui.TEXT, 1));
         card.addView(Ui.text(this, PumpRepository.note(this), 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Native Android app • no WebView • no HTML wrapper", 14, Ui.MUTED, 0));
-        card.addView(Ui.text(this, "Default display unit: LPM. When LPH is selected, results/details/chart/share image use LPH.", 14, Ui.MUTED, 0));
+        card.addView(Ui.text(this, "Default display unit: LPH. LPM remains available from the unit dropdown.", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Checked: dropdown readability, search, fixed flow, range flow, model details, chart, WhatsApp share, download image, GitHub workflow.", 14, Ui.MUTED, 0));
-        if (q != null) card.addView(Ui.text(this, "ACS 1125 at 40 m ≈ " + PumpSelector.formatFlow(q, "LPM"), 14, Ui.GREEN, 1));
+        if (q != null) card.addView(Ui.text(this, "ACS 1125 at 40 m ≈ " + PumpSelector.formatFlow(q, "LPH"), 14, Ui.GREEN, 1));
         root.addView(card);
 
         LinearLayout rules = Ui.card(this);

@@ -22,7 +22,7 @@ public class PerformanceCurveView extends View {
     Paint grid = new Paint(1), minorGrid = new Paint(1), axis = new Paint(1), txt = new Paint(1), curvePaint = new Paint(1), selected = new Paint(1);
     double[][] curve;
     Double sh, sf;
-    String displayUnit = "LPM";
+    String displayUnit = "LPH";
 
     private final ScaleGestureDetector scaleDetector;
     private final GestureDetector gestureDetector;
