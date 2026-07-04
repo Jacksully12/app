@@ -154,19 +154,21 @@ public class ShareImageBuilder {
         grid.setStyle(Paint.Style.STROKE);
         grid.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
         Paint minorGrid = new Paint(1);
-        minorGrid.setColor(Color.rgb(232, 238, 245));
-        minorGrid.setStrokeWidth(1.1f);
+        minorGrid.setColor(Color.rgb(224, 233, 243));
+        minorGrid.setStrokeWidth(1.2f);
         minorGrid.setStyle(Paint.Style.STROKE);
         Paint text = new Paint(1);
         text.setColor(Ui.TEXT);
         text.setTextSize(22);
         text.setTextAlign(Paint.Align.CENTER);
-        for (int i = 1; i < 10; i++) {
-            float gx = plot.left + i * plot.width() / 10f;
+        for (int i = 1; i < 20; i++) {
+            if (i % 4 == 0) continue;
+            float gx = plot.left + i * plot.width() / 20f;
             c.drawLine(gx, plot.top, gx, plot.bottom, minorGrid);
         }
-        for (int i = 1; i < 10; i++) {
-            float gy = plot.bottom - i * plot.height() / 10f;
+        for (int i = 1; i < 20; i++) {
+            if (i % 4 == 0) continue;
+            float gy = plot.bottom - i * plot.height() / 20f;
             c.drawLine(plot.left, gy, plot.right, gy, minorGrid);
         }
         for (int i = 0; i <= 5; i++) {

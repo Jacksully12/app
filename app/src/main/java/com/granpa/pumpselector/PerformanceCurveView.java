@@ -21,30 +21,40 @@ public class PerformanceCurveView extends View {
     Paint grid = new Paint(1), minorGrid = new Paint(1), axis = new Paint(1), txt = new Paint(1), curvePaint = new Paint(1), selected = new Paint(1);
     double[][] curve;
     Double sh, sf;
+
     private final ScaleGestureDetector scaleDetector;
     private float zoomFactor = 1f;
+    private float panX = 0f;
+    private float panY = 0f;
+    private float lastTouchX = 0f;
+    private float lastTouchY = 0f;
     private boolean pinchZoomEnabled = false;
+    private boolean dragging = false;
 
     public PerformanceCurveView(Context c) {
         super(c);
-        grid.setColor(Color.rgb(209, 218, 230));
-        grid.setStrokeWidth(dp(1.15f));
+
+        grid.setColor(Color.rgb(199, 211, 225));
+        grid.setStrokeWidth(dp(1.1f));
         grid.setStyle(Paint.Style.STROKE);
         grid.setPathEffect(new DashPathEffect(new float[]{6, 6}, 0));
 
-        minorGrid.setColor(Color.rgb(232, 238, 245));
+        minorGrid.setColor(Color.rgb(225, 233, 242));
         minorGrid.setStrokeWidth(1f);
         minorGrid.setStyle(Paint.Style.STROKE);
 
         axis.setColor(Color.rgb(91, 105, 120));
         axis.setStrokeWidth(dp(1.5f));
+
         txt.setColor(Ui.TEXT);
         txt.setTextSize(sp(12));
+
         curvePaint.setColor(Color.rgb(0, 96, 216));
         curvePaint.setStyle(Paint.Style.STROKE);
         curvePaint.setStrokeWidth(dp(3.2f));
         curvePaint.setStrokeCap(Paint.Cap.ROUND);
         curvePaint.setStrokeJoin(Paint.Join.ROUND);
+
         selected.setColor(Color.rgb(255, 132, 0));
         selected.setStyle(Paint.Style.FILL);
 
@@ -52,8 +62,15 @@ public class PerformanceCurveView extends View {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 if (!pinchZoomEnabled) return false;
+                float previous = zoomFactor;
                 zoomFactor *= detector.getScaleFactor();
-                zoomFactor = Math.max(1f, Math.min(3f, zoomFactor));
+                zoomFactor = Math.max(1f, Math.min(4f, zoomFactor));
+                if (zoomFactor == 1f) {
+                    panX = 0f;
+                    panY = 0f;
+                } else if (previous != zoomFactor) {
+                    clampPan();
+                }
                 invalidate();
                 return true;
             }
@@ -69,19 +86,92 @@ public class PerformanceCurveView extends View {
 
     public void setPinchZoomEnabled(boolean enabled) {
         pinchZoomEnabled = enabled;
+        setFocusable(enabled);
+        setClickable(enabled);
     }
 
     public void resetZoom() {
         zoomFactor = 1f;
+        panX = 0f;
+        panY = 0f;
         invalidate();
+    }
+
+    public void zoomIn() {
+        zoomFactor = Math.min(4f, zoomFactor * 1.25f);
+        clampPan();
+        invalidate();
+    }
+
+    public void zoomOut() {
+        zoomFactor = Math.max(1f, zoomFactor / 1.25f);
+        if (zoomFactor == 1f) {
+            panX = 0f;
+            panY = 0f;
+        }
+        clampPan();
+        invalidate();
+    }
+
+    public int getZoomPercent() {
+        return Math.round(zoomFactor * 100f);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!pinchZoomEnabled) return super.onTouchEvent(event);
-        if (event.getPointerCount() > 1 && getParent() != null) getParent().requestDisallowInterceptTouchEvent(true);
+
         scaleDetector.onTouchEvent(event);
-        return true;
+
+        boolean multiTouch = event.getPointerCount() > 1;
+        boolean canPan = zoomFactor > 1.02f && !scaleDetector.isInProgress();
+
+        if (multiTouch || canPan) {
+            if (getParent() != null) getParent().requestDisallowInterceptTouchEvent(true);
+        }
+
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                lastTouchX = event.getX();
+                lastTouchY = event.getY();
+                dragging = canPan;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (canPan && event.getPointerCount() == 1) {
+                    float dx = event.getX() - lastTouchX;
+                    float dy = event.getY() - lastTouchY;
+                    panX += dx;
+                    panY += dy;
+                    clampPan();
+                    lastTouchX = event.getX();
+                    lastTouchY = event.getY();
+                    dragging = true;
+                    invalidate();
+                    return true;
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                dragging = false;
+                if (getParent() != null) getParent().requestDisallowInterceptTouchEvent(false);
+                break;
+        }
+
+        return multiTouch || dragging || zoomFactor > 1.02f || super.onTouchEvent(event);
+    }
+
+    private void clampPan() {
+        if (zoomFactor <= 1f) {
+            panX = 0f;
+            panY = 0f;
+            return;
+        }
+        float maxX = (zoomFactor - 1f) * getWidth() * 0.45f;
+        float maxY = (zoomFactor - 1f) * getHeight() * 0.45f;
+        panX = Math.max(-maxX, Math.min(maxX, panX));
+        panY = Math.max(-maxY, Math.min(maxY, panY));
     }
 
     @Override
@@ -111,7 +201,11 @@ public class PerformanceCurveView extends View {
         RectF plot = new RectF(dp(62), dp(24), getWidth() - dp(22), getHeight() - dp(78));
 
         c.save();
-        if (pinchZoomEnabled && zoomFactor != 1f) c.scale(zoomFactor, zoomFactor, plot.centerX(), plot.centerY());
+        if (pinchZoomEnabled && zoomFactor > 1f) {
+            c.translate(panX, panY);
+            c.scale(zoomFactor, zoomFactor, plot.centerX(), plot.centerY());
+        }
+
         drawGrid(c, plot, axisF, axisH, hasSelected ? sf : null);
         drawCurve(c, pts, axisF, axisH, plot);
         if (hasSelected) drawSelectedPoint(c, plot, axisF, axisH, sf, sh);
@@ -121,13 +215,14 @@ public class PerformanceCurveView extends View {
             Paint hint = new Paint(txt);
             hint.setColor(Color.rgb(88, 101, 119));
             hint.setTextSize(sp(11));
-            String msg = "Pinch with two fingers to zoom";
+            String msg = zoomFactor > 1f ? "Drag to move • pinch to zoom" : "Pinch with two fingers to zoom";
             c.drawText(msg, getWidth() - hint.measureText(msg) - dp(8), dp(14), hint);
         }
     }
 
     void drawSelectedPoint(Canvas c, RectF plot, double axisF, double axisH, double flow, double head) {
         float sx = x(flow, axisF, plot), sy = y(head, axisH, plot);
+
         Paint dash = new Paint(1);
         dash.setColor(Color.rgb(255, 132, 0));
         dash.setStyle(Paint.Style.STROKE);
@@ -143,6 +238,7 @@ public class PerformanceCurveView extends View {
         halo.setStyle(Paint.Style.FILL);
         halo.setColor(Color.argb(42, 255, 132, 0));
         c.drawCircle(sx, sy, dp(16), halo);
+
         Paint ring = new Paint(1);
         ring.setStyle(Paint.Style.FILL);
         ring.setColor(Color.WHITE);
@@ -154,7 +250,9 @@ public class PerformanceCurveView extends View {
         ArrayList<double[]> p = new ArrayList<>();
         if (curve != null) {
             for (double[] q : curve) {
-                if (q != null && q.length >= 2 && !Double.isNaN(q[0]) && !Double.isNaN(q[1])) p.add(new double[]{q[0], q[1]});
+                if (q != null && q.length >= 2 && !Double.isNaN(q[0]) && !Double.isNaN(q[1])) {
+                    p.add(new double[]{q[0], q[1]});
+                }
             }
         }
         Collections.sort(p, Comparator.comparingDouble(a -> a[1]));
@@ -164,11 +262,15 @@ public class PerformanceCurveView extends View {
     ArrayList<double[]> displayPoints(ArrayList<double[]> real, Double selH, Double selF) {
         ArrayList<double[]> pts = new ArrayList<>();
         for (double[] p : real) pts.add(new double[]{p[0], p[1]});
+
         if (selH != null && selF != null && !Double.isNaN(selH) && !Double.isNaN(selF)) {
             boolean duplicate = false;
-            for (double[] p : pts) if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - selF) < 1) duplicate = true;
+            for (double[] p : pts) {
+                if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - selF) < 1) duplicate = true;
+            }
             if (!duplicate) pts.add(new double[]{selH, selF});
         }
+
         Collections.sort(pts, Comparator.comparingDouble(a -> a[1]));
         return pts;
     }
@@ -178,12 +280,14 @@ public class PerformanceCurveView extends View {
         gridText.setColor(Color.rgb(26, 37, 52));
         gridText.setTextSize(sp(12));
 
-        for (int i = 1; i < 10; i++) {
-            float gx = p.left + i * p.width() / 10f;
+        for (int i = 1; i < 20; i++) {
+            if (i % 4 == 0) continue;
+            float gx = p.left + i * p.width() / 20f;
             c.drawLine(gx, p.top, gx, p.bottom, minorGrid);
         }
-        for (int i = 1; i < 10; i++) {
-            float gy = p.bottom - i * p.height() / 10f;
+        for (int i = 1; i < 20; i++) {
+            if (i % 4 == 0) continue;
+            float gy = p.bottom - i * p.height() / 20f;
             c.drawLine(p.left, gy, p.right, gy, minorGrid);
         }
 
@@ -200,6 +304,7 @@ public class PerformanceCurveView extends View {
             String l = String.format(Locale.US, "%.0f", maxH * i / 5);
             c.drawText(l, p.left - gridText.measureText(l) - dp(8), gy + dp(4), gridText);
         }
+
         c.drawLine(p.left, p.top, p.left, p.bottom, axis);
         c.drawLine(p.left, p.bottom, p.right, p.bottom, axis);
 
@@ -207,8 +312,10 @@ public class PerformanceCurveView extends View {
         lab.setColor(Color.rgb(26, 37, 52));
         lab.setTextSize(sp(13.5f));
         lab.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+
         String xl = "Flow Rate (LPH)";
         c.drawText(xl, p.centerX() - lab.measureText(xl) / 2, getHeight() - dp(5), lab);
+
         c.save();
         c.rotate(-90, dp(18), p.centerY());
         c.drawText("Head (m)", dp(18), p.centerY(), lab);
@@ -233,10 +340,12 @@ public class PerformanceCurveView extends View {
         Paint bg = new Paint(1);
         bg.setColor(Color.rgb(255, 132, 0));
         bg.setStyle(Paint.Style.FILL);
+
         Paint t = new Paint(1);
         t.setColor(Color.WHITE);
         t.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         t.setTextSize(sp(11));
+
         float pad = dp(7);
         float w = t.measureText(label) + pad * 2;
         float h = dp(24);
@@ -249,10 +358,12 @@ public class PerformanceCurveView extends View {
         Paint bg = new Paint(1);
         bg.setColor(Color.rgb(255, 132, 0));
         bg.setStyle(Paint.Style.FILL);
+
         Paint t = new Paint(1);
         t.setColor(Color.WHITE);
         t.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         t.setTextSize(sp(11));
+
         float pad = dp(8);
         float w = Math.min(t.measureText(label) + pad * 2, dp(92));
         float h = dp(24);
@@ -270,9 +381,20 @@ public class PerformanceCurveView extends View {
         p.setTextSize(old);
     }
 
-    String formatHead(double v) { return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v); }
+    String formatHead(double v) {
+        return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
+    }
+
     String formatFlow(double v) { return String.format(Locale.US, "%,.0f", v); }
-    double niceFlowStep(double maxF) { if (maxF <= 1000) return 200; if (maxF <= 3000) return 500; if (maxF <= 10000) return 1000; if (maxF <= 30000) return 5000; return 10000; }
+
+    double niceFlowStep(double maxF) {
+        if (maxF <= 1000) return 200;
+        if (maxF <= 3000) return 500;
+        if (maxF <= 10000) return 1000;
+        if (maxF <= 30000) return 5000;
+        return 10000;
+    }
+
     double roundUp(double v, double s) { return Math.ceil(v / s) * s; }
     float x(double f, double maxF, RectF r) { return (float) (r.left + (f / maxF) * r.width()); }
     float y(double h, double maxH, RectF r) { return (float) (r.bottom - (h / maxH) * r.height()); }

@@ -24,3 +24,10 @@
 - Added Android-style two-finger pinch zoom support on the closer chart view.
 - The chart remains a clean line-only performance curve with the selected orange point and orange guide lines.
 - Major and minor grid lines remain visible for easier reading.
+
+
+## v2.6.0 zoom move + finer grid update
+- Improved closer chart view with Android-style pinch zoom and drag-to-move panning.
+- Added +/- zoom buttons plus reset view as a fallback for users who prefer buttons.
+- Increased minor grid density so the chart can be checked more precisely.
+- Kept the chart as a clean line-only performance curve with the orange selected point and guide lines.

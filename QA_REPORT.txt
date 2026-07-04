@@ -73,3 +73,9 @@ v2.5.0 pinch zoom update:
 - Added two-finger pinch zoom support on the closer chart screen.
 - Kept the chart as a clean line-only curve with the selected point and guide lines.
 - Major and minor grid lines remain enabled.
+
+
+v2.6.0 zoom move + finer grid update:
+- Added drag-to-move panning after zooming in.
+- Improved pinch zoom behaviour and kept button zoom/reset fallback.
+- Increased minor grid line density in app chart and share image chart.
