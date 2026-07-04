@@ -13,6 +13,9 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
 
+      - name: Show files
+        run: ls -la
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
@@ -21,12 +24,11 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Make Gradle executable
-        run: chmod +x ./gradlew
+        with:
+          gradle-version: 8.7
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
