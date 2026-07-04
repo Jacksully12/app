@@ -1,64 +1,34 @@
 Granpa Pump Selector - QA / Change Report
 
-Package version: 1.4.0
+Package version: 1.6.0
 Project type: Native Android Java app, no WebView and no HTML UI.
 Data asset: app/src/main/assets/pumps.json
 
-Included changes in this package
-- Restored/kept the detailed in-app result card format:
-  MODEL
-  HP • kW • Phase S/T
-  Pump category
-  At selected head: estimated LPH • difference/status
-  Page N • Size X • BRAND
-- Restored/kept detailed model details screen cards:
-  Curve points used, Quick specs, Catalogue section.
-- Quick specs now includes: Delivery / Pipe size, Page, Head range, Discharge range, Flow range, Brand, Stages, Sheet.
-- Catalogue section card is always shown.
-- App details screen keeps page number and full technical details.
-- Final WhatsApp/share image hides page number.
-- Direct WhatsApp image sharing remains available on model details screen.
-- Share Image fallback remains available.
-- Main screen model search remains at the top.
-- GitHub Actions workflow is clean YAML and uses Gradle 8.9.
+Requested changes completed
+- Model details now has one Share WhatsApp button.
+- Generic Share Image button removed.
+- Second model details action is now Download Image.
+- Download Image saves the generated PNG to Pictures / Granpa on Android 10+ using MediaStore.
+- UI spacing improved across screens.
+- Safe top padding added to all screens.
+- Phase dropdown spacing before Find suitable pumps button fixed.
+- Browse full catalogue button uses a blue filled style.
+- Catalogue section uses compact text from catalogue page-header data.
+- Share/download image remains customer-facing and does not show page number.
+- In-app result cards and model details still show page number, size, brand and technical details.
 
-Chart behavior
-- Actual catalogue curve points remain unchanged and are shown in Curve points used.
-- For display only, the chart extends the visible curve to the Y-axis at high head and to the X-axis at high flow / zero head.
-- This makes the chart visually complete while keeping the original catalogue points intact.
-- The selected operating point remains highlighted in orange with dotted guide lines.
-
-Data checks in this package
+Data checks
 - Catalogue records in pumps.json: 1780
 - Pages covered: 1-43
-- Missing pages: none
+- Missing pages: None
 - Missing HP records: 0
 - Missing curve records: 0
 
-Project context files added
-- AGENTS.md
-- agent.md
-- PROJECT_CONTEXT.md
-- DATA_RULES.md
-- UI_RULES.md
+Sample check
+- SRF06/09 catalogue section:
+  TEXMO | 4” Stainless steel Borewell Radial Flow Submersible Pumpsets / Single Phase 220 Volts, 3 Phase 380 Volts, 50 Hz
+- SRF06/09 at 40 m estimates approximately 1257 LPH.
 
-Important note
-- This ZIP is APK-ready Android source. Build the actual APK using GitHub Actions or Android Studio.
-
-## Catalogue section source text rule
-- The in-app model details screen must show the full catalogue/source row text for the selected model so the user can cross-check against the original CSV/Excel/PDF catalogue.
-- Do not remove Page, Brand, Stages, Sheet, head range, discharge range, pipe size, or curve point values from the in-app details.
-- The WhatsApp/share image remains customer-facing and must not show the page number.
-
-V16 update
-- Added fullCatalogueText to each pump record.
-- Catalogue section in model details now displays full source row text for cross-checking against CSV/Excel/PDF data.
-- Share/WhatsApp image remains customer-facing and does not show page number.
-
-
-v17 checks:
-- Top safe padding added through Ui.root.
-- Phase dropdown bottom spacing added.
-- Browse full catalogue button changed to blue filled style.
-- `catalogueSectionText` added to pump records from catalogue page headers.
-- Catalogue section UI is compact and uses data from pumps.json.
+Build
+- GitHub Actions workflow uses Gradle 8.9.
+- Artifact name: granpa-pump-selector-debug-apk.

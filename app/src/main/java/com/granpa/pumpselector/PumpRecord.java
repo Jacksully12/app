@@ -1,6 +1,7 @@
 package com.granpa.pumpselector;
 
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class PumpRecord {
     public String id = "";
@@ -15,11 +16,11 @@ public class PumpRecord {
     public String dischargeRangeText = "";
     public String flowUnitOriginal = "";
     public String size = "";
+    public String sheet = "";
     public String title = "";
-    public String imageUrl = "";
-    public String fullCatalogueText = "";
     public String catalogueSectionText = "";
-    public int page;
+    public String imageUrl = "";
+    public int page = 0;
     public double hp = Double.NaN;
     public double kw = Double.NaN;
     public double minHead = Double.NaN;
@@ -42,10 +43,10 @@ public class PumpRecord {
         r.dischargeRangeText = o.optString("dischargeRangeText", "");
         r.flowUnitOriginal = o.optString("flowUnitOriginal", "");
         r.size = o.optString("size", "");
+        r.sheet = o.optString("sheet", "");
         r.title = o.optString("title", "");
-        r.imageUrl = o.optString("imageUrl", "");
-        r.fullCatalogueText = o.optString("fullCatalogueText", "");
         r.catalogueSectionText = o.optString("catalogueSectionText", "");
+        r.imageUrl = o.optString("imageUrl", "");
         r.page = o.optInt("page", 0);
         r.hp = o.optDouble("hp", Double.NaN);
         r.kw = o.optDouble("kw", Double.NaN);
@@ -53,14 +54,15 @@ public class PumpRecord {
         r.maxHead = o.optDouble("maxHead", Double.NaN);
         r.minFlowLPH = o.optDouble("minFlowLPH", Double.NaN);
         r.maxFlowLPH = o.optDouble("maxFlowLPH", Double.NaN);
-        JSONArray a = o.optJSONArray("curve");
-        if (a != null) {
-            r.curve = new double[a.length()][2];
-            for (int i = 0; i < a.length(); i++) {
-                JSONArray p = a.optJSONArray(i);
-                if (p != null) {
-                    r.curve[i][0] = p.optDouble(0);
-                    r.curve[i][1] = p.optDouble(1);
+
+        JSONArray points = o.optJSONArray("curve");
+        if (points != null) {
+            r.curve = new double[points.length()][2];
+            for (int i = 0; i < points.length(); i++) {
+                JSONArray p = points.optJSONArray(i);
+                if (p != null && p.length() >= 2) {
+                    r.curve[i][0] = p.optDouble(0, Double.NaN);
+                    r.curve[i][1] = p.optDouble(1, Double.NaN);
                 }
             }
         }

@@ -1,17 +1,22 @@
 package com.granpa.pumpselector;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.view.*;
-import android.widget.*;
-import java.util.*;
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class PumpDetailsActivity extends Activity {
-    PumpRecord rec;
-    boolean hasEstimate;
-    double head, flow;
+    private PumpRecord rec;
+    private boolean hasEstimate;
+    private double head;
+    private double flow;
 
+    @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         String id = getIntent().getStringExtra("id");
@@ -37,20 +42,24 @@ public class PumpDetailsActivity extends Activity {
         setContentView(Ui.scroll(this, root));
     }
 
-    LinearLayout modelHeaderCard() {
+    private LinearLayout modelHeaderCard() {
         LinearLayout top = Ui.card(this);
         LinearLayout row = Ui.row(this);
+
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.app_logo);
         row.addView(logo, new LinearLayout.LayoutParams(Ui.dp(this, 42), Ui.dp(this, 42)));
+
         TextView model = Ui.text(this, safe(rec.model), 30, Ui.TEXT, 1);
         model.setPadding(Ui.dp(this, 10), 0, 0, 0);
         row.addView(model);
         top.addView(row);
+
         top.addView(Ui.text(this, safe(rec.category), 16, Ui.BLUE, 1));
         top.addView(Ui.text(this,
                 PumpSelector.trim(rec.hp) + " HP  •  " + PumpSelector.trim(rec.kw) + " kW  •  " + phaseLabel(rec.phase),
                 16, Ui.MUTED, 1));
+
         if (hasEstimate && !Double.isNaN(head) && !Double.isNaN(flow)) {
             top.addView(Ui.text(this,
                     "Estimated at selected head: " + PumpSelector.lph(flow) + " at " + PumpSelector.head(head),
@@ -59,7 +68,7 @@ public class PumpDetailsActivity extends Activity {
         return top;
     }
 
-    LinearLayout performanceChartCard() {
+    private LinearLayout performanceChartCard() {
         LinearLayout chartCard = Ui.card(this);
         chartCard.addView(Ui.text(this, "Performance curve", 20, Ui.TEXT, 1));
         TextView note = Ui.text(this,
@@ -67,13 +76,14 @@ public class PumpDetailsActivity extends Activity {
                 13, Ui.MUTED, 0);
         Ui.mb(this, note, 8);
         chartCard.addView(note);
+
         PerformanceCurveView chart = new PerformanceCurveView(this);
         chart.setData(rec.curve, hasEstimate ? head : null, hasEstimate ? flow : null);
         chartCard.addView(chart, new LinearLayout.LayoutParams(-1, Ui.dp(this, 330)));
         return chartCard;
     }
 
-    LinearLayout catalogueSectionCard() {
+    private LinearLayout catalogueSectionCard() {
         LinearLayout card = Ui.card(this);
         card.addView(Ui.text(this, "Catalogue section", 18, Ui.TEXT, 1));
         TextView source = Ui.text(this, catalogueSectionText(), 14, Ui.MUTED, 0);
@@ -83,50 +93,32 @@ public class PumpDetailsActivity extends Activity {
         return card;
     }
 
-    LinearLayout actionButtons() {
-        LinearLayout outer = new LinearLayout(this);
-        outer.setOrientation(LinearLayout.VERTICAL);
+    private LinearLayout actionButtons() {
+        LinearLayout actions = Ui.row(this);
 
-        LinearLayout actions1 = Ui.row(this);
         Button whatsapp = Ui.primary(this, "Share WhatsApp");
-        actions1.addView(whatsapp, new LinearLayout.LayoutParams(0, -2, 1));
-        Button share = Ui.secondary(this, "Share Image");
-        LinearLayout.LayoutParams shp = new LinearLayout.LayoutParams(0, -2, 1);
-        shp.setMargins(Ui.dp(this, 10), 0, 0, 0);
-        actions1.addView(share, shp);
-        Ui.mb(this, actions1, 10);
-        outer.addView(actions1);
+        actions.addView(whatsapp, new LinearLayout.LayoutParams(0, -2, 1));
 
-        LinearLayout actions2 = Ui.row(this);
-        Button copy = Ui.secondary(this, "Copy model number");
-        actions2.addView(copy, new LinearLayout.LayoutParams(0, -2, 1));
-        Button back = Ui.secondary(this, "Back");
-        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(0, -2, 1);
-        bp.setMargins(Ui.dp(this, 10), 0, 0, 0);
-        actions2.addView(back, bp);
-        outer.addView(actions2);
+        Button download = Ui.blue(this, "Download Image");
+        LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(0, -2, 1);
+        dp.setMargins(Ui.dp(this, 10), 0, 0, 0);
+        actions.addView(download, dp);
 
-        whatsapp.setOnClickListener(v -> ShareImageBuilder.shareImage(this, rec, hasEstimate, head, flow, true));
-        share.setOnClickListener(v -> ShareImageBuilder.shareImage(this, rec, hasEstimate, head, flow, false));
-        copy.setOnClickListener(v -> {
-            ((android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE))
-                    .setPrimaryClip(ClipData.newPlainText("model", rec.model));
-            Toast.makeText(this, "Model copied", Toast.LENGTH_SHORT).show();
-        });
-        back.setOnClickListener(v -> finish());
-        return outer;
+        whatsapp.setOnClickListener(v -> ShareImageBuilder.shareWhatsApp(this, rec, hasEstimate, head, flow));
+        download.setOnClickListener(v -> ShareImageBuilder.downloadImage(this, rec, hasEstimate, head, flow));
+        return actions;
     }
 
-    String[][] curveRows() {
+    private String[][] curveRows() {
         ArrayList<String[]> rows = new ArrayList<>();
         double[][] pts = rec.curve;
         if (pts != null) {
             int maxFlow = -1, maxHead = -1;
-            double bestF = -1, bestH = -1;
+            double bestFlow = -1, bestHead = -1;
             for (int i = 0; i < pts.length; i++) {
                 if (pts[i] != null && pts[i].length >= 2) {
-                    if (pts[i][1] > bestF) { bestF = pts[i][1]; maxFlow = i; }
-                    if (pts[i][0] > bestH) { bestH = pts[i][0]; maxHead = i; }
+                    if (pts[i][1] > bestFlow) { bestFlow = pts[i][1]; maxFlow = i; }
+                    if (pts[i][0] > bestHead) { bestHead = pts[i][0]; maxHead = i; }
                 }
             }
             for (int i = 0; i < pts.length; i++) {
@@ -141,7 +133,7 @@ public class PumpDetailsActivity extends Activity {
         return rows.toArray(new String[0][]);
     }
 
-    String[][] quickSpecRows() {
+    private String[][] quickSpecRows() {
         return new String[][]{
                 {"Delivery / Pipe size", empty(rec.size) ? "-" : rec.size},
                 {"Page", String.valueOf(rec.page)},
@@ -150,51 +142,46 @@ public class PumpDetailsActivity extends Activity {
                 {"Flow range", flowRange(rec)},
                 {"Brand", empty(rec.brand) ? "-" : rec.brand},
                 {"Stages", empty(rec.stages) ? "-" : rec.stages},
-                {"Sheet", "Page " + rec.page + " Layout"}
+                {"Sheet", empty(rec.sheet) ? "Page " + rec.page + " Layout" : rec.sheet}
         };
     }
 
-    LinearLayout detailCard(String title, String[][] rows) {
+    private LinearLayout detailCard(String title, String[][] rows) {
         LinearLayout card = Ui.card(this);
         card.addView(Ui.text(this, title, 18, Ui.TEXT, 1));
         for (String[] row : rows) {
             LinearLayout line = Ui.row(this);
             line.setPadding(0, Ui.dp(this, 6), 0, Ui.dp(this, 6));
-            TextView l = Ui.text(this, row[0], 15, Ui.MUTED, 1);
-            TextView r = Ui.text(this, row[1], 16, Ui.TEXT, 0);
-            line.addView(l, new LinearLayout.LayoutParams(0, -2, 1));
-            line.addView(r, new LinearLayout.LayoutParams(0, -2, 1));
+            TextView left = Ui.text(this, row[0], 15, Ui.MUTED, 1);
+            TextView right = Ui.text(this, row[1], 16, Ui.TEXT, 0);
+            line.addView(left, new LinearLayout.LayoutParams(0, -2, 1));
+            line.addView(right, new LinearLayout.LayoutParams(0, -2, 1));
             card.addView(line);
         }
         return card;
     }
 
-    String catalogueSectionText() {
+    private String catalogueSectionText() {
         String compact = safe(rec.catalogueSectionText);
         if (!compact.isEmpty()) return compact;
-        String title = safe(rec.title);
-        if (!title.isEmpty()) {
-            if (!empty(rec.brand) && !title.toUpperCase(Locale.US).contains(rec.brand.toUpperCase(Locale.US))) {
-                return rec.brand + " | " + title;
-            }
-            return title;
-        }
+        if (!empty(rec.title)) return rec.title;
         if (!empty(rec.brand) && !empty(rec.category)) return rec.brand + " | " + rec.category;
         if (!empty(rec.category)) return rec.category;
         return "Catalogue page " + rec.page;
     }
 
-    String safe(String s) { return s == null ? "" : s.trim(); }
-    boolean empty(String s) { return safe(s).isEmpty(); }
-    String phaseLabel(String p) {
+    private String safe(String s) { return s == null ? "" : s.trim(); }
+    private boolean empty(String s) { return safe(s).isEmpty(); }
+
+    private String phaseLabel(String p) {
         p = safe(p).toUpperCase(Locale.US);
         if (p.contains("S")) return "Single Phase";
         if (p.contains("T")) return "Three Phase";
         return p.isEmpty() ? "Phase -" : p;
     }
-    String flowRange(PumpRecord r) {
-        return Double.isNaN(r.minFlowLPH) || Double.isNaN(r.maxFlowLPH)
-                ? "-"
-                : PumpSelector.lph(r.minFlowLPH).replace(" LPH", "") + " – " + PumpSelector.lph(r.maxFlowLPH);
+
+    private String flowRange(PumpRecord r) {
+        if (Double.isNaN(r.minFlowLPH) || Double.isNaN(r.maxFlowLPH)) return "-";
+        return PumpSelector.lph(r.minFlowLPH).replace(" LPH", "") + " – " + PumpSelector.lph(r.maxFlowLPH);
     }
 }

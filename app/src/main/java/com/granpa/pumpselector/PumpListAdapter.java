@@ -1,58 +1,69 @@
 package com.granpa.pumpselector;
 
-import android.app.*;
+import android.app.Activity;
 import android.graphics.Typeface;
-import android.view.*;
-import android.widget.*;
-import java.util.*;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class PumpListAdapter extends BaseAdapter {
-    Activity a;
-    ArrayList<PumpSelector.Result> items = new ArrayList<>();
+    private final Activity activity;
+    private final ArrayList<PumpSelector.Result> items = new ArrayList<>();
 
-    public PumpListAdapter(Activity a) { this.a = a; }
+    public PumpListAdapter(Activity activity) {
+        this.activity = activity;
+    }
 
-    public void setItems(List<PumpSelector.Result> l) {
+    public void setItems(List<PumpSelector.Result> newItems) {
         items.clear();
-        if (l != null) items.addAll(l);
+        if (newItems != null) items.addAll(newItems);
         notifyDataSetChanged();
     }
 
-    public PumpSelector.Result getResult(int p) { return items.get(p); }
-    public int getCount() { return items.size(); }
-    public Object getItem(int p) { return items.get(p); }
-    public long getItemId(int p) { return p; }
+    public PumpSelector.Result getResult(int position) {
+        return items.get(position);
+    }
 
-    public View getView(int p, View v, ViewGroup parent) {
-        PumpSelector.Result it = items.get(p);
-        PumpRecord r = it.r;
+    @Override public int getCount() { return items.size(); }
+    @Override public Object getItem(int position) { return items.get(position); }
+    @Override public long getItemId(int position) { return position; }
 
-        LinearLayout c = Ui.card(a);
-        c.setPadding(Ui.dp(a, 14), Ui.dp(a, 14), Ui.dp(a, 14), Ui.dp(a, 14));
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        PumpSelector.Result item = items.get(position);
+        PumpRecord r = item.r;
 
-        c.addView(Ui.text(a, safe(r.model), 22, Ui.TEXT, Typeface.BOLD));
-        c.addView(Ui.text(a,
+        LinearLayout card = Ui.card(activity);
+        card.setPadding(Ui.dp(activity, 14), Ui.dp(activity, 14), Ui.dp(activity, 14), Ui.dp(activity, 14));
+
+        card.addView(Ui.text(activity, safe(r.model), 22, Ui.TEXT, Typeface.BOLD));
+        card.addView(Ui.text(activity,
                 PumpSelector.trim(r.hp) + " HP  •  " + PumpSelector.trim(r.kw) + " kW  •  Phase " + phaseShort(r.phase),
                 15, Ui.MUTED, Typeface.NORMAL));
 
-        TextView type = Ui.text(a, safe(r.category), 16, Ui.BLUE, Typeface.BOLD);
-        c.addView(type);
+        card.addView(Ui.text(activity, safe(r.category), 16, Ui.BLUE, Typeface.BOLD));
 
-        if (it.estimate) {
-            c.addView(Ui.text(a,
-                    "At " + PumpSelector.head(it.head) + ": " + PumpSelector.lph(it.flow) + "  •  " + it.status,
+        if (item.estimate) {
+            card.addView(Ui.text(activity,
+                    "At " + PumpSelector.head(item.head) + ": " + PumpSelector.lph(item.flow) + "  •  " + item.status,
                     17, Ui.GREEN, Typeface.BOLD));
         } else {
-            c.addView(Ui.text(a,
+            card.addView(Ui.text(activity,
                     "Head: " + safe(r.headRangeText) + " m  •  Flow: " + safe(r.dischargeRangeText) + " " + safe(r.flowUnitOriginal),
                     15, Ui.MUTED, Typeface.NORMAL));
         }
 
         String bottom = "Page " + r.page + "  •  Size " + dashIfEmpty(r.size);
         if (!safe(r.brand).isEmpty()) bottom += "  •  " + safe(r.brand);
-        c.addView(Ui.text(a, bottom, 15, Ui.MUTED, Typeface.NORMAL));
+        card.addView(Ui.text(activity, bottom, 15, Ui.MUTED, Typeface.NORMAL));
 
-        return c;
+        return card;
     }
 
     private String phaseShort(String phase) {

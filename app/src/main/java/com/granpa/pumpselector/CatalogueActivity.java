@@ -1,34 +1,44 @@
 package com.granpa.pumpselector;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.text.*;
-import android.view.*;
-import android.widget.*;
-import java.util.*;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CatalogueActivity extends Activity {
-    PumpListAdapter adapter;
-    EditText search;
-    Spinner cat;
+    private PumpListAdapter adapter;
+    private EditText search;
+    private Spinner category;
 
+    @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+
         LinearLayout root = Ui.root(this);
         root.addView(Ui.text(this, "Catalogue Search", 25, Ui.TEXT, 1));
-        TextView note = Ui.text(this, "Search by model, type, phase or size. ACS1125 finds ACS 1125.", 13, Ui.MUTED, 0);
+        TextView note = Ui.text(this, "Search by model, pump type, phase or size. ACS1125 finds ACS 1125.", 13, Ui.MUTED, 0);
         Ui.mb(this, note, 10);
         root.addView(note);
 
         search = Ui.input(this, "", android.text.InputType.TYPE_CLASS_TEXT);
         search.setHint("Search model");
-        Ui.mb(this, search, 8);
+        Ui.mb(this, search, 10);
         root.addView(search);
 
-        cat = Ui.spinner(this, cats());
-        Ui.mb(this, cat, 8);
-        root.addView(cat);
+        category = Ui.spinner(this, categoryOptions());
+        Ui.mb(this, category, 10);
+        root.addView(category);
 
         adapter = new PumpListAdapter(this);
         ListView list = new ListView(this);
@@ -38,30 +48,30 @@ public class CatalogueActivity extends Activity {
         root.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
         setContentView(root);
 
-        TextWatcher w = new TextWatcher(){
-            public void beforeTextChanged(CharSequence s,int st,int c,int a){}
-            public void onTextChanged(CharSequence s,int st,int before,int count){refresh();}
-            public void afterTextChanged(Editable e){}
+        TextWatcher w = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
+            @Override public void onTextChanged(CharSequence s, int st, int before, int count) { refresh(); }
+            @Override public void afterTextChanged(Editable e) {}
         };
         search.addTextChangedListener(w);
-        cat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?>p,View v,int pos,long id){refresh();}
-            public void onNothingSelected(AdapterView<?>p){}
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { refresh(); }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
         });
-        list.setOnItemClickListener((p,v,pos,id)->{
-            PumpSelector.Result r=adapter.getResult(pos);
-            Intent i=new Intent(this,PumpDetailsActivity.class);
-            i.putExtra("id",r.r.id);
-            startActivity(i);
+        list.setOnItemClickListener((p, v, pos, id) -> {
+            PumpSelector.Result r = adapter.getResult(pos);
+            Intent intent = new Intent(this, PumpDetailsActivity.class);
+            intent.putExtra("id", r.r.id);
+            startActivity(intent);
         });
         refresh();
     }
 
-    void refresh() {
-        adapter.setItems(PumpSelector.catalogue(PumpRepository.getRecords(this), sel(cat), search.getText().toString()));
+    private void refresh() {
+        adapter.setItems(PumpSelector.catalogue(PumpRepository.getRecords(this), selected(category), search.getText().toString()));
     }
 
-    List<Option> cats() {
+    private List<Option> categoryOptions() {
         ArrayList<Option> o = new ArrayList<>();
         o.add(new Option("all", "All pump types"));
         o.add(new Option("monoblock_all", "All Monoblock / Centrifugal"));
@@ -71,8 +81,8 @@ public class CatalogueActivity extends Activity {
         return o;
     }
 
-    String sel(Spinner s) {
-        Object o = s.getSelectedItem();
-        return o instanceof Option ? ((Option)o).value : String.valueOf(o);
+    private String selected(Spinner s) {
+        Object item = s.getSelectedItem();
+        return item instanceof Option ? ((Option) item).value : String.valueOf(item);
     }
 }

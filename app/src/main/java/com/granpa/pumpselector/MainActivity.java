@@ -1,39 +1,74 @@
 package com.granpa.pumpselector;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.InputType;
-import android.view.*;
-import android.widget.*;
-import java.util.*;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity {
-    EditText modelSearch, head, flow1, flow2;
-    Spinner mode, unit, cat, phase;
-    LinearLayout flow2Box;
-    TextView hint;
+    private EditText modelSearch;
+    private EditText headInput;
+    private EditText flowOneInput;
+    private EditText flowTwoInput;
+    private Spinner modeSpinner;
+    private Spinner unitSpinner;
+    private Spinner categorySpinner;
+    private Spinner phaseSpinner;
+    private LinearLayout secondFlowBox;
+    private TextView hintText;
 
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         PumpRepository.getRecords(this);
 
         LinearLayout root = Ui.root(this);
+        root.addView(headerCard());
+        root.addView(searchCard());
+        root.addView(Ui.text(this, PumpRepository.note(this), 12, Ui.MUTED, 0));
 
-        LinearLayout header = Ui.card(this);
+        setContentView(Ui.scroll(this, root));
+        updateFlowMode();
+
+        modeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { updateFlowMode(); }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private LinearLayout headerCard() {
+        LinearLayout card = Ui.card(this);
         LinearLayout row = Ui.row(this);
+
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.app_logo);
         row.addView(logo, new LinearLayout.LayoutParams(Ui.dp(this, 64), Ui.dp(this, 64)));
+
         LinearLayout titleBox = new LinearLayout(this);
         titleBox.setOrientation(LinearLayout.VERTICAL);
         titleBox.setPadding(Ui.dp(this, 12), 0, 0, 0);
         titleBox.addView(Ui.text(this, "Granpa", 28, Ui.TEXT, 1));
         titleBox.addView(Ui.text(this, "Pump selector with chart and WhatsApp image share", 14, Ui.MUTED, 0));
         row.addView(titleBox, new LinearLayout.LayoutParams(0, -2, 1));
-        header.addView(row);
-        root.addView(header);
 
+        card.addView(row);
+        return card;
+    }
+
+    private LinearLayout searchCard() {
         LinearLayout card = Ui.card(this);
 
         card.addView(Ui.label(this, "Search model / keyword"));
@@ -46,101 +81,91 @@ public class MainActivity extends Activity {
 
         card.addView(Ui.label(this, "Fixed head"));
         LinearLayout headRow = Ui.row(this);
-        head = Ui.input(this, "40", Ui.numberInput());
-        headRow.addView(head, new LinearLayout.LayoutParams(0, -2, 1));
+        headInput = Ui.input(this, "40", Ui.numberInput());
+        headRow.addView(headInput, new LinearLayout.LayoutParams(0, -2, 1));
         TextView metre = Ui.text(this, " m", 15, Ui.MUTED, 1);
         metre.setPadding(Ui.dp(this, 8), 0, 0, 0);
         headRow.addView(metre);
         card.addView(headRow);
 
         card.addView(Ui.label(this, "Water input mode"));
-        mode = Ui.spinner(this, opts(new String[][]{{"fixed", "Fixed water flow"}, {"range", "Water-flow range"}}));
-        card.addView(mode);
+        modeSpinner = Ui.spinner(this, options(new String[][]{{"fixed", "Fixed water flow"}, {"range", "Water-flow range"}}));
+        card.addView(modeSpinner);
 
         card.addView(Ui.label(this, "Water flow"));
         LinearLayout flowRow = Ui.row(this);
-        flow1 = Ui.input(this, "1200", Ui.numberInput());
-        flowRow.addView(flow1, new LinearLayout.LayoutParams(0, -2, 1));
-        unit = Ui.spinner(this, opts(new String[][]{{"LPH", "LPH"}, {"LPM", "LPM"}, {"LPS", "LPS"}, {"M3H", "m³/hour"}}));
+        flowOneInput = Ui.input(this, "1200", Ui.numberInput());
+        flowRow.addView(flowOneInput, new LinearLayout.LayoutParams(0, -2, 1));
+        unitSpinner = Ui.spinner(this, options(new String[][]{{"LPH", "LPH"}, {"LPM", "LPM"}, {"LPS", "LPS"}, {"M3H", "m³/hour"}}));
         LinearLayout.LayoutParams unitLp = new LinearLayout.LayoutParams(Ui.dp(this, 130), -2);
         unitLp.setMargins(Ui.dp(this, 10), 0, 0, 0);
-        flowRow.addView(unit, unitLp);
+        flowRow.addView(unitSpinner, unitLp);
         card.addView(flowRow);
 
-        flow2Box = new LinearLayout(this);
-        flow2Box.setOrientation(LinearLayout.VERTICAL);
-        flow2Box.addView(Ui.label(this, "Second flow value"));
-        flow2 = Ui.input(this, "4500", Ui.numberInput());
-        flow2Box.addView(flow2);
-        card.addView(flow2Box);
+        secondFlowBox = new LinearLayout(this);
+        secondFlowBox.setOrientation(LinearLayout.VERTICAL);
+        secondFlowBox.addView(Ui.label(this, "Second flow value"));
+        flowTwoInput = Ui.input(this, "4500", Ui.numberInput());
+        secondFlowBox.addView(flowTwoInput);
+        card.addView(secondFlowBox);
 
-        hint = Ui.text(this, "", 13, Ui.MUTED, 0);
-        hint.setPadding(0, Ui.dp(this, 10), 0, Ui.dp(this, 8));
-        card.addView(hint);
+        hintText = Ui.text(this, "", 13, Ui.MUTED, 0);
+        hintText.setPadding(0, Ui.dp(this, 10), 0, Ui.dp(this, 8));
+        card.addView(hintText);
 
         card.addView(Ui.label(this, "Pump type"));
-        cat = Ui.spinner(this, cats());
-        card.addView(cat);
+        categorySpinner = Ui.spinner(this, categoryOptions());
+        card.addView(categorySpinner);
 
         card.addView(Ui.label(this, "Phase"));
-        phase = Ui.spinner(this, opts(new String[][]{{"any", "Any"}, {"S", "Single phase"}, {"T", "Three phase"}}));
-        Ui.mb(this, phase, 18);
-        card.addView(phase);
+        phaseSpinner = Ui.spinner(this, options(new String[][]{{"any", "Any"}, {"S", "Single phase"}, {"T", "Three phase"}}));
+        Ui.mb(this, phaseSpinner, 18);
+        card.addView(phaseSpinner);
 
         Button find = Ui.primary(this, "Find suitable pumps");
-        Ui.mb(this, find, 10);
+        Ui.mb(this, find, 12);
         card.addView(find);
-
-        Button browse = Ui.catalogueButton(this, "Browse full catalogue");
-        Ui.mb(this, browse, 10);
-        card.addView(browse);
-
-        Button qa = Ui.secondary(this, "Data QA report");
-        card.addView(qa);
-
-        root.addView(card);
-        root.addView(Ui.text(this, PumpRepository.note(this), 12, Ui.MUTED, 0));
-        setContentView(Ui.scroll(this, root));
-
-        update();
-        mode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { update(); }
-            public void onNothingSelected(AdapterView<?> p) {}
-        });
-
         find.setOnClickListener(v -> openResults());
+
+        Button browse = Ui.blue(this, "Browse full catalogue");
+        card.addView(browse);
         browse.setOnClickListener(v -> startActivity(new Intent(this, CatalogueActivity.class)));
-        qa.setOnClickListener(v -> startActivity(new Intent(this, QAActivity.class)));
+
+        return card;
     }
 
-    void openResults() {
-        double h = val(head);
-        double f1 = val(flow1);
-        double f2 = val(flow2);
-        boolean range = sel(mode).equals("range");
-        if (Double.isNaN(h) || h < 0 || Double.isNaN(f1) || f1 <= 0 || (range && (Double.isNaN(f2) || f2 <= 0))) {
+    private void updateFlowMode() {
+        boolean range = selected(modeSpinner).equals("range");
+        secondFlowBox.setVisibility(range ? View.VISIBLE : View.GONE);
+        hintText.setText(range
+                ? "Range accepts either order, e.g. 13,500 to 4,500."
+                : "Fixed mode shows pumps with equal or more water at the selected head. No upper limit.");
+    }
+
+    private void openResults() {
+        double head = parse(headInput);
+        double first = parse(flowOneInput);
+        double second = parse(flowTwoInput);
+        boolean range = selected(modeSpinner).equals("range");
+
+        if (Double.isNaN(head) || head < 0 || Double.isNaN(first) || first <= 0 || (range && (Double.isNaN(second) || second <= 0))) {
             Toast.makeText(this, "Enter valid head and water flow values", Toast.LENGTH_LONG).show();
             return;
         }
-        Intent i = new Intent(this, ResultsActivity.class);
-        i.putExtra("head", h);
-        i.putExtra("range", range);
-        i.putExtra("flow1", f1);
-        i.putExtra("flow2", range ? f2 : f1);
-        i.putExtra("unit", sel(unit));
-        i.putExtra("cat", sel(cat));
-        i.putExtra("phase", sel(phase));
-        i.putExtra("key", modelSearch.getText().toString());
-        startActivity(i);
+
+        Intent intent = new Intent(this, ResultsActivity.class);
+        intent.putExtra("head", head);
+        intent.putExtra("range", range);
+        intent.putExtra("flow1", first);
+        intent.putExtra("flow2", range ? second : first);
+        intent.putExtra("unit", selected(unitSpinner));
+        intent.putExtra("cat", selected(categorySpinner));
+        intent.putExtra("phase", selected(phaseSpinner));
+        intent.putExtra("key", modelSearch.getText().toString());
+        startActivity(intent);
     }
 
-    void update() {
-        boolean r = sel(mode).equals("range");
-        flow2Box.setVisibility(r ? View.VISIBLE : View.GONE);
-        hint.setText(r ? "Range accepts either order, e.g. 13,500 to 4,500." : "Fixed mode shows pumps with equal or more water at the selected head. No upper limit.");
-    }
-
-    List<Option> cats() {
+    private List<Option> categoryOptions() {
         ArrayList<Option> o = new ArrayList<>();
         o.add(new Option("all", "All pump types"));
         o.add(new Option("monoblock_all", "All Monoblock / Centrifugal"));
@@ -150,18 +175,18 @@ public class MainActivity extends Activity {
         return o;
     }
 
-    List<Option> opts(String[][] a) {
-        ArrayList<Option> o = new ArrayList<>();
-        for (String[] x : a) o.add(new Option(x[0], x[1]));
-        return o;
+    private List<Option> options(String[][] values) {
+        ArrayList<Option> out = new ArrayList<>();
+        for (String[] v : values) out.add(new Option(v[0], v[1]));
+        return out;
     }
 
-    String sel(Spinner s) {
-        Object o = s.getSelectedItem();
-        return o instanceof Option ? ((Option) o).value : String.valueOf(o);
+    private String selected(Spinner s) {
+        Object item = s.getSelectedItem();
+        return item instanceof Option ? ((Option) item).value : String.valueOf(item);
     }
 
-    double val(EditText e) {
+    private double parse(EditText e) {
         try { return Double.parseDouble(e.getText().toString().replace(",", "").trim()); }
         catch (Exception ex) { return Double.NaN; }
     }
