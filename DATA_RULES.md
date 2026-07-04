@@ -1,8 +1,8 @@
 # Data Rules
 
-- `pumps.json` is the app runtime data source.
-- `catalogue_sections.csv` is included for reference and traceability.
-- `catalogueSectionText` is used for the compact catalogue section UI.
-- Page number is visible inside the app but hidden from customer share/download images.
-- Flow is converted internally to LPH.
-- Selection uses interpolation inside available catalogue head points only.
+- Source data is converted into `pumps.json`.
+- Pump records include model, brand, category, phase, HP, kW, stages, head range, discharge range, flow unit, size, page, sheet and curve points.
+- Catalogue section uses `catalogueSectionText` generated from page headers.
+- Flow calculations use LPH internally.
+- Page numbers remain visible inside the app for catalogue verification.
+- Page numbers are hidden in share image output.

@@ -1,1 +1,1 @@
-See `AGENTS.md` for the full project context and rules.
+See `AGENTS.md` for full project rules.

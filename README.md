@@ -1,31 +1,40 @@
 # Granpa Pump Selector
 
-Native Android app for pump selection.
+Native Android pump selector app for Granpa. The app loads catalogue data from `app/src/main/assets/pumps.json` and works offline for pump search, selection, details and share image generation.
 
-## v1.6.0 updates
-- Only two main model-detail actions:
-  - Share WhatsApp
-  - Download Image
-- Generic Share Image button removed.
-- Download Image saves the generated pump recommendation image to Pictures / Granpa on modern Android.
-- Improved UI spacing, card styling, safe top padding, and button colours across the app.
-- Catalogue section uses compact catalogue page-header text from `pumps.json`.
-- Page number remains visible in the app but is hidden from share/download images.
+## Version 2.0.0 UI/UX update
 
-## Build APK with GitHub Actions
-1. Upload/replace this project in your GitHub repo.
-2. Open Actions.
+This version reviews and improves the whole app:
+
+- Safer top padding on all screens so content is not cut off.
+- Cleaner cards, typography, spacing and button hierarchy.
+- Improved dropdowns with readable two-line options.
+- Main category and sub category labels are clearer.
+- Search box remains near the top of the main screen.
+- Results cards keep technical dealer format.
+- Model details screen keeps page number, size, brand, stages, sheet and catalogue section.
+- Share image is simplified and customer-facing.
+- WhatsApp share and image download are direct buttons in model details.
+- Shared/downloaded image does not include page number.
+- GitHub Actions workflow uses Gradle 8.9.
+
+## Build APK using GitHub Actions
+
+1. Upload this project to GitHub.
+2. Go to **Actions**.
 3. Run **Build Android APK**.
-4. Download the artifact named `granpa-pump-selector-debug-apk`.
+4. Download artifact: **granpa-pump-selector-debug-apk**.
 
 ## Local build
-Open in Android Studio, or run:
+
+Open the project in Android Studio or run:
+
 ```bash
 gradle assembleDebug
 ```
 
-## v1.7.0 dropdown readability update
-- Pump type dropdown now shows readable two-line options.
-- Main categories and sub categories are clearly separated in wording.
-- Added helper descriptions for water input mode, flow unit and phase.
-- Added main category filter for Dewatering / Sewage.
+APK output:
+
+```text
+app/build/outputs/apk/debug/
+```

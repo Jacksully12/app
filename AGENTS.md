@@ -1,73 +1,36 @@
-# AGENTS.md — Granpa Pump Selector Project Rules
+# AGENTS.md — Granpa Pump Selector Rules
 
-## Project identity
+## Product rules
 - App name: Granpa.
-- Project type: Native Android Java app.
-- Do not convert this into HTML, WebView, React, Flutter, or a website wrapper.
+- Native Android app only. Do not convert to WebView, HTML, Flutter or React Native unless explicitly requested.
+- Core data lives in `app/src/main/assets/pumps.json`.
+- App should remain useful offline.
 
-## Data rules
-- Main pump data is in `app/src/main/assets/pumps.json`.
-- Catalogue section data is also included in `app/src/main/assets/catalogue_sections.csv`.
-- Use LPH internally for all flow comparisons.
-- Do not apply a 10% upper limit.
-- Do not extrapolate for pump selection outside the catalogue head range.
-- Use linear interpolation between catalogue curve points for the operating estimate.
+## Selection logic rules
+- Fixed head only.
+- No 10% upper limit.
+- Fixed flow mode: estimated flow at selected head must be greater than or equal to required flow.
+- Range mode: estimated flow must be inside normalized min/max range.
+- Reverse flow range must be accepted.
+- Convert all units internally to LPH.
+- Use interpolation between catalogue curve points only; do not extrapolate selection outside catalogue head range.
 
-## Main screen rules
-- Model search must stay near the top.
-- Brand filter must not be shown on the main search screen.
-- Keep fixed head and water flow inputs simple.
-- Browse full catalogue button must have a clear blue filled style.
-
-## Results screen rules
-Each result card must keep this format:
-```text
-MODEL
-HP • kW • Phase S/T
-Pump type/category
-At selected head: estimated LPH • difference/status
-Page N • Size X • BRAND
-```
-
-## Model details rules
-Model details must include:
-- model header
-- performance curve
-- curve points used
-- quick specs
-- catalogue section
-- one Share WhatsApp button
-- one Download Image button
-
-The details screen may show page number. The final share/download image must not show page number.
-
-## Catalogue section rule
-The Catalogue section should be compact:
-```text
-TEXMO | catalogue heading / voltage-frequency line
-```
-This must come from `catalogueSectionText` in `pumps.json`, generated from catalogue page header data.
-
-## Share image rules
-- Customer-facing image only.
-- No page number.
-- No sheet name.
-- No internal raw catalogue row text.
-- Include Granpa branding, model, HP, kW, phase, type, selected head, estimated flow, and chart.
-- Avoid overlapping text in chart labels, legend, and footer.
+## UI rules
+- Main model search stays near the top.
+- Use custom readable dropdowns with main category and sub category wording.
+- Results cards must include page number, size and brand inside the app.
+- Model details must show full technical information.
+- Catalogue section must use compact catalogue header text from data.
+- Share image must not show page number or sheet name.
+- Direct model detail actions: Share WhatsApp and Download Image.
 
 ## Chart rules
 - One curve line per model.
-- Y-axis = Head (m).
-- X-axis = Flow Rate (LPH).
-- Selected operating point must be orange with dashed guide lines.
-- Visible curve may be extended to axis endpoints for readability, but catalogue points must remain unchanged in the data cards.
+- Y-axis = Head (m), X-axis = Flow Rate (LPH).
+- Curve should visually run end-to-end from head side to flow side.
+- Selected operating point is orange with dashed guide lines.
 
 ## Build rules
 - Java 17.
-- GitHub Actions uses Gradle 8.9.
-- Artifact name: `granpa-pump-selector-debug-apk`.
-- No Git merge conflict markers in workflow files.
-
-## Dropdown / category UX rule
-Use `OptionAdapter` for readable two-line dropdowns. Main pump groups should be easy to understand, and exact catalogue groups should be labelled as sub categories. Do not revert dropdowns to the default one-line Android spinner unless specifically requested.
+- Gradle 8.9 in GitHub Actions.
+- APK artifact name: granpa-pump-selector-debug-apk.

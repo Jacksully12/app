@@ -4,7 +4,6 @@
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
     </queries>
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_logo"
@@ -13,7 +12,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false"
         android:resizeableActivity="true">
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -21,7 +19,6 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
-
         <activity android:name=".QAActivity" android:screenOrientation="portrait" />
         <activity android:name=".PumpDetailsActivity" android:screenOrientation="portrait" />
         <activity android:name=".CatalogueActivity" android:screenOrientation="portrait" />

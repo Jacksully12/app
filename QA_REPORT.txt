@@ -1,42 +1,41 @@
-Granpa Pump Selector - QA / Change Report
+Granpa Pump Selector - QA Summary
 
-Package version: 1.6.0
-Project type: Native Android Java app, no WebView and no HTML UI.
-Data asset: app/src/main/assets/pumps.json
-
-Requested changes completed
-- Model details now has one Share WhatsApp button.
-- Generic Share Image button removed.
-- Second model details action is now Download Image.
-- Download Image saves the generated PNG to Pictures / Granpa on Android 10+ using MediaStore.
-- UI spacing improved across screens.
-- Safe top padding added to all screens.
-- Phase dropdown spacing before Find suitable pumps button fixed.
-- Browse full catalogue button uses a blue filled style.
-- Catalogue section uses compact text from catalogue page-header data.
-- Share/download image remains customer-facing and does not show page number.
-- In-app result cards and model details still show page number, size, brand and technical details.
+Version: 2.0.0
+Project type: Native Android Java app. No WebView and no HTML wrapper.
+Data source: app/src/main/assets/pumps.json generated from texmo_3_inch_borewell_submersible_pumpsets_page43_added.xlsx.
 
 Data checks
-- Catalogue records in pumps.json: 1780
+- Pump records in package: 1780
 - Pages covered: 1-43
-- Missing pages: None
-- Missing HP records: 0
-- Missing curve records: 0
+- Missing pages: none
+- Flow converted internally to LPH
+- Catalogue section text is generated from page-header catalogue data
 
-Sample check
-- SRF06/09 catalogue section:
-  TEXMO | 4” Stainless steel Borewell Radial Flow Submersible Pumpsets / Single Phase 220 Volts, 3 Phase 380 Volts, 50 Hz
-- SRF06/09 at 40 m estimates approximately 1257 LPH.
+UI / UX checks
+- Main screen top spacing improved to avoid status-bar cut-off.
+- Main search box kept near the top for easier typing.
+- Water mode, unit, pump type and phase dropdowns use custom two-line readable layout.
+- Pump type dropdown has clear main categories and sub categories.
+- Buttons use clearer hierarchy: orange primary action, blue catalogue/download action, muted secondary action.
+- Results cards keep dealer format: model, HP/kW/phase, type, estimate, page/size/brand.
+- Model details keep full technical format with page number.
+- Catalogue section uses compact text block from data.
+- Share image hides page number and sheet name.
+- Share image chart spacing checked to avoid label/legend/footer overlap.
+- QA screen added with logic summary.
 
-Build
-- GitHub Actions workflow uses Gradle 8.9.
-- Artifact name: granpa-pump-selector-debug-apk.
+Logic checks
+- Fixed head only.
+- No 10% upper limit.
+- Fixed flow mode requires estimated flow >= required flow at fixed head.
+- Range mode normalizes min/max and accepts reverse input.
+- Search ignores spacing, so ACS1125 matches ACS 1125.
+- Selection uses interpolation inside catalogue curve head range.
 
-v1.7.0 dropdown/UI update:
-- Replaced default Android spinner item rendering with a custom two-line dropdown adapter.
-- Dropdown selected view and menu are now easier to read on mobile.
-- Main category options are clearly labelled as main categories.
-- Detailed catalogue options are clearly labelled as sub categories.
-- Added Dewatering / Sewage as a main category filter.
-- Flow mode, flow unit and phase dropdowns now include short helper text.
+Build workflow checks
+- GitHub Actions YAML has no merge conflict markers.
+- Workflow uses Java 17 and Gradle 8.9.
+- Artifact path points to app/build/outputs/apk/debug/*.apk.
+
+Limitations
+- Online product-image fetching is not enabled by default because the app is designed to work offline. The data model includes imageUrl for future mapped product images.

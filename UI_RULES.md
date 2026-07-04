@@ -1,23 +1,19 @@
 # UI Rules
 
-## Buttons
-- Model details must show one Share WhatsApp button and one Download Image button.
-- Do not show a generic Share Image button.
-- Browse full catalogue should use a blue filled button.
+## Dropdowns
+Use `OptionAdapter` for readable two-line dropdowns. Main categories and sub categories must be easy to understand.
 
-## Layout
-- Use safe top padding on all screens.
-- Keep enough spacing between dropdowns and buttons.
-- Keep result cards clean and readable.
+## Results cards
+Format:
 
-## Share/download image
-- No page number.
-- No raw catalogue text.
-- Clean chart with no overlap.
+MODEL
+HP • kW • Phase S/T
+Pump type/category
+At fixed head: estimated LPH • difference/status
+Page N • Size X • BRAND
 
-## Dropdown rules
-- Dropdowns should use the custom `OptionAdapter`, not the default one-line Android spinner style.
-- Pump type dropdown must clearly distinguish main category options from sub category options.
-- Main categories should use clear customer-facing labels such as Borewell Submersible and Monoblock / Centrifugal.
-- Sub categories should start with `Sub category •` and include a short explanation.
-- Keep dropdown text readable on mobile; avoid long one-line labels.
+## Details screen
+Show full technical details, chart, catalogue section and share/download actions.
+
+## Share image
+Clean customer-facing PNG. No page number. No sheet name. No overlapping text.
