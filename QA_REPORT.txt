@@ -148,3 +148,11 @@ v3.5.0 dealer smart fallback bands:
 - Wider fallback results are clearly labelled.
 - Ranking prefers lower HP, then lower kW, then tighter band, then closest flow.
 - Range mode unchanged.
+
+
+v3.6.0 deep filter/sort QA:
+- All pump types is now grouped by main category.
+- Each category section shows max 2 above/equal + 2 below.
+- Band quality is sorted before HP.
+- Inside same band, lower HP/kW is preferred.
+- Added LOGIC_QA_REPORT.txt.

@@ -15,6 +15,22 @@ public class PumpSelector {
         public String status;
         public boolean estimate;
         public String unit = "LPH";
+        public boolean header = false;
+        public String groupTitle = "";
+    }
+
+    public static Result header(String title) {
+        Result r = new Result();
+        r.header = true;
+        r.groupTitle = title;
+        return r;
+    }
+
+    public static int realCount(List<Result> rows) {
+        int n = 0;
+        if (rows == null) return 0;
+        for (Result r : rows) if (r != null && !r.header && r.r != null) n++;
+        return n;
     }
 
     public static String normalizeUnit(String u) {
@@ -91,9 +107,28 @@ public class PumpSelector {
             r.min = x;
             r.max = Double.NaN;
             r.label = "Fixed flow " + formatFlow(x, unit);
-            r.rule = "dealer smart match: max 2 above + 2 below; starts at ±10%, can expand to ±20%, ±30% and last option ±50%";
+            r.rule = "dealer smart match: for each selected type, show max 2 above + 2 below; bands are ±10%, ±20%, ±30%, last option ±50%";
         }
         return r;
+    }
+
+    public static ArrayList<Result> selectAllMainGroups(List<PumpRecord> rows, double head, Req req, String phase, String key) {
+        ArrayList<Result> out = new ArrayList<>();
+        String[][] groups = new String[][]{
+                {"borewell_all", "Borewell Submersible"},
+                {"openwell_all", "Openwell Submersible"},
+                {"monoblock_all", "Centrifugal / Surface Monoblock"},
+                {"dewatering_all", "Dewatering / Sewage"}
+        };
+
+        for (String[] g : groups) {
+            ArrayList<Result> part = select(rows, head, req, g[0], phase, key);
+            if (!part.isEmpty()) {
+                out.add(header(g[1] + " • " + realCount(part) + " models"));
+                out.addAll(part);
+            }
+        }
+        return out;
     }
 
     public static ArrayList<Result> select(List<PumpRecord> rows, double head, Req req, String cat, String phase, String key) {
@@ -142,20 +177,8 @@ public class PumpSelector {
         }
 
         if (!req.range) {
-            Comparator<Result> dealerBest = (a, b) -> {
-                int hp = Double.compare(a.r.hp, b.r.hp);
-                if (hp != 0) return hp;
-                int kw = Double.compare(a.r.kw, b.r.kw);
-                if (kw != 0) return kw;
-                int band = Integer.compare(resultBand(a), resultBand(b));
-                if (band != 0) return band;
-                int d = Double.compare(a.diff, b.diff);
-                if (d != 0) return d;
-                return a.r.model.compareToIgnoreCase(b.r.model);
-            };
-
-            Collections.sort(above, dealerBest);
-            Collections.sort(below, dealerBest);
+            Collections.sort(above, dealerBest());
+            Collections.sort(below, dealerBest());
 
             int plus = Math.min(2, above.size());
             int minus = Math.min(2, below.size());
@@ -167,13 +190,33 @@ public class PumpSelector {
         }
 
         Collections.sort(out, (a, b) -> {
-            int d = Double.compare(a.diff, b.diff);
-            if (d != 0) return d;
             int hp = Double.compare(a.r.hp, b.r.hp);
             if (hp != 0) return hp;
+            int kw = Double.compare(a.r.kw, b.r.kw);
+            if (kw != 0) return kw;
+            int d = Double.compare(a.diff, b.diff);
+            if (d != 0) return d;
             return a.r.model.compareToIgnoreCase(b.r.model);
         });
         return out;
+    }
+
+    private static Comparator<Result> dealerBest() {
+        return (a, b) -> {
+            // Fallback bands come first: do not let a ±50% low-HP model hide a ±10% valid match.
+            int band = Integer.compare(resultBand(a), resultBand(b));
+            if (band != 0) return band;
+
+            // Inside the same quality band, dealer recommendation prefers lower HP/kW.
+            int hp = Double.compare(a.r.hp, b.r.hp);
+            if (hp != 0) return hp;
+            int kw = Double.compare(a.r.kw, b.r.kw);
+            if (kw != 0) return kw;
+
+            int d = Double.compare(a.diff, b.diff);
+            if (d != 0) return d;
+            return a.r.model.compareToIgnoreCase(b.r.model);
+        };
     }
 
     private static int toleranceBand(double pct) {

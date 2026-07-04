@@ -31,8 +31,15 @@ public class PumpListAdapter extends BaseAdapter {
 
     public View getView(int pos, View cv, ViewGroup parent) {
         PumpSelector.Result it = items.get(pos);
-        PumpRecord r = it.r;
 
+        if (it.header) {
+            LinearLayout h = Ui.card(a);
+            h.setPadding(Ui.dp(a, 14), Ui.dp(a, 12), Ui.dp(a, 14), Ui.dp(a, 12));
+            h.addView(Ui.text(a, safe(it.groupTitle), 19, Ui.BLUE, Typeface.BOLD));
+            return h;
+        }
+
+        PumpRecord r = it.r;
         String u = it.unit == null ? displayUnit : it.unit;
 
         LinearLayout c = Ui.card(a);
@@ -43,7 +50,7 @@ public class PumpListAdapter extends BaseAdapter {
         c.addView(Ui.text(a, safe(r.category), 16, Ui.BLUE, Typeface.BOLD));
 
         if (it.estimate) {
-            int color = it.status != null && it.status.startsWith("Oversized") ? Ui.ORANGE : Ui.GREEN;
+            int color = matchColor(it.status);
             c.addView(Ui.text(a, "At " + PumpSelector.head(it.head) + ": " + PumpSelector.formatFlow(it.flow, u) + "  •  " + it.status, 17, color, Typeface.BOLD));
         } else {
             c.addView(Ui.text(a, "Head: " + safe(r.headRangeText) + " m  •  Flow: " + rangeFlow(r, u), 15, Ui.MUTED, Typeface.NORMAL));
@@ -71,6 +78,14 @@ public class PumpListAdapter extends BaseAdapter {
         if (s) return "S";
         if (t) return "T";
         return p.isEmpty() ? "-" : p;
+    }
+
+    int matchColor(String status) {
+        String s = status == null ? "" : status;
+        if (s.contains("Last option")) return Ui.ORANGE;
+        if (s.contains("Wide match")) return Ui.ORANGE;
+        if (s.contains("Extended match")) return Ui.BLUE;
+        return Ui.GREEN;
     }
 
     String safe(String s) { return s == null ? "" : s.trim(); }

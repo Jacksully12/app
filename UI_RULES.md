@@ -144,3 +144,16 @@ v2.2.0 chart grid visibility update:
 - Wider matches are visible instead of silently hidden, so dealers can see fallback options.
 - Ranking prefers lower HP, then lower kW, then tighter tolerance band, then closest flow.
 - Range mode is unchanged.
+
+
+## v3.6.0 deep filter/sort QA and grouped All results
+- Fixed All pump types so categories are no longer mixed into one 4-result list.
+- All pump types now shows category-wise sections:
+  - Borewell Submersible
+  - Openwell Submersible
+  - Centrifugal / Surface Monoblock
+  - Dewatering / Sewage
+- Each section uses max 2 above/equal + 2 below target.
+- Fixed fallback sorting: band quality comes before HP, so a ±50% low-HP item cannot hide a ±10% or ±20% better match.
+- Inside the same band, lower HP/kW is preferred.
+- Added `LOGIC_QA_REPORT.txt` with test results for 40 m and 1200 LPH.

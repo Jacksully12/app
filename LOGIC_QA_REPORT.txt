@@ -1,0 +1,69 @@
+Granpa Pump Selector Deep Logic QA - v3.6.0
+========================================================
+
+Issues found and fixed
+- All pump types was previously mixed into one common result list; low-HP borewell items could hide openwell/monoblock/dewatering groups.
+- Fixed: All pump types now shows results grouped by main category.
+- Previous fallback sorting could allow a very wide ±50% low-HP option to hide a better ±10%/±20% match.
+- Fixed: tolerance band priority is checked before HP; inside the same band, lower HP/kW is preferred.
+
+Final fixed-flow result logic
+- Specific pump type: show max 2 above/equal target flow and max 2 below target flow.
+- All pump types: repeat the same max 2 above + 2 below logic separately for each main category.
+- Bands: Best ±10%, Extended ±20%, Wide ±30%, Last option ±50%.
+- Sort priority: band quality first, then lower HP, lower kW, closest flow, model name.
+
+Main category coverage
+- Records checked: 1780
+- Covered by exactly one main category: 1780
+- Not covered by a main category: 0
+- Overlapping multiple main categories: 0
+
+Data checks
+- Missing id: 0
+- Missing model: 0
+- Missing brand: 0
+- Missing category: 0
+- Missing phase: 0
+- Missing hp: 0
+- Missing kw: 0
+- Missing headRangeText: 0
+- Missing dischargeRangeText: 0
+- Missing flowUnitOriginal: 0
+- Missing page: 0
+- Missing catalogueSectionText: 0
+- Missing curve: 0
+- Missing size: 0
+- Non-TEXMO brand records: 0
+- ASM SP records under Openwell Submersible: 34
+
+Expected result QA: 40 m head + 1200 LPH + All pump types + Any phase
+
+Borewell Submersible:
+- SRF06/09 | page 10 | 0.5 HP | 1257 LPH | Best match ±10%
+- JRF06/07 | page 2 | 0.5 HP | 1300 LPH | Best match ±10%
+- JRT4E/12 | page 2 | 1.0 HP | 1100 LPH | Best match ±10%
+- AWS1525 | page 33 | 1.5 HP | 1091 LPH | Best match ±10%
+
+Openwell Submersible:
+- ASM SP 1125SS | page 36 | 1.5 HP | 1200 LPH | Best match ±10%
+- EAVM220AS/02 | page 27 | 20.0 HP | 1246 LPH | Best match ±10%
+- EAVM130/04 | page 27 | 20.0 HP | 1126 LPH | Best match ±10%
+- EAVM130/03 | page 27 | 15.0 HP | 935 LPH | Wide match ±30%
+
+Centrifugal / Surface Monoblock:
+- ACS 1125 | page 36 | 1.5 HP | 1473 LPH | Wide match ±30%
+- ASM 1125 | page 41 | 1.5 HP | 1800 LPH | Last option ±50%
+- TSJ 1025M | page 35 | 1.0 HP | 900 LPH | Wide match ±30%
+- ASJ 525C | page 35 | 0.5 HP | 720 LPH | Last option ±50%
+
+Dewatering / Sewage: no result within ±50% at this head/flow
+
+Specific search checks
+- Search ACS1125 under Centrifugal / Surface Monoblock returns: ACS 1125.
+- Search Openwell Submersible at 40 m / 1200 LPH includes: ASM SP 1125SS.
+- LPH and LPM are equivalent because LPM is converted internally to LPH before selection.
+
+Limitations
+- Actual APK compilation was not run in this environment because Android SDK/Gradle runtime is unavailable here.
+- Source syntax, data consistency, rule logic and expected-result simulations were checked.

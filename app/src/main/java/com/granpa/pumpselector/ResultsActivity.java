@@ -24,18 +24,24 @@ public class ResultsActivity extends Activity {
         double f1 = in.getDoubleExtra("flow1", Double.NaN), f2 = in.getDoubleExtra("flow2", f1);
 
         PumpSelector.Req req = PumpSelector.req(range, f1, f2, unit);
-        all = PumpSelector.select(PumpRepository.getRecords(this), head, req, in.getStringExtra("cat"), in.getStringExtra("phase"), in.getStringExtra("key"));
+        String selectedCat = in.getStringExtra("cat");
+        if ("all".equals(selectedCat)) {
+            all = PumpSelector.selectAllMainGroups(PumpRepository.getRecords(this), head, req, in.getStringExtra("phase"), in.getStringExtra("key"));
+        } else {
+            all = PumpSelector.select(PumpRepository.getRecords(this), head, req, selectedCat, in.getStringExtra("phase"), in.getStringExtra("key"));
+        }
 
         LinearLayout root = Ui.root(this);
 
         LinearLayout sum = Ui.card(this);
         sum.addView(Ui.text(this, "Results", 26, Ui.TEXT, 1));
         sum.addView(Ui.text(this, PumpSelector.head(head) + " fixed head • " + (req == null ? "Invalid rule" : req.label), 14, Ui.MUTED, 0));
-        sum.addView(Ui.text(this, all.size() + " matching models", 24, all.isEmpty() ? Ui.ORANGE : Ui.GREEN, 1));
+        int matchCount = PumpSelector.realCount(all);
+        sum.addView(Ui.text(this, matchCount + " matching models", 24, matchCount == 0 ? Ui.ORANGE : Ui.GREEN, 1));
         if (req != null) sum.addView(Ui.text(this, "Rule: " + req.rule, 14, Ui.MUTED, 0));
         if (req != null && !range) sum.addView(Ui.text(this, "Shown result limit: maximum 2 above target + 2 below target. Wider matches are labelled clearly.", 13, Ui.BLUE, 0));
         if ("all".equals(in.getStringExtra("cat"))) {
-            sum.addView(Ui.text(this, "Tip: choose Borewell Submersible if you do not want dewatering/sewage models mixed in.", 13, Ui.BLUE, 0));
+            sum.addView(Ui.text(this, "All pump types is grouped category-wise, so one category cannot hide another category.", 13, Ui.BLUE, 0));
         }
         root.addView(sum);
 
@@ -56,7 +62,7 @@ public class ResultsActivity extends Activity {
         root.addView(actions);
 
         TextView empty = Ui.text(this, "No nearby model found even up to the ±50% fallback band. Try another flow value, pump type, phase, or range mode.", 15, Ui.MUTED, 0);
-        if (all.isEmpty()) root.addView(empty);
+        if (matchCount == 0) root.addView(empty);
 
         adapter = new PumpListAdapter(this);
         adapter.setDisplayUnit(unit);
@@ -85,12 +91,31 @@ public class ResultsActivity extends Activity {
             adapter.setItems(all);
             return;
         }
+
         ArrayList<PumpSelector.Result> out = new ArrayList<>();
-        for (PumpSelector.Result r : all) if (PumpSelector.kw(r.r, q)) out.add(r);
+        PumpSelector.Result pendingHeader = null;
+        boolean headerAdded = false;
+
+        for (PumpSelector.Result r : all) {
+            if (r.header) {
+                pendingHeader = r;
+                headerAdded = false;
+                continue;
+            }
+
+            if (r.r != null && PumpSelector.kw(r.r, q)) {
+                if (pendingHeader != null && !headerAdded) {
+                    out.add(pendingHeader);
+                    headerAdded = true;
+                }
+                out.add(r);
+            }
+        }
         adapter.setItems(out);
     }
 
     void openDetails(PumpSelector.Result r) {
+        if (r == null || r.header || r.r == null) return;
         Intent i = new Intent(this, PumpDetailsActivity.class);
         i.putExtra("id", r.r.id);
         i.putExtra("head", r.head);
@@ -102,8 +127,9 @@ public class ResultsActivity extends Activity {
 
     void copyCsv() {
         String u = PumpSelector.unitLabel(unit);
-        StringBuilder sb = new StringBuilder("Model,HP,kW,Phase,Estimated " + u + ",Head,Category,Page,Size,Brand\n");
+        StringBuilder sb = new StringBuilder("Model,HP,kW,Phase,Estimated " + u + ",Head,Category,Match,Page,Size,Brand\n");
         for (PumpSelector.Result x : all) {
+            if (x.header || x.r == null) continue;
             PumpRecord r = x.r;
             sb.append(q(r.model)).append(',')
                     .append(r.hp).append(',')
@@ -112,6 +138,7 @@ public class ResultsActivity extends Activity {
                     .append(String.format(Locale.US, "%.2f", PumpSelector.fromLPH(x.flow, unit))).append(',')
                     .append(String.format(Locale.US, "%.1f", x.head)).append(',')
                     .append(q(r.category)).append(',')
+                    .append(q(x.status)).append(',')
                     .append(r.page).append(',')
                     .append(q(r.size)).append(',')
                     .append(q(r.brand)).append('\n');
