@@ -109,3 +109,11 @@ v3.0.0 strict ±10% fixed-flow rule:
 - No model above +10% or below -10% is shown.
 - The strict rule works with LPH and LPM because conversion happens internally.
 - Result labels and rule text display in the selected unit.
+
+
+v3.1.0 openwell category correction:
+- Added Openwell Submersible as a main category.
+- Moved ASM SP models to Openwell Submersible.
+- Updated ASM SP brand/catalogue section to match TEXMO Openwell Submersible Monoblocks.
+- Renamed Monoblock / Centrifugal main category to Centrifugal / Surface Monoblock.
+- Confirmed Openwell category has priority over Monoblock wording.

@@ -463,8 +463,9 @@ public class ShareImageBuilder {
 
     static String compactType(String c) {
         c = safe(c).toLowerCase(Locale.US);
+        if (c.contains("openwell")) return "Openwell\nSubmersible";
         if (c.contains("borewell")) return "Borewell\nSubmersible";
-        if (c.contains("monoblock")) return "Monoblock";
+        if (c.contains("monoblock") || c.contains("centrifugal") || c.contains("agricultural")) return "Surface\nMonoblock";
         if (c.contains("dewatering") || c.contains("sewage")) return "Dewatering";
         return safe(c).replace(" - ", "\n");
     }

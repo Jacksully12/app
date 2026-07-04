@@ -58,3 +58,16 @@ See `AGENTS.md` for full project rules.
 - The rule works for LPH, LPM, LPS and m³/hour because the app converts internally and displays back in the selected unit.
 - Result sorting now uses closest flow difference within the ±10% band.
 - LPH remains the default unit; LPM remains available in the dropdown.
+
+
+## v3.1.0 openwell category correction
+- Added `Openwell Submersible` as a main category.
+- Corrected ASM SP models to `Openwell Submersible` instead of Centrifugal/Agricultural Monoblock.
+- Updated ASM SP catalogue section to the TEXMO Openwell Submersible Monoblocks heading.
+- Main category names are now:
+  - All pump types
+  - Borewell Submersible
+  - Openwell Submersible
+  - Centrifugal / Surface Monoblock
+  - Dewatering / Sewage
+- Category priority rule: Openwell Submersible must be checked before Monoblock/Centrifugal, because Openwell Submersible Monoblocks are not surface/centrifugal monoblocks.

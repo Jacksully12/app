@@ -167,7 +167,8 @@ public class MainActivity extends Activity {
         ArrayList<Option> o = new ArrayList<>();
         o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
         o.add(new Option("borewell_all", "Borewell Submersible", "Main category • all borewell submersible pumps", true));
-        o.add(new Option("monoblock_all", "Monoblock / Centrifugal", "Main category • agricultural and centrifugal monoblock pumps", true));
+        o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell submersible monoblocks", true));
+        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • centrifugal, agricultural and surface pumps", true));
         o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • construction, drainage and wastewater pumps", true));
         for (String c : PumpRepository.categories(this)) o.add(new Option(c, "Sub category • " + c, detail(c), false));
         return o;
@@ -175,8 +176,9 @@ public class MainActivity extends Activity {
 
     String detail(String c) {
         c = c == null ? "" : c.toLowerCase(Locale.US);
+        if (c.contains("openwell")) return "Detailed catalogue group under openwell submersible pumps";
         if (c.contains("borewell")) return "Detailed catalogue group under borewell pumps";
-        if (c.contains("agricultural")) return "Detailed catalogue group for agricultural monoblock pumps";
+        if (c.contains("agricultural")) return "Detailed catalogue group for agricultural/surface monoblock pumps";
         if (c.contains("centrifugal")) return "Detailed catalogue group for centrifugal monoblock pumps";
         if (c.contains("dewatering") || c.contains("sewage")) return "Detailed catalogue group for dewatering / sewage pumps";
         return "Detailed catalogue group";

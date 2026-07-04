@@ -180,11 +180,27 @@ public class PumpSelector {
 
     public static boolean cat(PumpRecord r, String s) {
         if (s == null || s.equals("all")) return true;
+
         String c = (r.category == null ? "" : r.category).toLowerCase(Locale.US);
-        if (s.equals("borewell_all")) return c.contains("borewell");
-        if (s.equals("monoblock_all")) return c.contains("monoblock") || c.contains("centrifugal");
-        if (s.equals("submersible_all")) return c.contains("submersible");
-        if (s.equals("dewatering_all")) return c.contains("dewatering") || c.contains("sewage");
+        String section = ((r.catalogueSectionText == null ? "" : r.catalogueSectionText) + " " + (r.title == null ? "" : r.title)).toLowerCase(Locale.US);
+
+        if (s.equals("openwell_all")) {
+            return c.contains("openwell") || section.contains("openwell submersible");
+        }
+        if (s.equals("borewell_all")) {
+            return c.contains("borewell") || section.contains("borewell");
+        }
+        if (s.equals("dewatering_all")) {
+            return c.contains("dewatering") || c.contains("sewage") || section.contains("dewatering") || section.contains("sewage");
+        }
+        if (s.equals("monoblock_all")) {
+            // Important: Openwell Submersible Monoblocks must not be grouped as centrifugal/surface monoblock.
+            if (c.contains("openwell") || section.contains("openwell submersible")) return false;
+            return c.contains("monoblock") || c.contains("centrifugal") || c.contains("agricultural") || section.contains("centrifugal") || section.contains("jet pump");
+        }
+        if (s.equals("submersible_all")) {
+            return c.contains("submersible");
+        }
         return s.equals(r.category);
     }
 
