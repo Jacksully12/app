@@ -149,8 +149,10 @@ public class ShareImageBuilder {
         double axisH = roundUp(maxH * 1.08, 10);
 
         Paint grid = new Paint(1);
-        grid.setColor(Color.rgb(225, 232, 241));
-        grid.setStrokeWidth(1.5f);
+        grid.setColor(Color.rgb(209, 218, 230));
+        grid.setStrokeWidth(2.0f);
+        grid.setStyle(Paint.Style.STROKE);
+        grid.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
         Paint text = new Paint(1);
         text.setColor(Ui.TEXT);
         text.setTextSize(22);
@@ -204,22 +206,78 @@ public class ShareImageBuilder {
             Paint dash = new Paint(1);
             dash.setColor(Color.rgb(255, 132, 0));
             dash.setStyle(Paint.Style.STROKE);
-            dash.setStrokeWidth(2);
-            dash.setPathEffect(new DashPathEffect(new float[]{10, 8}, 0));
+            dash.setStrokeWidth(2.4f);
+            dash.setPathEffect(new DashPathEffect(new float[]{12, 10}, 0));
             c.drawLine(plot.left, sy, sx, sy, dash);
             c.drawLine(sx, sy, sx, plot.bottom, dash);
+            drawHeadBadge(c, formatHead(head), plot.left, sy);
+            drawFlowBadge(c, formatFlow(flow), sx, plot.bottom + 34, plot);
+            Paint glow = new Paint(1);
+            glow.setStyle(Paint.Style.FILL);
+            glow.setColor(Color.argb(45, 255, 132, 0));
+            c.drawCircle(sx, sy, 30, glow);
             Paint halo = new Paint(1);
             halo.setColor(Color.WHITE);
-            c.drawCircle(sx, sy, 17, halo);
+            halo.setStyle(Paint.Style.FILL);
+            c.drawCircle(sx, sy, 19, halo);
             Paint dot = new Paint(1);
             dot.setColor(Color.rgb(255, 132, 0));
-            c.drawCircle(sx, sy, 13, dot);
+            dot.setStyle(Paint.Style.FILL);
+            c.drawCircle(sx, sy, 14, dot);
         }
 
         Paint leg = new Paint(1);
         leg.setTextSize(23);
         leg.setColor(Ui.TEXT);
         c.drawText("Selected operating point", outer.left + 115, outer.bottom - 42, leg);
+    }
+
+
+    static void drawHeadBadge(Canvas c, String label, float axisX, float centerY) {
+        Paint bg = new Paint(1);
+        bg.setColor(Color.rgb(255, 132, 0));
+        bg.setStyle(Paint.Style.FILL);
+        Paint t = new Paint(1);
+        t.setColor(Color.WHITE);
+        t.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        t.setTextSize(22);
+        float pad = 14;
+        float bw = t.measureText(label) + pad * 2;
+        RectF r = new RectF(axisX - bw - 12, centerY - 22, axisX - 12, centerY + 22);
+        c.drawRoundRect(r, 9, 9, bg);
+        c.drawText(label, r.centerX() - t.measureText(label) / 2, r.centerY() + 8, t);
+    }
+
+    static void drawFlowBadge(Canvas c, String label, float centerX, float centerY, RectF plot) {
+        Paint bg = new Paint(1);
+        bg.setColor(Color.rgb(255, 132, 0));
+        bg.setStyle(Paint.Style.FILL);
+        Paint t = new Paint(1);
+        t.setColor(Color.WHITE);
+        t.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        t.setTextSize(22);
+        float pad = 16;
+        float bw = Math.min(t.measureText(label) + pad * 2, 155);
+        RectF r = new RectF(centerX - bw / 2, centerY - 22, centerX + bw / 2, centerY + 22);
+        if (r.left < plot.left) r.offset(plot.left - r.left, 0);
+        if (r.right > plot.right) r.offset(plot.right - r.right, 0);
+        c.drawRoundRect(r, 9, 9, bg);
+        drawCenteredFit(c, label, r, t);
+    }
+
+    static void drawCenteredFit(Canvas c, String label, RectF r, Paint p) {
+        float old = p.getTextSize();
+        while (p.measureText(label) > r.width() - 12 && p.getTextSize() > 15) p.setTextSize(p.getTextSize() - 1);
+        c.drawText(label, r.centerX() - p.measureText(label) / 2, r.centerY() + 8, p);
+        p.setTextSize(old);
+    }
+
+    static String formatHead(double v) {
+        return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
+    }
+
+    static String formatFlow(double v) {
+        return String.format(Locale.US, "%,.0f", v);
     }
 
     static ArrayList<double[]> displayPoints(ArrayList<double[]> real, Double selH, Double selF) {

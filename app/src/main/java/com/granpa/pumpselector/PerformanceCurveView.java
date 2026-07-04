@@ -12,15 +12,17 @@ public class PerformanceCurveView extends View {
 
     public PerformanceCurveView(Context c) {
         super(c);
-        grid.setColor(Color.rgb(225, 232, 241));
-        grid.setStrokeWidth(dp(1));
-        axis.setColor(Ui.MUTED);
-        axis.setStrokeWidth(dp(1.4f));
+        grid.setColor(Color.rgb(209, 218, 230));
+        grid.setStrokeWidth(dp(1.15f));
+        grid.setStyle(Paint.Style.STROKE);
+        grid.setPathEffect(new DashPathEffect(new float[]{6, 6}, 0));
+        axis.setColor(Color.rgb(91, 105, 120));
+        axis.setStrokeWidth(dp(1.5f));
         txt.setColor(Ui.TEXT);
         txt.setTextSize(sp(12));
         curvePaint.setColor(Color.rgb(0, 96, 216));
         curvePaint.setStyle(Paint.Style.STROKE);
-        curvePaint.setStrokeWidth(dp(3));
+        curvePaint.setStrokeWidth(dp(3.2f));
         curvePaint.setStrokeCap(Paint.Cap.ROUND);
         curvePaint.setStrokeJoin(Paint.Join.ROUND);
         selected.setColor(Color.rgb(255, 132, 0));
@@ -35,7 +37,7 @@ public class PerformanceCurveView extends View {
     }
 
     protected void onMeasure(int w, int h) {
-        setMeasuredDimension(MeasureSpec.getSize(w), resolveSize(dp(320), h));
+        setMeasuredDimension(MeasureSpec.getSize(w), resolveSize(dp(360), h));
     }
 
     protected void onDraw(Canvas c) {
@@ -56,26 +58,36 @@ public class PerformanceCurveView extends View {
 
         double axisF = roundUp(maxF * 1.04, niceFlowStep(maxF));
         double axisH = roundUp(maxH * 1.08, 10);
-        RectF plot = new RectF(dp(48), dp(18), getWidth() - dp(18), getHeight() - dp(50));
+        RectF plot = new RectF(dp(62), dp(24), getWidth() - dp(22), getHeight() - dp(78));
 
-        drawGrid(c, plot, axisF, axisH);
+        drawGrid(c, plot, axisF, axisH, hasSelected ? sf : null);
         drawCurve(c, pts, axisF, axisH, plot);
 
-        if (hasSelected) {
-            float sx = x(sf, axisF, plot), sy = y(sh, axisH, plot);
-            Paint dash = new Paint(1);
-            dash.setColor(Color.rgb(255, 132, 0));
-            dash.setStyle(Paint.Style.STROKE);
-            dash.setStrokeWidth(dp(1));
-            dash.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
-            c.drawLine(plot.left, sy, sx, sy, dash);
-            c.drawLine(sx, sy, sx, plot.bottom, dash);
-            Paint halo = new Paint(1);
-            halo.setColor(Color.WHITE);
-            halo.setStyle(Paint.Style.FILL);
-            c.drawCircle(sx, sy, dp(11), halo);
-            c.drawCircle(sx, sy, dp(9), selected);
-        }
+        if (hasSelected) drawSelectedPoint(c, plot, axisF, axisH, sf, sh);
+    }
+
+    void drawSelectedPoint(Canvas c, RectF plot, double axisF, double axisH, double flow, double head) {
+        float sx = x(flow, axisF, plot), sy = y(head, axisH, plot);
+        Paint dash = new Paint(1);
+        dash.setColor(Color.rgb(255, 132, 0));
+        dash.setStyle(Paint.Style.STROKE);
+        dash.setStrokeWidth(dp(1.25f));
+        dash.setPathEffect(new DashPathEffect(new float[]{8, 7}, 0));
+        c.drawLine(plot.left, sy, sx, sy, dash);
+        c.drawLine(sx, sy, sx, plot.bottom, dash);
+
+        drawHeadBadge(c, formatHead(head), plot.left, sy);
+        drawFlowBadge(c, formatFlow(flow), sx, plot.bottom + dp(18));
+
+        Paint halo = new Paint(1);
+        halo.setStyle(Paint.Style.FILL);
+        halo.setColor(Color.argb(42, 255, 132, 0));
+        c.drawCircle(sx, sy, dp(16), halo);
+        Paint ring = new Paint(1);
+        ring.setStyle(Paint.Style.FILL);
+        ring.setColor(Color.WHITE);
+        c.drawCircle(sx, sy, dp(11), ring);
+        c.drawCircle(sx, sy, dp(8), selected);
     }
 
     ArrayList<double[]> valid() {
@@ -121,28 +133,35 @@ public class PerformanceCurveView extends View {
         return pts;
     }
 
-    void drawGrid(Canvas c, RectF p, double maxF, double maxH) {
+    void drawGrid(Canvas c, RectF p, double maxF, double maxH, Double selectedFlow) {
+        Paint gridText = new Paint(txt);
+        gridText.setColor(Color.rgb(26, 37, 52));
+        gridText.setTextSize(sp(12));
+
         for (int i = 0; i <= 5; i++) {
             float gx = p.left + i * p.width() / 5f;
             c.drawLine(gx, p.top, gx, p.bottom, grid);
             String l = String.format(Locale.US, "%,.0f", maxF * i / 5);
-            c.drawText(l, gx - txt.measureText(l) / 2, getHeight() - dp(24), txt);
+            boolean hideNearBadge = selectedFlow != null && Math.abs((maxF * i / 5) - selectedFlow) < maxF / 18;
+            if (!hideNearBadge) c.drawText(l, gx - gridText.measureText(l) / 2, p.bottom + dp(27), gridText);
         }
         for (int i = 0; i <= 5; i++) {
             float gy = p.bottom - i * p.height() / 5f;
             c.drawLine(p.left, gy, p.right, gy, grid);
             String l = String.format(Locale.US, "%.0f", maxH * i / 5);
-            c.drawText(l, p.left - txt.measureText(l) - dp(6), gy + dp(4), txt);
+            c.drawText(l, p.left - gridText.measureText(l) - dp(8), gy + dp(4), gridText);
         }
         c.drawLine(p.left, p.top, p.left, p.bottom, axis);
         c.drawLine(p.left, p.bottom, p.right, p.bottom, axis);
         Paint lab = new Paint(txt);
-        lab.setTextSize(sp(13));
+        lab.setColor(Color.rgb(26, 37, 52));
+        lab.setTextSize(sp(13.5f));
+        lab.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         String xl = "Flow Rate (LPH)";
-        c.drawText(xl, p.centerX() - lab.measureText(xl) / 2, getHeight() - dp(4), lab);
+        c.drawText(xl, p.centerX() - lab.measureText(xl) / 2, getHeight() - dp(5), lab);
         c.save();
-        c.rotate(-90, dp(14), p.centerY());
-        c.drawText("Head (m)", dp(14), p.centerY(), lab);
+        c.rotate(-90, dp(18), p.centerY());
+        c.drawText("Head (m)", dp(18), p.centerY(), lab);
         c.restore();
     }
 
@@ -158,6 +177,55 @@ public class PerformanceCurveView extends View {
             }
         }
         c.drawPath(path, curvePaint);
+    }
+
+    void drawHeadBadge(Canvas c, String label, float axisX, float centerY) {
+        Paint bg = new Paint(1);
+        bg.setColor(Color.rgb(255, 132, 0));
+        bg.setStyle(Paint.Style.FILL);
+        Paint t = new Paint(1);
+        t.setColor(Color.WHITE);
+        t.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        t.setTextSize(sp(11));
+        float pad = dp(7);
+        float w = t.measureText(label) + pad * 2;
+        float h = dp(24);
+        RectF r = new RectF(Math.max(dp(2), axisX - w - dp(5)), centerY - h / 2, axisX - dp(5), centerY + h / 2);
+        c.drawRoundRect(r, dp(5), dp(5), bg);
+        c.drawText(label, r.centerX() - t.measureText(label) / 2, r.centerY() + dp(4), t);
+    }
+
+    void drawFlowBadge(Canvas c, String label, float centerX, float centerY) {
+        Paint bg = new Paint(1);
+        bg.setColor(Color.rgb(255, 132, 0));
+        bg.setStyle(Paint.Style.FILL);
+        Paint t = new Paint(1);
+        t.setColor(Color.WHITE);
+        t.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        t.setTextSize(sp(11));
+        float pad = dp(8);
+        float w = Math.min(t.measureText(label) + pad * 2, dp(92));
+        float h = dp(24);
+        RectF r = new RectF(centerX - w / 2, centerY - h / 2, centerX + w / 2, centerY + h / 2);
+        if (r.left < dp(58)) r.offset(dp(58) - r.left, 0);
+        if (r.right > getWidth() - dp(4)) r.offset(getWidth() - dp(4) - r.right, 0);
+        c.drawRoundRect(r, dp(5), dp(5), bg);
+        drawCenteredFit(c, label, r, t);
+    }
+
+    void drawCenteredFit(Canvas c, String label, RectF r, Paint p) {
+        float old = p.getTextSize();
+        while (p.measureText(label) > r.width() - dp(8) && p.getTextSize() > sp(8)) p.setTextSize(p.getTextSize() - 1);
+        c.drawText(label, r.centerX() - p.measureText(label) / 2, r.centerY() + dp(4), p);
+        p.setTextSize(old);
+    }
+
+    String formatHead(double v) {
+        return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
+    }
+
+    String formatFlow(double v) {
+        return String.format(Locale.US, "%,.0f", v);
     }
 
     double niceFlowStep(double maxF) {
