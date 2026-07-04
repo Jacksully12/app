@@ -1,31 +1,38 @@
-# Granpa Pump Selector - Native Android App
+# Granpa Pump Selector
 
-This is a native Android Studio project for the Granpa Pump Selector app.
+Native Android pump selector app for Granpa.
 
 ## Latest update
-- App renamed to **Granpa**
-- Main screen model search moved to the top
-- Brand filter removed from the main search screen
-- Model details screen includes a full end-to-end performance curve chart
-- Direct **Share WhatsApp** button added inside model details
-- Share output is an image only, not PDF
-- Shared image does not show catalogue page number
-- App logo added as app icon and header logo
 
-## Build APK
-1. Upload this project to GitHub.
-2. The included GitHub Actions workflow runs on push.
-3. Open Actions → Build Android APK.
-4. Download artifact: `granpa-pump-selector-debug-apk`.
+This version fixes the chart and share image layout:
 
-Or open in Android Studio and run:
-Build → Build Bundle(s) / APK(s) → Build APK(s)
+- App name: **Granpa**
+- Model search is at the top of the main screen
+- Direct **Share WhatsApp** button in model details
+- Image-only sharing, no PDF export
+- App details screen keeps page number and full technical details
+- Final shared image hides page number
+- Performance curve now visually starts from the Y-axis and ends at the X-axis
+- Share image chart spacing fixed so axis labels and legend do not overlap
+- GitHub Actions updated to Gradle 8.9
 
-## Logic
-- Fixed head only
-- Strict fixed-head calculation
-- No 10% upper limit
-- Fixed flow = estimated flow at fixed head must be >= required flow
-- Range flow = estimated flow at fixed head must be inside range
-- Reverse range supported, e.g. 13,500 to 4,500
-- Search ignores spaces, so ACS1125 finds ACS 1125
+## Build APK using GitHub Actions
+
+1. Upload/replace this project in your GitHub repo.
+2. Go to **Actions**.
+3. Run **Build Android APK**.
+4. Download the artifact named **granpa-pump-selector-debug-apk**.
+
+## Local build
+
+Open the project in Android Studio and run:
+
+```bash
+gradle assembleDebug
+```
+
+The APK will be created at:
+
+```text
+app/build/outputs/apk/debug/
+```
