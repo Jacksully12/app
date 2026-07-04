@@ -22,6 +22,7 @@ public class PerformanceCurveView extends View {
     Paint grid = new Paint(1), minorGrid = new Paint(1), axis = new Paint(1), txt = new Paint(1), curvePaint = new Paint(1), selected = new Paint(1);
     double[][] curve;
     Double sh, sf;
+    String displayUnit = "LPM";
 
     private final ScaleGestureDetector scaleDetector;
     private final GestureDetector gestureDetector;
@@ -34,9 +35,7 @@ public class PerformanceCurveView extends View {
     private boolean dragging = false;
     private ZoomListener zoomListener;
 
-    public interface ZoomListener {
-        void onZoomChanged(int percent);
-    }
+    public interface ZoomListener { void onZoomChanged(int percent); }
 
     public PerformanceCurveView(Context c) {
         super(c);
@@ -114,6 +113,11 @@ public class PerformanceCurveView extends View {
         });
     }
 
+    public void setDisplayUnit(String unit) {
+        displayUnit = PumpSelector.normalizeUnit(unit);
+        invalidate();
+    }
+
     public void setData(double[][] c, Double h, Double f) {
         curve = c;
         sh = h;
@@ -127,9 +131,7 @@ public class PerformanceCurveView extends View {
         setClickable(enabled);
     }
 
-    public void setZoomListener(ZoomListener listener) {
-        zoomListener = listener;
-    }
+    public void setZoomListener(ZoomListener listener) { zoomListener = listener; }
 
     public void resetZoom() {
         zoomFactor = 1f;
@@ -157,9 +159,7 @@ public class PerformanceCurveView extends View {
         invalidate();
     }
 
-    public int getZoomPercent() {
-        return Math.round(zoomFactor * 100f);
-    }
+    public int getZoomPercent() { return Math.round(zoomFactor * 100f); }
 
     private void notifyZoomChanged() {
         if (zoomListener != null) zoomListener.onZoomChanged(getZoomPercent());
@@ -243,7 +243,7 @@ public class PerformanceCurveView extends View {
             maxF = Math.max(maxF, p[1]);
             maxH = Math.max(maxH, p[0]);
         }
-        if (maxF < 1) maxF = 1000;
+        if (maxF < 1) maxF = 20;
         if (maxH < 1) maxH = 10;
 
         double axisF = roundUp(maxF * 1.04, niceFlowStep(maxF));
@@ -256,9 +256,9 @@ public class PerformanceCurveView extends View {
             c.scale(zoomFactor, zoomFactor, plot.centerX(), plot.centerY());
         }
 
-        drawGrid(c, plot, axisF, axisH, hasSelected ? sf : null);
+        drawGrid(c, plot, axisF, axisH, hasSelected ? PumpSelector.fromLPH(sf, displayUnit) : null);
         drawCurve(c, pts, axisF, axisH, plot);
-        if (hasSelected) drawSelectedPoint(c, plot, axisF, axisH, sf, sh);
+        if (hasSelected) drawSelectedPoint(c, plot, axisF, axisH, PumpSelector.fromLPH(sf, displayUnit), sh);
         c.restore();
 
         if (pinchZoomEnabled) {
@@ -270,8 +270,8 @@ public class PerformanceCurveView extends View {
         }
     }
 
-    void drawSelectedPoint(Canvas c, RectF plot, double axisF, double axisH, double flow, double head) {
-        float sx = x(flow, axisF, plot), sy = y(head, axisH, plot);
+    void drawSelectedPoint(Canvas c, RectF plot, double axisF, double axisH, double flowDisplay, double head) {
+        float sx = x(flowDisplay, axisF, plot), sy = y(head, axisH, plot);
 
         Paint dash = new Paint(1);
         dash.setColor(Color.rgb(255, 132, 0));
@@ -282,7 +282,7 @@ public class PerformanceCurveView extends View {
         c.drawLine(sx, sy, sx, plot.bottom, dash);
 
         drawHeadBadge(c, formatHead(head), plot.left, sy);
-        drawFlowBadge(c, formatFlow(flow), sx, plot.bottom + dp(18));
+        drawFlowBadge(c, PumpSelector.formatFlowNumber(flowDisplay, displayUnit), sx, plot.bottom + dp(18));
 
         Paint halo = new Paint(1);
         halo.setStyle(Paint.Style.FILL);
@@ -301,7 +301,7 @@ public class PerformanceCurveView extends View {
         if (curve != null) {
             for (double[] q : curve) {
                 if (q != null && q.length >= 2 && !Double.isNaN(q[0]) && !Double.isNaN(q[1])) {
-                    p.add(new double[]{q[0], q[1]});
+                    p.add(new double[]{q[0], PumpSelector.fromLPH(q[1], displayUnit)});
                 }
             }
         }
@@ -314,11 +314,12 @@ public class PerformanceCurveView extends View {
         for (double[] p : real) pts.add(new double[]{p[0], p[1]});
 
         if (selH != null && selF != null && !Double.isNaN(selH) && !Double.isNaN(selF)) {
+            double sfDisplay = PumpSelector.fromLPH(selF, displayUnit);
             boolean duplicate = false;
             for (double[] p : pts) {
-                if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - selF) < 1) duplicate = true;
+                if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - sfDisplay) < 0.01) duplicate = true;
             }
-            if (!duplicate) pts.add(new double[]{selH, selF});
+            if (!duplicate) pts.add(new double[]{selH, sfDisplay});
         }
 
         Collections.sort(pts, Comparator.comparingDouble(a -> a[1]));
@@ -344,8 +345,9 @@ public class PerformanceCurveView extends View {
         for (int i = 0; i <= 5; i++) {
             float gx = p.left + i * p.width() / 5f;
             c.drawLine(gx, p.top, gx, p.bottom, grid);
-            String l = String.format(Locale.US, "%,.0f", maxF * i / 5);
-            boolean hideNearBadge = selectedFlow != null && Math.abs((maxF * i / 5) - selectedFlow) < maxF / 18;
+            double tick = maxF * i / 5;
+            String l = PumpSelector.formatFlowNumber(tick, displayUnit);
+            boolean hideNearBadge = selectedFlow != null && Math.abs(tick - selectedFlow) < maxF / 18;
             if (!hideNearBadge) c.drawText(l, gx - gridText.measureText(l) / 2, p.bottom + dp(27), gridText);
         }
         for (int i = 0; i <= 5; i++) {
@@ -363,7 +365,7 @@ public class PerformanceCurveView extends View {
         lab.setTextSize(sp(13.5f));
         lab.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
-        String xl = "Flow Rate (LPH)";
+        String xl = "Flow Rate (" + PumpSelector.unitLabel(displayUnit) + ")";
         c.drawText(xl, p.centerX() - lab.measureText(xl) / 2, getHeight() - dp(5), lab);
 
         c.save();
@@ -435,14 +437,24 @@ public class PerformanceCurveView extends View {
         return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
     }
 
-    String formatFlow(double v) { return String.format(Locale.US, "%,.0f", v); }
-
     double niceFlowStep(double maxF) {
-        if (maxF <= 1000) return 200;
-        if (maxF <= 3000) return 500;
-        if (maxF <= 10000) return 1000;
-        if (maxF <= 30000) return 5000;
-        return 10000;
+        if (displayUnit.equals("LPM")) {
+            if (maxF <= 20) return 5;
+            if (maxF <= 60) return 10;
+            if (maxF <= 200) return 25;
+            if (maxF <= 600) return 100;
+            if (maxF <= 2000) return 250;
+            return 1000;
+        }
+        if (displayUnit.equals("LPH")) {
+            if (maxF <= 1000) return 200;
+            if (maxF <= 3000) return 500;
+            if (maxF <= 10000) return 1000;
+            if (maxF <= 30000) return 5000;
+            return 10000;
+        }
+        if (displayUnit.equals("LPS")) return maxF <= 10 ? 1 : 5;
+        return maxF <= 10 ? 1 : 10;
     }
 
     double roundUp(double v, double s) { return Math.ceil(v / s) * s; }

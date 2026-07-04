@@ -86,3 +86,13 @@ v2.2.0 chart grid visibility update:
 - The closer chart view supports pinch zoom, double-tap zoom/reset, and drag-to-move panning after zooming.
 - Zoom percentage updates while using gestures or buttons.
 - Chart gridlines were slightly strengthened for better technical checking.
+
+
+## v2.8.0 unit display + sorting update
+- LPM is now the default unit on the main screen.
+- Default flow example changed from 1,200 LPH to 20 LPM.
+- When LPH is selected, results, details, curve points, chart axis, zoom chart, share image, download image and CSV use LPH.
+- When LPM is selected, the same screens use LPM.
+- Internal calculations still use LPH for consistency, but all user-facing values follow the selected unit.
+- Fixed result ordering so closest suitable pumps appear first before very oversized pumps.
+- Oversized results are marked as oversized instead of looking like the best recommendation.

@@ -10,6 +10,7 @@ public class ChartZoomActivity extends Activity {
     PumpRecord rec;
     boolean has;
     double head, flow;
+    String unit = "LPM";
     PerformanceCurveView chart;
     TextView zoomInfo;
 
@@ -21,10 +22,11 @@ public class ChartZoomActivity extends Activity {
         has = getIntent().getBooleanExtra("estimate", false);
         head = getIntent().getDoubleExtra("head", Double.NaN);
         flow = getIntent().getDoubleExtra("flow", Double.NaN);
+        unit = PumpSelector.normalizeUnit(getIntent().getStringExtra("unit"));
 
         LinearLayout root = Ui.root(this);
         root.addView(Ui.text(this, "Zoom chart", 24, Ui.TEXT, 1));
-        root.addView(Ui.text(this, rec != null ? rec.model : "Pump model", 18, Ui.BLUE, 1));
+        root.addView(Ui.text(this, (rec != null ? rec.model : "Pump model") + " • " + PumpSelector.unitLabel(unit), 18, Ui.BLUE, 1));
 
         TextView help = Ui.text(this, "Pinch or double-tap to zoom. After zooming, drag the chart to move around.", 14, Ui.MUTED, 0);
         Ui.mb(this, help, 10);
@@ -52,6 +54,7 @@ public class ChartZoomActivity extends Activity {
 
         LinearLayout card = Ui.card(this);
         chart = new PerformanceCurveView(this);
+        chart.setDisplayUnit(unit);
         if (rec != null) chart.setData(rec.curve, has ? head : null, has ? flow : null);
         chart.setPinchZoomEnabled(true);
         chart.setZoomListener(percent -> updateZoomInfo());
@@ -61,21 +64,9 @@ public class ChartZoomActivity extends Activity {
         Button close = Ui.secondary(this, "Back to details");
         root.addView(close);
 
-        minus.setOnClickListener(v -> {
-            chart.zoomOut();
-            updateZoomInfo();
-        });
-
-        plus.setOnClickListener(v -> {
-            chart.zoomIn();
-            updateZoomInfo();
-        });
-
-        reset.setOnClickListener(v -> {
-            chart.resetZoom();
-            updateZoomInfo();
-        });
-
+        minus.setOnClickListener(v -> { chart.zoomOut(); updateZoomInfo(); });
+        plus.setOnClickListener(v -> { chart.zoomIn(); updateZoomInfo(); });
+        reset.setOnClickListener(v -> { chart.resetZoom(); updateZoomInfo(); });
         close.setOnClickListener(v -> finish());
 
         setContentView(Ui.scroll(this, root));

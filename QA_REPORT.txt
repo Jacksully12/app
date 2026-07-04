@@ -86,3 +86,12 @@ v2.7.0 tap-to-zoom + improved chart navigation:
 - Added double-tap zoom/reset in zoom screen.
 - Improved drag-to-move panning and zoom percentage updates.
 - Strengthened chart gridlines for easier checking.
+
+
+v2.8.0 unit display + sorting update:
+- LPM is now default everywhere.
+- User-selected unit is passed from search to results, details, chart, zoom screen, share image, download image and CSV.
+- LPH selection displays LPH everywhere.
+- Internal LPH conversion remains unchanged for calculation.
+- Results now sort by closest extra flow first, then HP.
+- Very oversized fixed-flow results are labelled.

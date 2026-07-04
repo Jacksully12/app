@@ -17,6 +17,7 @@ public class PumpDetailsActivity extends Activity {
     PumpRecord rec;
     boolean has;
     double head, flow;
+    String unit = "LPM";
 
     @Override
     protected void onCreate(Bundle b) {
@@ -25,6 +26,7 @@ public class PumpDetailsActivity extends Activity {
         has = getIntent().getBooleanExtra("estimate", false);
         head = getIntent().getDoubleExtra("head", Double.NaN);
         flow = getIntent().getDoubleExtra("flow", Double.NaN);
+        unit = PumpSelector.normalizeUnit(getIntent().getStringExtra("unit"));
 
         LinearLayout root = Ui.root(this);
         if (rec == null) {
@@ -45,6 +47,7 @@ public class PumpDetailsActivity extends Activity {
     LinearLayout header() {
         LinearLayout top = Ui.card(this);
         LinearLayout row = Ui.row(this);
+
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.app_logo);
         row.addView(logo, new LinearLayout.LayoutParams(Ui.dp(this, 42), Ui.dp(this, 42)));
@@ -56,8 +59,9 @@ public class PumpDetailsActivity extends Activity {
 
         top.addView(Ui.text(this, rec.category, 16, Ui.BLUE, 1));
         top.addView(Ui.text(this, PumpSelector.trim(rec.hp) + " HP  •  " + PumpSelector.trim(rec.kw) + " kW  •  " + phaseLabel(rec.phase), 16, Ui.MUTED, 1));
+
         if (has && !Double.isNaN(head) && !Double.isNaN(flow)) {
-            top.addView(Ui.text(this, "Estimated at selected head: " + PumpSelector.lph(flow) + " at " + PumpSelector.head(head), 17, Ui.GREEN, 1));
+            top.addView(Ui.text(this, "Estimated at selected head: " + PumpSelector.formatFlow(flow, unit) + " at " + PumpSelector.head(head), 17, Ui.GREEN, 1));
         }
         return top;
     }
@@ -65,11 +69,13 @@ public class PumpDetailsActivity extends Activity {
     LinearLayout chartCard() {
         LinearLayout c = Ui.card(this);
         c.addView(Ui.text(this, "Performance curve", 20, Ui.TEXT, 1));
-        TextView n = Ui.text(this, "Tap the chart to open the closer zoom view. Orange point is the selected operating point.", 13, Ui.MUTED, 0);
+
+        TextView n = Ui.text(this, "Tap the chart to open the closer zoom view. Flow values are shown in " + PumpSelector.unitLabel(unit) + ".", 13, Ui.MUTED, 0);
         Ui.mb(this, n, 8);
         c.addView(n);
 
         PerformanceCurveView chart = new PerformanceCurveView(this);
+        chart.setDisplayUnit(unit);
         chart.setData(rec.curve, has ? head : null, has ? flow : null);
         chart.setOnClickListener(v -> openZoomScreen());
         chart.setContentDescription("Performance curve. Tap to open zoom view.");
@@ -84,9 +90,9 @@ public class PumpDetailsActivity extends Activity {
         zp.topMargin = Ui.dp(this, 4);
         c.addView(zoom, zp);
         zoom.setOnClickListener(v -> openZoomScreen());
+
         return c;
     }
-
 
     void openZoomScreen() {
         android.content.Intent i = new android.content.Intent(this, ChartZoomActivity.class);
@@ -94,16 +100,19 @@ public class PumpDetailsActivity extends Activity {
         i.putExtra("estimate", has);
         i.putExtra("head", head);
         i.putExtra("flow", flow);
+        i.putExtra("unit", unit);
         startActivity(i);
     }
 
     LinearLayout catalogueCard() {
         LinearLayout c = Ui.card(this);
         c.addView(Ui.text(this, "Catalogue section", 18, Ui.TEXT, 1));
+
         TextView t = Ui.text(this, catalogueText(), 14, Ui.MUTED, 0);
         t.setLineSpacing(Ui.dp(this, 2), 1f);
         t.setTextIsSelectable(true);
         c.addView(t);
+
         return c;
     }
 
@@ -114,29 +123,33 @@ public class PumpDetailsActivity extends Activity {
         LinearLayout row = Ui.row(this);
         Button wa = Ui.primary(this, "Share WhatsApp");
         row.addView(wa, new LinearLayout.LayoutParams(0, -2, 1));
+
         Button dl = Ui.blue(this, "Download Image");
         LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(0, -2, 1);
         dp.setMargins(Ui.dp(this, 10), 0, 0, 0);
         row.addView(dl, dp);
+
         Ui.mb(this, row, 10);
         outer.addView(row);
 
         LinearLayout row2 = Ui.row(this);
         Button copy = Ui.secondary(this, "Copy model number");
         row2.addView(copy, new LinearLayout.LayoutParams(0, -2, 1));
+
         Button back = Ui.secondary(this, "Back");
         LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(0, -2, 1);
         bp.setMargins(Ui.dp(this, 10), 0, 0, 0);
         row2.addView(back, bp);
         outer.addView(row2);
 
-        wa.setOnClickListener(v -> ShareImageBuilder.shareWhatsApp(this, rec, has, head, flow));
-        dl.setOnClickListener(v -> ShareImageBuilder.download(this, rec, has, head, flow));
+        wa.setOnClickListener(v -> ShareImageBuilder.shareWhatsApp(this, rec, has, head, flow, unit));
+        dl.setOnClickListener(v -> ShareImageBuilder.download(this, rec, has, head, flow, unit));
         copy.setOnClickListener(v -> {
             ((android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("model", rec.model));
             Toast.makeText(this, "Model copied", Toast.LENGTH_SHORT).show();
         });
         back.setOnClickListener(v -> finish());
+
         return outer;
     }
 
@@ -145,17 +158,23 @@ public class PumpDetailsActivity extends Activity {
         double[][] pts = rec.curve;
         int maxFlow = -1, maxHead = -1;
         double bestF = -1, bestH = -1;
+
         if (pts != null) {
             for (int i = 0; i < pts.length; i++) if (pts[i] != null && pts[i].length >= 2) {
                 if (pts[i][1] > bestF) { bestF = pts[i][1]; maxFlow = i; }
                 if (pts[i][0] > bestH) { bestH = pts[i][0]; maxHead = i; }
             }
+
             for (int i = 0; i < pts.length; i++) if (pts[i] != null && pts[i].length >= 2) {
                 String label = i == maxFlow ? "Max Flow" : i == maxHead ? "Max Head" : "BEP";
-                rows.add(new String[]{label, String.format(Locale.US, "%,.0f LPH at %.1f m", pts[i][1], pts[i][0])});
+                rows.add(new String[]{label, PumpSelector.formatFlow(pts[i][1], unit) + " at " + String.format(Locale.US, "%.1f m", pts[i][0])});
             }
         }
-        if (has && !Double.isNaN(head) && !Double.isNaN(flow)) rows.add(new String[]{"Selected point", String.format(Locale.US, "%,.0f LPH at %.1f m", flow, head)});
+
+        if (has && !Double.isNaN(head) && !Double.isNaN(flow)) {
+            rows.add(new String[]{"Selected point", PumpSelector.formatFlow(flow, unit) + " at " + String.format(Locale.US, "%.1f m", head)});
+        }
+
         return rows.toArray(new String[0][]);
     }
 
@@ -164,7 +183,7 @@ public class PumpDetailsActivity extends Activity {
                 {"Delivery / Pipe size", empty(rec.size) ? "-" : rec.size},
                 {"Page", String.valueOf(rec.page)},
                 {"Head range", safe(rec.headRangeText) + " m"},
-                {"Discharge range", safe(rec.dischargeRangeText) + " " + safe(rec.flowUnitOriginal)},
+                {"Discharge range", flowRange(rec)},
                 {"Flow range", flowRange(rec)},
                 {"Brand", empty(rec.brand) ? "-" : rec.brand},
                 {"Stages", empty(rec.stages) ? "-" : rec.stages},
@@ -175,6 +194,7 @@ public class PumpDetailsActivity extends Activity {
     LinearLayout detailCard(String title, String[][] rows) {
         LinearLayout c = Ui.card(this);
         c.addView(Ui.text(this, title, 18, Ui.TEXT, 1));
+
         for (String[] row : rows) {
             LinearLayout line = Ui.row(this);
             line.setPadding(0, Ui.dp(this, 6), 0, Ui.dp(this, 6));
@@ -187,6 +207,13 @@ public class PumpDetailsActivity extends Activity {
         return c;
     }
 
+    String flowRange(PumpRecord r) {
+        if (!Double.isNaN(r.minFlowLPH) && !Double.isNaN(r.maxFlowLPH)) {
+            return PumpSelector.formatFlowNumber(PumpSelector.fromLPH(r.minFlowLPH, unit), unit) + " – " + PumpSelector.formatFlow(r.maxFlowLPH, unit);
+        }
+        return safe(r.dischargeRangeText) + " " + safe(r.flowUnitOriginal);
+    }
+
     String catalogueText() {
         String s = safe(rec.catalogueSectionText);
         if (!s.isEmpty()) return s;
@@ -197,13 +224,12 @@ public class PumpDetailsActivity extends Activity {
 
     String phaseLabel(String p) {
         p = safe(p).toUpperCase(Locale.US);
-        if (p.contains("S")) return "Single Phase";
-        if (p.contains("T")) return "Three Phase";
+        boolean s = p.contains("S");
+        boolean t = p.contains("T") || p.contains("3");
+        if (s && t) return "Single / Three Phase";
+        if (s) return "Single Phase";
+        if (t) return "Three Phase";
         return p.isEmpty() ? "Phase -" : p;
-    }
-
-    String flowRange(PumpRecord r) {
-        return Double.isNaN(r.minFlowLPH) || Double.isNaN(r.maxFlowLPH) ? "-" : PumpSelector.lph(r.minFlowLPH).replace(" LPH", "") + " – " + PumpSelector.lph(r.maxFlowLPH);
     }
 
     String safe(String s) { return s == null ? "" : s.trim(); }

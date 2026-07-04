@@ -1,6 +1,127 @@
 package com.granpa.pumpselector;
-import android.app.*;import android.content.*;import android.os.*;import android.text.*;import android.view.*;import android.widget.*;import java.util.*;
-public class ResultsActivity extends Activity{PumpListAdapter adapter;ArrayList<PumpSelector.Result> all=new ArrayList<>();double head;
- protected void onCreate(Bundle b){super.onCreate(b);Intent in=getIntent();head=in.getDoubleExtra("head",Double.NaN);boolean range=in.getBooleanExtra("range",false);double f1=in.getDoubleExtra("flow1",Double.NaN),f2=in.getDoubleExtra("flow2",f1);PumpSelector.Req req=PumpSelector.req(range,f1,f2,in.getStringExtra("unit"));all=PumpSelector.select(PumpRepository.getRecords(this),head,req,in.getStringExtra("cat"),in.getStringExtra("phase"),in.getStringExtra("key"));LinearLayout root=Ui.root(this);LinearLayout sum=Ui.card(this);sum.addView(Ui.text(this,"Results",26,Ui.TEXT,1));sum.addView(Ui.text(this,PumpSelector.head(head)+" fixed head • "+(req==null?"Invalid rule":req.label),14,Ui.MUTED,0));sum.addView(Ui.text(this,all.size()+" matching models",24,all.isEmpty()?Ui.ORANGE:Ui.GREEN,1));if(req!=null)sum.addView(Ui.text(this,"Rule: "+req.rule,14,Ui.MUTED,0));root.addView(sum);EditText search=Ui.input(this,"",android.text.InputType.TYPE_CLASS_TEXT);search.setHint("Search within results, e.g. ACS1125");Ui.mb(this,search,10);root.addView(search);LinearLayout actions=Ui.row(this);Button csv=Ui.secondary(this,"Copy CSV");actions.addView(csv,new LinearLayout.LayoutParams(0,-2,1));Button back=Ui.secondary(this,"Back to search");LinearLayout.LayoutParams bp=new LinearLayout.LayoutParams(0,-2,1);bp.setMargins(Ui.dp(this,10),0,0,0);actions.addView(back,bp);Ui.mb(this,actions,10);root.addView(actions);TextView empty=Ui.text(this,"No matching model for this fixed-head rule. Try another pump type, phase, or flow range.",15,Ui.MUTED,0);if(all.isEmpty())root.addView(empty);adapter=new PumpListAdapter(this);adapter.setItems(all);ListView list=new ListView(this);list.setDivider(null);list.setCacheColorHint(0);list.setAdapter(adapter);root.addView(list,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);search.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int st,int before,int count){filter(s.toString());}public void afterTextChanged(Editable e){}});list.setOnItemClickListener((p,v,pos,id)->openDetails(adapter.getResult(pos)));back.setOnClickListener(v->finish());csv.setOnClickListener(v->copyCsv());}
- void filter(String q){if(q==null||q.trim().isEmpty()){adapter.setItems(all);return;}ArrayList<PumpSelector.Result> out=new ArrayList<>();for(PumpSelector.Result r:all)if(PumpSelector.kw(r.r,q))out.add(r);adapter.setItems(out);}void openDetails(PumpSelector.Result r){Intent i=new Intent(this,PumpDetailsActivity.class);i.putExtra("id",r.r.id);i.putExtra("head",r.head);i.putExtra("flow",r.flow);i.putExtra("estimate",r.estimate);startActivity(i);}void copyCsv(){StringBuilder sb=new StringBuilder("Model,HP,kW,Phase,Estimated LPH,Head,Category,Page,Size,Brand\n");for(PumpSelector.Result x:all){PumpRecord r=x.r;sb.append(q(r.model)).append(',').append(r.hp).append(',').append(r.kw).append(',').append(q(r.phase)).append(',').append(String.format(Locale.US,"%.0f",x.flow)).append(',').append(String.format(Locale.US,"%.1f",x.head)).append(',').append(q(r.category)).append(',').append(r.page).append(',').append(q(r.size)).append(',').append(q(r.brand)).append('\n');}((android.content.ClipboardManager)getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("granpa-results.csv",sb.toString()));Toast.makeText(this,"CSV copied",Toast.LENGTH_SHORT).show();}String q(String s){if(s==null)return"\"\"";return"\""+s.replace("\"","\"\"")+"\"";}
+
+import android.app.*;
+import android.content.*;
+import android.os.*;
+import android.text.*;
+import android.view.*;
+import android.widget.*;
+import java.util.*;
+
+public class ResultsActivity extends Activity {
+    PumpListAdapter adapter;
+    ArrayList<PumpSelector.Result> all = new ArrayList<>();
+    double head;
+    String unit = "LPM";
+
+    protected void onCreate(Bundle b) {
+        super.onCreate(b);
+
+        Intent in = getIntent();
+        head = in.getDoubleExtra("head", Double.NaN);
+        unit = PumpSelector.normalizeUnit(in.getStringExtra("unit"));
+        boolean range = in.getBooleanExtra("range", false);
+        double f1 = in.getDoubleExtra("flow1", Double.NaN), f2 = in.getDoubleExtra("flow2", f1);
+
+        PumpSelector.Req req = PumpSelector.req(range, f1, f2, unit);
+        all = PumpSelector.select(PumpRepository.getRecords(this), head, req, in.getStringExtra("cat"), in.getStringExtra("phase"), in.getStringExtra("key"));
+
+        LinearLayout root = Ui.root(this);
+
+        LinearLayout sum = Ui.card(this);
+        sum.addView(Ui.text(this, "Results", 26, Ui.TEXT, 1));
+        sum.addView(Ui.text(this, PumpSelector.head(head) + " fixed head • " + (req == null ? "Invalid rule" : req.label), 14, Ui.MUTED, 0));
+        sum.addView(Ui.text(this, all.size() + " matching models", 24, all.isEmpty() ? Ui.ORANGE : Ui.GREEN, 1));
+        if (req != null) sum.addView(Ui.text(this, "Rule: " + req.rule, 14, Ui.MUTED, 0));
+        if ("all".equals(in.getStringExtra("cat"))) {
+            sum.addView(Ui.text(this, "Tip: choose Borewell Submersible if you do not want dewatering/sewage models mixed in.", 13, Ui.BLUE, 0));
+        }
+        root.addView(sum);
+
+        EditText search = Ui.input(this, "", android.text.InputType.TYPE_CLASS_TEXT);
+        search.setHint("Search within results, e.g. ACS1125");
+        Ui.mb(this, search, 10);
+        root.addView(search);
+
+        LinearLayout actions = Ui.row(this);
+        Button csv = Ui.secondary(this, "Copy CSV");
+        actions.addView(csv, new LinearLayout.LayoutParams(0, -2, 1));
+
+        Button back = Ui.secondary(this, "Back to search");
+        LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(0, -2, 1);
+        bp.setMargins(Ui.dp(this, 10), 0, 0, 0);
+        actions.addView(back, bp);
+        Ui.mb(this, actions, 10);
+        root.addView(actions);
+
+        TextView empty = Ui.text(this, "No matching model for this fixed-head rule. Try another pump type, phase, or flow range.", 15, Ui.MUTED, 0);
+        if (all.isEmpty()) root.addView(empty);
+
+        adapter = new PumpListAdapter(this);
+        adapter.setDisplayUnit(unit);
+        adapter.setItems(all);
+
+        ListView list = new ListView(this);
+        list.setDivider(null);
+        list.setCacheColorHint(0);
+        list.setAdapter(adapter);
+        root.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
+        setContentView(root);
+
+        search.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
+            public void onTextChanged(CharSequence s, int st, int before, int count) { filter(s.toString()); }
+            public void afterTextChanged(Editable e) {}
+        });
+
+        list.setOnItemClickListener((p, v, pos, id) -> openDetails(adapter.getResult(pos)));
+        back.setOnClickListener(v -> finish());
+        csv.setOnClickListener(v -> copyCsv());
+    }
+
+    void filter(String q) {
+        if (q == null || q.trim().isEmpty()) {
+            adapter.setItems(all);
+            return;
+        }
+        ArrayList<PumpSelector.Result> out = new ArrayList<>();
+        for (PumpSelector.Result r : all) if (PumpSelector.kw(r.r, q)) out.add(r);
+        adapter.setItems(out);
+    }
+
+    void openDetails(PumpSelector.Result r) {
+        Intent i = new Intent(this, PumpDetailsActivity.class);
+        i.putExtra("id", r.r.id);
+        i.putExtra("head", r.head);
+        i.putExtra("flow", r.flow);
+        i.putExtra("estimate", r.estimate);
+        i.putExtra("unit", unit);
+        startActivity(i);
+    }
+
+    void copyCsv() {
+        String u = PumpSelector.unitLabel(unit);
+        StringBuilder sb = new StringBuilder("Model,HP,kW,Phase,Estimated " + u + ",Head,Category,Page,Size,Brand\n");
+        for (PumpSelector.Result x : all) {
+            PumpRecord r = x.r;
+            sb.append(q(r.model)).append(',')
+                    .append(r.hp).append(',')
+                    .append(r.kw).append(',')
+                    .append(q(r.phase)).append(',')
+                    .append(String.format(Locale.US, "%.2f", PumpSelector.fromLPH(x.flow, unit))).append(',')
+                    .append(String.format(Locale.US, "%.1f", x.head)).append(',')
+                    .append(q(r.category)).append(',')
+                    .append(r.page).append(',')
+                    .append(q(r.size)).append(',')
+                    .append(q(r.brand)).append('\n');
+        }
+        ((android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE))
+                .setPrimaryClip(ClipData.newPlainText("granpa-results.csv", sb.toString()));
+        Toast.makeText(this, "CSV copied in " + u, Toast.LENGTH_SHORT).show();
+    }
+
+    String q(String s) {
+        if (s == null) return "\"\"";
+        return "\"" + s.replace("\"", "\"\"") + "\"";
+    }
 }
