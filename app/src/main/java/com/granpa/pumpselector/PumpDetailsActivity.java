@@ -65,27 +65,36 @@ public class PumpDetailsActivity extends Activity {
     LinearLayout chartCard() {
         LinearLayout c = Ui.card(this);
         c.addView(Ui.text(this, "Performance curve", 20, Ui.TEXT, 1));
-        TextView n = Ui.text(this, "Smooth catalogue curve with major and minor grid lines. Orange point is the selected operating point. Open closer to pinch-zoom and move the chart with your finger when required.", 13, Ui.MUTED, 0);
+        TextView n = Ui.text(this, "Tap the chart to open the closer zoom view. Orange point is the selected operating point.", 13, Ui.MUTED, 0);
         Ui.mb(this, n, 8);
         c.addView(n);
 
         PerformanceCurveView chart = new PerformanceCurveView(this);
         chart.setData(rec.curve, has ? head : null, has ? flow : null);
+        chart.setOnClickListener(v -> openZoomScreen());
+        chart.setContentDescription("Performance curve. Tap to open zoom view.");
         c.addView(chart, new LinearLayout.LayoutParams(-1, Ui.dp(this, 330)));
+
+        TextView tapHint = Ui.text(this, "Tap chart for pinch zoom, double-tap zoom, and drag-to-move view.", 12, Ui.BLUE, 1);
+        Ui.mb(this, tapHint, 8);
+        c.addView(tapHint);
 
         Button zoom = Ui.secondary(this, "Open closer / Pinch + move");
         LinearLayout.LayoutParams zp = new LinearLayout.LayoutParams(-1, -2);
-        zp.topMargin = Ui.dp(this, 10);
+        zp.topMargin = Ui.dp(this, 4);
         c.addView(zoom, zp);
-        zoom.setOnClickListener(v -> {
-            android.content.Intent i = new android.content.Intent(this, ChartZoomActivity.class);
-            i.putExtra("id", rec.id);
-            i.putExtra("estimate", has);
-            i.putExtra("head", head);
-            i.putExtra("flow", flow);
-            startActivity(i);
-        });
+        zoom.setOnClickListener(v -> openZoomScreen());
         return c;
+    }
+
+
+    void openZoomScreen() {
+        android.content.Intent i = new android.content.Intent(this, ChartZoomActivity.class);
+        i.putExtra("id", rec.id);
+        i.putExtra("estimate", has);
+        i.putExtra("head", head);
+        i.putExtra("flow", flow);
+        startActivity(i);
     }
 
     LinearLayout catalogueCard() {

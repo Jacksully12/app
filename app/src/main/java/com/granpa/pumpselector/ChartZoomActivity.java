@@ -26,7 +26,7 @@ public class ChartZoomActivity extends Activity {
         root.addView(Ui.text(this, "Zoom chart", 24, Ui.TEXT, 1));
         root.addView(Ui.text(this, rec != null ? rec.model : "Pump model", 18, Ui.BLUE, 1));
 
-        TextView help = Ui.text(this, "Pinch with two fingers to zoom. After zooming, drag the chart to move around.", 14, Ui.MUTED, 0);
+        TextView help = Ui.text(this, "Pinch or double-tap to zoom. After zooming, drag the chart to move around.", 14, Ui.MUTED, 0);
         Ui.mb(this, help, 10);
         root.addView(help);
 
@@ -54,7 +54,8 @@ public class ChartZoomActivity extends Activity {
         chart = new PerformanceCurveView(this);
         if (rec != null) chart.setData(rec.curve, has ? head : null, has ? flow : null);
         chart.setPinchZoomEnabled(true);
-        card.addView(chart, new LinearLayout.LayoutParams(-1, Ui.dp(this, 520)));
+        chart.setZoomListener(percent -> updateZoomInfo());
+        card.addView(chart, new LinearLayout.LayoutParams(-1, Ui.dp(this, 540)));
         root.addView(card);
 
         Button close = Ui.secondary(this, "Back to details");

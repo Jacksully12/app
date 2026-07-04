@@ -51,3 +51,10 @@ Important split:
 - Added +/- zoom buttons plus reset view as a fallback for users who prefer buttons.
 - Increased minor grid density so the chart can be checked more precisely.
 - Kept the chart as a clean line-only performance curve with the orange selected point and guide lines.
+
+
+## v2.7.0 tap-to-zoom + improved chart navigation
+- Tapping the chart on the model details screen now opens the closer zoom view directly.
+- The closer chart view supports pinch zoom, double-tap zoom/reset, and drag-to-move panning after zooming.
+- Zoom percentage updates while using gestures or buttons.
+- Chart gridlines were slightly strengthened for better technical checking.

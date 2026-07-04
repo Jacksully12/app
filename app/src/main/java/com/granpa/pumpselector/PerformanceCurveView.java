@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -23,6 +24,7 @@ public class PerformanceCurveView extends View {
     Double sh, sf;
 
     private final ScaleGestureDetector scaleDetector;
+    private final GestureDetector gestureDetector;
     private float zoomFactor = 1f;
     private float panX = 0f;
     private float panY = 0f;
@@ -30,20 +32,25 @@ public class PerformanceCurveView extends View {
     private float lastTouchY = 0f;
     private boolean pinchZoomEnabled = false;
     private boolean dragging = false;
+    private ZoomListener zoomListener;
+
+    public interface ZoomListener {
+        void onZoomChanged(int percent);
+    }
 
     public PerformanceCurveView(Context c) {
         super(c);
 
-        grid.setColor(Color.rgb(199, 211, 225));
-        grid.setStrokeWidth(dp(1.1f));
+        grid.setColor(Color.rgb(194, 208, 224));
+        grid.setStrokeWidth(dp(1.15f));
         grid.setStyle(Paint.Style.STROKE);
         grid.setPathEffect(new DashPathEffect(new float[]{6, 6}, 0));
 
-        minorGrid.setColor(Color.rgb(225, 233, 242));
+        minorGrid.setColor(Color.rgb(218, 228, 239));
         minorGrid.setStrokeWidth(1f);
         minorGrid.setStyle(Paint.Style.STROKE);
 
-        axis.setColor(Color.rgb(91, 105, 120));
+        axis.setColor(Color.rgb(82, 97, 114));
         axis.setStrokeWidth(dp(1.5f));
 
         txt.setColor(Ui.TEXT);
@@ -62,15 +69,45 @@ public class PerformanceCurveView extends View {
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
                 if (!pinchZoomEnabled) return false;
+
+                float focusX = detector.getFocusX();
+                float focusY = detector.getFocusY();
                 float previous = zoomFactor;
+
                 zoomFactor *= detector.getScaleFactor();
                 zoomFactor = Math.max(1f, Math.min(4f, zoomFactor));
+
                 if (zoomFactor == 1f) {
                     panX = 0f;
                     panY = 0f;
                 } else if (previous != zoomFactor) {
+                    float scaleChange = zoomFactor / previous;
+                    panX = focusX - (focusX - panX) * scaleChange;
+                    panY = focusY - (focusY - panY) * scaleChange;
                     clampPan();
                 }
+
+                notifyZoomChanged();
+                invalidate();
+                return true;
+            }
+        });
+
+        gestureDetector = new GestureDetector(c, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                if (!pinchZoomEnabled) return false;
+
+                if (zoomFactor <= 1.05f) {
+                    zoomFactor = 2f;
+                    panX = getWidth() / 2f - e.getX();
+                    panY = getHeight() / 2f - e.getY();
+                    clampPan();
+                } else {
+                    resetZoom();
+                }
+
+                notifyZoomChanged();
                 invalidate();
                 return true;
             }
@@ -90,16 +127,22 @@ public class PerformanceCurveView extends View {
         setClickable(enabled);
     }
 
+    public void setZoomListener(ZoomListener listener) {
+        zoomListener = listener;
+    }
+
     public void resetZoom() {
         zoomFactor = 1f;
         panX = 0f;
         panY = 0f;
+        notifyZoomChanged();
         invalidate();
     }
 
     public void zoomIn() {
         zoomFactor = Math.min(4f, zoomFactor * 1.25f);
         clampPan();
+        notifyZoomChanged();
         invalidate();
     }
 
@@ -110,6 +153,7 @@ public class PerformanceCurveView extends View {
             panY = 0f;
         }
         clampPan();
+        notifyZoomChanged();
         invalidate();
     }
 
@@ -117,10 +161,15 @@ public class PerformanceCurveView extends View {
         return Math.round(zoomFactor * 100f);
     }
 
+    private void notifyZoomChanged() {
+        if (zoomListener != null) zoomListener.onZoomChanged(getZoomPercent());
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!pinchZoomEnabled) return super.onTouchEvent(event);
 
+        gestureDetector.onTouchEvent(event);
         scaleDetector.onTouchEvent(event);
 
         boolean multiTouch = event.getPointerCount() > 1;
@@ -135,7 +184,7 @@ public class PerformanceCurveView extends View {
                 lastTouchX = event.getX();
                 lastTouchY = event.getY();
                 dragging = canPan;
-                break;
+                return true;
 
             case MotionEvent.ACTION_MOVE:
                 if (canPan && event.getPointerCount() == 1) {
@@ -163,13 +212,14 @@ public class PerformanceCurveView extends View {
     }
 
     private void clampPan() {
-        if (zoomFactor <= 1f) {
+        if (zoomFactor <= 1f || getWidth() == 0 || getHeight() == 0) {
             panX = 0f;
             panY = 0f;
             return;
         }
-        float maxX = (zoomFactor - 1f) * getWidth() * 0.45f;
-        float maxY = (zoomFactor - 1f) * getHeight() * 0.45f;
+
+        float maxX = (zoomFactor - 1f) * getWidth() * 0.5f;
+        float maxY = (zoomFactor - 1f) * getHeight() * 0.5f;
         panX = Math.max(-maxX, Math.min(maxX, panX));
         panY = Math.max(-maxY, Math.min(maxY, panY));
     }
@@ -215,7 +265,7 @@ public class PerformanceCurveView extends View {
             Paint hint = new Paint(txt);
             hint.setColor(Color.rgb(88, 101, 119));
             hint.setTextSize(sp(11));
-            String msg = zoomFactor > 1f ? "Drag to move • pinch to zoom" : "Pinch with two fingers to zoom";
+            String msg = zoomFactor > 1f ? "Drag to move • double-tap reset" : "Pinch or double-tap to zoom";
             c.drawText(msg, getWidth() - hint.measureText(msg) - dp(8), dp(14), hint);
         }
     }

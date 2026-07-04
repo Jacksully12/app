@@ -79,3 +79,10 @@ v2.6.0 zoom move + finer grid update:
 - Added drag-to-move panning after zooming in.
 - Improved pinch zoom behaviour and kept button zoom/reset fallback.
 - Increased minor grid line density in app chart and share image chart.
+
+
+v2.7.0 tap-to-zoom + improved chart navigation:
+- Tapping chart opens zoom screen.
+- Added double-tap zoom/reset in zoom screen.
+- Improved drag-to-move panning and zoom percentage updates.
+- Strengthened chart gridlines for easier checking.

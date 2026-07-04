@@ -149,12 +149,12 @@ public class ShareImageBuilder {
         double axisH = roundUp(maxH * 1.08, 10);
 
         Paint grid = new Paint(1);
-        grid.setColor(Color.rgb(209, 218, 230));
+        grid.setColor(Color.rgb(194, 208, 224));
         grid.setStrokeWidth(2.0f);
         grid.setStyle(Paint.Style.STROKE);
         grid.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
         Paint minorGrid = new Paint(1);
-        minorGrid.setColor(Color.rgb(224, 233, 243));
+        minorGrid.setColor(Color.rgb(218, 228, 239));
         minorGrid.setStrokeWidth(1.2f);
         minorGrid.setStyle(Paint.Style.STROKE);
         Paint text = new Paint(1);
