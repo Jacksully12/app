@@ -115,3 +115,19 @@ v2.2.0 chart grid visibility update:
   - 2 nearest models below the searched flow
 - This works for LPH and LPM because the app converts internally and displays in the selected unit.
 - Range mode is unchanged.
+
+
+## v3.3.0 TEXMO brand normalization + data audit
+- All records are now stored/displayed as TEXMO.
+- Added `DATA_AUDIT_REPORT.txt` with data consistency checks.
+- Audit checked 1,780 records for missing model, brand, category, page, catalogue section and curve data.
+- Result: 0 missing model/brand/category/page/catalogue-section/curve records.
+- Remaining minor data gaps noted: two models have missing size values: CDP0380S and CDP07S.
+- ASM SP records remain under Openwell Submersible with TEXMO brand.
+
+
+## v3.4.0 size correction
+- Fixed missing size for CDP0380S: 50.
+- Fixed missing size for CDP07S: 50.
+- Updated DATA_AUDIT_REPORT.txt.
+- Data audit now shows 0 missing size values.

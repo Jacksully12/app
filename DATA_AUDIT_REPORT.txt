@@ -1,0 +1,45 @@
+Granpa Pump Selector Data Audit - v3.4.0
+================================================
+Total records checked: 1780
+
+Brand normalization
+- All records are stored/displayed as TEXMO.
+- Remaining records with non-TEXMO brand: 0
+
+Size correction
+- CDP0380S on page 32: size corrected from '' to '50'
+- CDP07S on page 32: size corrected from '' to '50'
+
+Main category counts
+- Borewell Submersible: 841
+- Borewell Submersible - Radial Flow: 355
+- Openwell Submersible: 263
+- Centrifugal Monoblock: 136
+- Agricultural Monoblock: 115
+- Sewage / Dewatering: 35
+- Construction Dewatering: 35
+
+Completeness checks
+- Missing id: 0
+- Missing model: 0
+- Missing brand: 0
+- Missing category: 0
+- Missing phase: 0
+- Missing hp: 0
+- Missing kw: 0
+- Missing headRangeText: 0
+- Missing dischargeRangeText: 0
+- Missing flowUnitOriginal: 0
+- Missing page: 0
+- Missing catalogueSectionText: 0
+- Missing curve: 0
+- Missing size: 0
+- Duplicate IDs: 0
+- Duplicate model names: 2
+  Duplicate model names: EAVM220AS/02, ASM 11 N
+- Bad/missing curve entries: 0
+
+ASM SP / Openwell check
+- ASM SP records checked: 34
+- ASM SP records under Openwell Submersible: 34
+- ASM SP records with TEXMO brand: 34

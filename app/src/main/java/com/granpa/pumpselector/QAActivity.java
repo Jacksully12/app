@@ -21,6 +21,7 @@ public class QAActivity extends Activity {
         card.addView(Ui.text(this, PumpRepository.note(this), 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Native Android app • no WebView • no HTML wrapper", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Default display unit: LPH. LPM remains available from the unit dropdown.", 14, Ui.MUTED, 0));
+        card.addView(Ui.text(this, "Brand rule: all app records are normalized to TEXMO.", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Checked: dropdown readability, search, fixed flow, range flow, model details, chart, WhatsApp share, download image, GitHub workflow.", 14, Ui.MUTED, 0));
         if (q != null) card.addView(Ui.text(this, "ACS 1125 at 40 m ≈ " + PumpSelector.formatFlow(q, "LPH"), 14, Ui.GREEN, 1));
         root.addView(card);
@@ -31,6 +32,7 @@ public class QAActivity extends Activity {
         rules.addView(Ui.text(this, "Fixed-flow results outside ±10% are not shown. Inside the band, only the closest 2 above and closest 2 below are shown.", 14, Ui.MUTED, 0));
         rules.addView(Ui.text(this, "Range mode accepts reverse ranges and checks inside min/max.", 14, Ui.MUTED, 0));
         rules.addView(Ui.text(this, "Page number appears in the app but is hidden from the share image.", 14, Ui.MUTED, 0));
+        rules.addView(Ui.text(this, "Data audit: 1,780 records, 0 missing model/brand/category/curve/page/catalogue-section/size fields. CDP0380S and CDP07S size corrected to 50.", 14, Ui.MUTED, 0));
         root.addView(rules);
 
         setContentView(Ui.scroll(this, root));
