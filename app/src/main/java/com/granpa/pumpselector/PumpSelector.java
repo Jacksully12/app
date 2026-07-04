@@ -91,7 +91,7 @@ public class PumpSelector {
             r.min = x;
             r.max = Double.NaN;
             r.label = "Fixed flow " + formatFlow(x, unit) + " ±10%";
-            r.rule = "strict rule: estimated flow must be between " + formatFlow(lower, unit) + " and " + formatFlow(upper, unit) + " at the fixed head";
+            r.rule = "strict rule: show only the 2 nearest above target and 2 nearest below target within " + formatFlow(lower, unit) + " to " + formatFlow(upper, unit);
         }
         return r;
     }
@@ -99,6 +99,9 @@ public class PumpSelector {
     public static ArrayList<Result> select(List<PumpRecord> rows, double head, Req req, String cat, String phase, String key) {
         ArrayList<Result> out = new ArrayList<>();
         if (req == null) return out;
+
+        ArrayList<Result> above = new ArrayList<>();
+        ArrayList<Result> below = new ArrayList<>();
 
         for (PumpRecord r : rows) {
             if (!cat(r, cat) || !phase(r.phase, phase) || !kw(r, key)) continue;
@@ -116,22 +119,49 @@ public class PumpSelector {
                 if (q < req.min - 1e-4 || q > req.max + 1e-4) continue;
                 x.diff = Math.abs(q - (req.min + req.max) / 2d);
                 x.status = "Inside range";
+                out.add(x);
             } else {
                 double lower = req.min * 0.90d;
                 double upper = req.min * 1.10d;
                 if (q < lower - 1e-4 || q > upper + 1e-4) continue;
 
-                x.diff = Math.abs(q - req.min);
                 double signed = q - req.min;
+                x.diff = Math.abs(signed);
+
                 if (Math.abs(signed) < 1d) {
                     x.status = "Exact";
+                    above.add(x);
                 } else if (signed > 0) {
-                    x.status = "+" + formatFlow(signed, req.unit);
+                    x.status = "Above target • +" + formatFlow(signed, req.unit);
+                    above.add(x);
                 } else {
-                    x.status = "-" + formatFlow(Math.abs(signed), req.unit);
+                    x.status = "Below target • -" + formatFlow(Math.abs(signed), req.unit);
+                    below.add(x);
                 }
             }
-            out.add(x);
+        }
+
+        if (!req.range) {
+            Comparator<Result> closestThenHp = (a, b) -> {
+                int d = Double.compare(a.diff, b.diff);
+                if (d != 0) return d;
+                int hp = Double.compare(a.r.hp, b.r.hp);
+                if (hp != 0) return hp;
+                int kw = Double.compare(a.r.kw, b.r.kw);
+                if (kw != 0) return kw;
+                return a.r.model.compareToIgnoreCase(b.r.model);
+            };
+
+            Collections.sort(above, closestThenHp);
+            Collections.sort(below, closestThenHp);
+
+            int plus = Math.min(2, above.size());
+            int minus = Math.min(2, below.size());
+
+            for (int i = 0; i < plus; i++) out.add(above.get(i));
+            for (int i = 0; i < minus; i++) out.add(below.get(i));
+
+            return out;
         }
 
         Collections.sort(out, (a, b) -> {

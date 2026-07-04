@@ -33,6 +33,7 @@ public class ResultsActivity extends Activity {
         sum.addView(Ui.text(this, PumpSelector.head(head) + " fixed head • " + (req == null ? "Invalid rule" : req.label), 14, Ui.MUTED, 0));
         sum.addView(Ui.text(this, all.size() + " matching models", 24, all.isEmpty() ? Ui.ORANGE : Ui.GREEN, 1));
         if (req != null) sum.addView(Ui.text(this, "Rule: " + req.rule, 14, Ui.MUTED, 0));
+        if (req != null && !range) sum.addView(Ui.text(this, "Shown result limit: maximum 2 above target + 2 below target.", 13, Ui.BLUE, 0));
         if ("all".equals(in.getStringExtra("cat"))) {
             sum.addView(Ui.text(this, "Tip: choose Borewell Submersible if you do not want dewatering/sewage models mixed in.", 13, Ui.BLUE, 0));
         }
@@ -54,7 +55,7 @@ public class ResultsActivity extends Activity {
         Ui.mb(this, actions, 10);
         root.addView(actions);
 
-        TextView empty = Ui.text(this, "No matching model within the strict ±10% flow rule. Try another flow value, pump type, phase, or range mode.", 15, Ui.MUTED, 0);
+        TextView empty = Ui.text(this, "No nearby model within the strict ±10% flow rule. Try another flow value, pump type, phase, or range mode.", 15, Ui.MUTED, 0);
         if (all.isEmpty()) root.addView(empty);
 
         adapter = new PumpListAdapter(this);

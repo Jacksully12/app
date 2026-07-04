@@ -98,3 +98,13 @@ Important split:
   - Centrifugal / Surface Monoblock
   - Dewatering / Sewage
 - Category priority rule: Openwell Submersible must be checked before Monoblock/Centrifugal, because Openwell Submersible Monoblocks are not surface/centrifugal monoblocks.
+
+
+## v3.2.0 nearest 2 above + 2 below rule
+- Fixed-flow results now show a maximum of 4 nearby recommendations.
+- The app first applies the strict ±10% flow band.
+- Then it shows only:
+  - 2 nearest models above/equal to the searched flow
+  - 2 nearest models below the searched flow
+- This works for LPH and LPM because the app converts internally and displays in the selected unit.
+- Range mode is unchanged.

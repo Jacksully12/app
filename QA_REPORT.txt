@@ -117,3 +117,11 @@ v3.1.0 openwell category correction:
 - Updated ASM SP brand/catalogue section to match TEXMO Openwell Submersible Monoblocks.
 - Renamed Monoblock / Centrifugal main category to Centrifugal / Surface Monoblock.
 - Confirmed Openwell category has priority over Monoblock wording.
+
+
+v3.2.0 nearest 2 above + 2 below rule:
+- Fixed-flow results are limited to max 4 models.
+- First apply strict ±10%.
+- Then show closest 2 above/equal and closest 2 below target flow.
+- Works for LPH and LPM.
+- Range mode unchanged.
