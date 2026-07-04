@@ -2,19 +2,58 @@
 
 Native Android pump selector app for Granpa.
 
-## Latest update
+## Latest update — v1.4.0
 
-This version fixes the chart and share image layout:
+This version keeps the detailed in-app format requested for model results and model details, while keeping the WhatsApp/share image clean and customer-facing.
 
-- App name: **Granpa**
-- Model search is at the top of the main screen
-- Direct **Share WhatsApp** button in model details
-- Image-only sharing, no PDF export
-- App details screen keeps page number and full technical details
-- Final shared image hides page number
-- Performance curve now visually starts from the Y-axis and ends at the X-axis
-- Share image chart spacing fixed so axis labels and legend do not overlap
-- GitHub Actions updated to Gradle 8.9
+### In-app format
+
+Result cards show:
+
+```text
+MODEL
+HP • kW • Phase S/T
+Pump type/category
+At selected head: estimated LPH • difference/status
+Page N • Size X • BRAND
+```
+
+Model details screen shows:
+- model header
+- performance curve
+- curve points used
+- quick specs
+- catalogue section
+- Share WhatsApp / Share Image buttons
+- Copy model number / Back buttons
+
+Quick specs shows:
+- Delivery / Pipe size
+- Page
+- Head range
+- Discharge range
+- Flow range
+- Brand
+- Stages
+- Sheet
+
+### Share image format
+
+The final WhatsApp/share image is simplified:
+- no page number
+- no sheet name
+- no unnecessary internal catalogue details
+- includes Granpa branding, model, key specs, estimated flow, and chart
+
+## Project context files
+
+Important project rules and context are stored in:
+
+- `AGENTS.md`
+- `agent.md`
+- `PROJECT_CONTEXT.md`
+- `DATA_RULES.md`
+- `UI_RULES.md`
 
 ## Build APK using GitHub Actions
 
