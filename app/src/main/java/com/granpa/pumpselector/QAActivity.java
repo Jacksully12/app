@@ -28,8 +28,8 @@ public class QAActivity extends Activity {
 
         LinearLayout rules = Ui.card(this);
         rules.addView(Ui.text(this, "Logic rules", 18, Ui.TEXT, 1));
-        rules.addView(Ui.text(this, "Fixed flow: strict ±10% rule, then show maximum 2 nearest above target and 2 nearest below target.", 14, Ui.MUTED, 0));
-        rules.addView(Ui.text(this, "Fixed-flow results outside ±10% are not shown. Inside the band, only the closest 2 above and closest 2 below are shown.", 14, Ui.MUTED, 0));
+        rules.addView(Ui.text(this, "Fixed flow: dealer smart rule. Shows maximum 2 above target and 2 below target; uses ±10%, then wider labelled fallback bands up to ±50%.", 14, Ui.MUTED, 0));
+        rules.addView(Ui.text(this, "Fixed-flow results are grouped as Best ±10%, Extended ±20%, Wide ±30%, or Last option ±50%. Wider matches are labelled, not hidden as exact recommendations.", 14, Ui.MUTED, 0));
         rules.addView(Ui.text(this, "Range mode accepts reverse ranges and checks inside min/max.", 14, Ui.MUTED, 0));
         rules.addView(Ui.text(this, "Page number appears in the app but is hidden from the share image.", 14, Ui.MUTED, 0));
         rules.addView(Ui.text(this, "Data audit: 1,780 records, 0 missing model/brand/category/curve/page/catalogue-section/size fields. CDP0380S and CDP07S size corrected to 50.", 14, Ui.MUTED, 0));

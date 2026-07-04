@@ -90,8 +90,8 @@ public class PumpSelector {
             double upper = x * 1.10d;
             r.min = x;
             r.max = Double.NaN;
-            r.label = "Fixed flow " + formatFlow(x, unit) + " ±10%";
-            r.rule = "strict rule: show only the 2 nearest above target and 2 nearest below target within " + formatFlow(lower, unit) + " to " + formatFlow(upper, unit);
+            r.label = "Fixed flow " + formatFlow(x, unit);
+            r.rule = "dealer smart match: max 2 above + 2 below; starts at ±10%, can expand to ±20%, ±30% and last option ±50%";
         }
         return r;
     }
@@ -121,39 +121,41 @@ public class PumpSelector {
                 x.status = "Inside range";
                 out.add(x);
             } else {
-                double lower = req.min * 0.90d;
-                double upper = req.min * 1.10d;
-                if (q < lower - 1e-4 || q > upper + 1e-4) continue;
-
                 double signed = q - req.min;
-                x.diff = Math.abs(signed);
+                double pct = Math.abs(signed) / Math.max(1d, Math.abs(req.min));
+                int band = toleranceBand(pct);
+                if (band == 0) continue;
 
+                x.diff = Math.abs(signed);
+                String level = toleranceLabel(band);
                 if (Math.abs(signed) < 1d) {
-                    x.status = "Exact";
+                    x.status = "Exact • " + level;
                     above.add(x);
                 } else if (signed > 0) {
-                    x.status = "Above target • +" + formatFlow(signed, req.unit);
+                    x.status = "Above target • +" + formatFlow(signed, req.unit) + " • " + level;
                     above.add(x);
                 } else {
-                    x.status = "Below target • -" + formatFlow(Math.abs(signed), req.unit);
+                    x.status = "Below target • -" + formatFlow(Math.abs(signed), req.unit) + " • " + level;
                     below.add(x);
                 }
             }
         }
 
         if (!req.range) {
-            Comparator<Result> closestThenHp = (a, b) -> {
-                int d = Double.compare(a.diff, b.diff);
-                if (d != 0) return d;
+            Comparator<Result> dealerBest = (a, b) -> {
                 int hp = Double.compare(a.r.hp, b.r.hp);
                 if (hp != 0) return hp;
                 int kw = Double.compare(a.r.kw, b.r.kw);
                 if (kw != 0) return kw;
+                int band = Integer.compare(resultBand(a), resultBand(b));
+                if (band != 0) return band;
+                int d = Double.compare(a.diff, b.diff);
+                if (d != 0) return d;
                 return a.r.model.compareToIgnoreCase(b.r.model);
             };
 
-            Collections.sort(above, closestThenHp);
-            Collections.sort(below, closestThenHp);
+            Collections.sort(above, dealerBest);
+            Collections.sort(below, dealerBest);
 
             int plus = Math.min(2, above.size());
             int minus = Math.min(2, below.size());
@@ -172,6 +174,29 @@ public class PumpSelector {
             return a.r.model.compareToIgnoreCase(b.r.model);
         });
         return out;
+    }
+
+    private static int toleranceBand(double pct) {
+        if (pct <= 0.10d + 1e-9) return 10;
+        if (pct <= 0.20d + 1e-9) return 20;
+        if (pct <= 0.30d + 1e-9) return 30;
+        if (pct <= 0.50d + 1e-9) return 50;
+        return 0;
+    }
+
+    private static String toleranceLabel(int band) {
+        if (band <= 10) return "Best match ±10%";
+        if (band <= 20) return "Extended match ±20%";
+        if (band <= 30) return "Wide match ±30%";
+        return "Last option ±50%";
+    }
+
+    private static int resultBand(Result r) {
+        String s = r.status == null ? "" : r.status;
+        if (s.contains("±10%")) return 10;
+        if (s.contains("±20%")) return 20;
+        if (s.contains("±30%")) return 30;
+        return 50;
     }
 
     public static ArrayList<Result> catalogue(List<PumpRecord> rows, String cat, String key) {

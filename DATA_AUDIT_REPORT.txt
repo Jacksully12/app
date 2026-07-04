@@ -43,3 +43,7 @@ ASM SP / Openwell check
 - ASM SP records checked: 34
 - ASM SP records under Openwell Submersible: 34
 - ASM SP records with TEXMO brand: 34
+
+Selection rule update - v3.5.0
+- Dealer smart matching uses labelled fallback bands up to ±50%.
+- Result limit remains max 2 above/equal and 2 below target flow.

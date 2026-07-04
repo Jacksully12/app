@@ -140,3 +140,11 @@ v3.4.0 size correction:
 - CDP0380S size set to 50.
 - CDP07S size set to 50.
 - Updated data audit. Missing size is now 0.
+
+
+v3.5.0 dealer smart fallback bands:
+- Fixed-flow search shows max 2 above/equal + 2 below.
+- Uses labelled bands: Best ±10%, Extended ±20%, Wide ±30%, Last option ±50%.
+- Wider fallback results are clearly labelled.
+- Ranking prefers lower HP, then lower kW, then tighter band, then closest flow.
+- Range mode unchanged.

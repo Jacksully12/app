@@ -124,3 +124,16 @@ Important split:
 - Fixed missing size for CDP07S: 50.
 - Updated DATA_AUDIT_REPORT.txt.
 - Data audit now shows 0 missing size values.
+
+
+## v3.5.0 dealer smart fallback bands
+- Fixed-flow search now uses dealer smart matching.
+- Shows maximum 4 models: 2 above/equal target flow and 2 below target flow.
+- Candidate bands are labelled:
+  - Best match ±10%
+  - Extended match ±20%
+  - Wide match ±30%
+  - Last option ±50%
+- Wider matches are visible instead of silently hidden, so dealers can see fallback options.
+- Ranking prefers lower HP, then lower kW, then tighter tolerance band, then closest flow.
+- Range mode is unchanged.

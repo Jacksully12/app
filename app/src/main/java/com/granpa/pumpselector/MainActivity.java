@@ -139,7 +139,7 @@ public class MainActivity extends Activity {
         flow2Box.setVisibility(r ? View.VISIBLE : View.GONE);
         hint.setText(r
                 ? "Range mode uses " + u + ". You can enter either order, for example 4500 to 1200."
-                : "Fixed mode uses " + u + ". Strict rule: shows only the 2 nearest above target and 2 nearest below target within ±10%.");
+                : "Fixed mode uses " + u + ". Dealer smart rule: show max 2 above + 2 below. Starts at ±10%; can expand to ±20%, ±30% and last option ±50%.");
     }
 
     void openResults() {
