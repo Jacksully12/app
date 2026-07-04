@@ -32,3 +32,11 @@ Sample check
 Build
 - GitHub Actions workflow uses Gradle 8.9.
 - Artifact name: granpa-pump-selector-debug-apk.
+
+v1.7.0 dropdown/UI update:
+- Replaced default Android spinner item rendering with a custom two-line dropdown adapter.
+- Dropdown selected view and menu are now easier to read on mobile.
+- Main category options are clearly labelled as main categories.
+- Detailed catalogue options are clearly labelled as sub categories.
+- Added Dewatering / Sewage as a main category filter.
+- Flow mode, flow unit and phase dropdowns now include short helper text.

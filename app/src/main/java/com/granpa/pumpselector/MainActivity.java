@@ -89,14 +89,22 @@ public class MainActivity extends Activity {
         card.addView(headRow);
 
         card.addView(Ui.label(this, "Water input mode"));
-        modeSpinner = Ui.spinner(this, options(new String[][]{{"fixed", "Fixed water flow"}, {"range", "Water-flow range"}}));
+        modeSpinner = Ui.spinner(this, options(new String[][]{
+                {"fixed", "Fixed water flow", "Enter one required discharge value"},
+                {"range", "Water-flow range", "Enter minimum and maximum acceptable discharge"}
+        }));
         card.addView(modeSpinner);
 
         card.addView(Ui.label(this, "Water flow"));
         LinearLayout flowRow = Ui.row(this);
         flowOneInput = Ui.input(this, "1200", Ui.numberInput());
         flowRow.addView(flowOneInput, new LinearLayout.LayoutParams(0, -2, 1));
-        unitSpinner = Ui.spinner(this, options(new String[][]{{"LPH", "LPH"}, {"LPM", "LPM"}, {"LPS", "LPS"}, {"M3H", "m³/hour"}}));
+        unitSpinner = Ui.spinner(this, options(new String[][]{
+                {"LPH", "LPH", "Litres per hour"},
+                {"LPM", "LPM", "Litres per minute"},
+                {"LPS", "LPS", "Litres per second"},
+                {"M3H", "m³/hour", "Cubic metres per hour"}
+        }));
         LinearLayout.LayoutParams unitLp = new LinearLayout.LayoutParams(Ui.dp(this, 130), -2);
         unitLp.setMargins(Ui.dp(this, 10), 0, 0, 0);
         flowRow.addView(unitSpinner, unitLp);
@@ -118,7 +126,11 @@ public class MainActivity extends Activity {
         card.addView(categorySpinner);
 
         card.addView(Ui.label(this, "Phase"));
-        phaseSpinner = Ui.spinner(this, options(new String[][]{{"any", "Any"}, {"S", "Single phase"}, {"T", "Three phase"}}));
+        phaseSpinner = Ui.spinner(this, options(new String[][]{
+                {"any", "Any phase", "Show single and three phase models"},
+                {"S", "Single phase", "Usually 220 V supply"},
+                {"T", "Three phase", "Usually 380 V supply"}
+        }));
         Ui.mb(this, phaseSpinner, 18);
         card.addView(phaseSpinner);
 
@@ -167,17 +179,31 @@ public class MainActivity extends Activity {
 
     private List<Option> categoryOptions() {
         ArrayList<Option> o = new ArrayList<>();
-        o.add(new Option("all", "All pump types"));
-        o.add(new Option("monoblock_all", "All Monoblock / Centrifugal"));
-        o.add(new Option("submersible_all", "All Submersible"));
-        o.add(new Option("borewell_all", "All Borewell Submersible"));
-        for (String c : PumpRepository.categories(this)) o.add(new Option(c, c));
+        o.add(new Option("all", "All pump types", "Main category • search the full catalogue", true));
+        o.add(new Option("borewell_all", "Borewell Submersible", "Main category • all borewell submersible pumps", true));
+        o.add(new Option("monoblock_all", "Monoblock / Centrifugal", "Main category • agricultural and centrifugal monoblock pumps", true));
+        o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • construction, drainage and wastewater pumps", true));
+        for (String c : PumpRepository.categories(this)) {
+            o.add(new Option(c, "Sub category • " + c, categoryDetail(c), false));
+        }
         return o;
+    }
+
+    private String categoryDetail(String c) {
+        String lower = c == null ? "" : c.toLowerCase(java.util.Locale.US);
+        if (lower.contains("borewell")) return "Detailed catalogue group under borewell pumps";
+        if (lower.contains("agricultural")) return "Detailed catalogue group for agricultural monoblock pumps";
+        if (lower.contains("centrifugal")) return "Detailed catalogue group for centrifugal monoblock pumps";
+        if (lower.contains("sewage") || lower.contains("dewatering")) return "Detailed catalogue group for dewatering / sewage pumps";
+        return "Detailed catalogue group";
     }
 
     private List<Option> options(String[][] values) {
         ArrayList<Option> out = new ArrayList<>();
-        for (String[] v : values) out.add(new Option(v[0], v[1]));
+        for (String[] v : values) {
+            String detail = v.length > 2 ? v[2] : "";
+            out.add(new Option(v[0], v[1], detail));
+        }
         return out;
     }
 

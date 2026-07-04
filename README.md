@@ -23,3 +23,9 @@ Open in Android Studio, or run:
 ```bash
 gradle assembleDebug
 ```
+
+## v1.7.0 dropdown readability update
+- Pump type dropdown now shows readable two-line options.
+- Main categories and sub categories are clearly separated in wording.
+- Added helper descriptions for water input mode, flow unit and phase.
+- Added main category filter for Dewatering / Sewage.

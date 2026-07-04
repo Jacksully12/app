@@ -143,6 +143,7 @@ public class PumpSelector {
         if (selected.equals("monoblock_all")) return c.contains("monoblock") || c.contains("centrifugal");
         if (selected.equals("submersible_all")) return c.contains("submersible");
         if (selected.equals("borewell_all")) return c.contains("borewell");
+        if (selected.equals("dewatering_all")) return c.contains("dewatering") || c.contains("sewage");
         return selected.equals(r.category);
     }
 

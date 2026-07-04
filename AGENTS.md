@@ -68,3 +68,6 @@ This must come from `catalogueSectionText` in `pumps.json`, generated from catal
 - GitHub Actions uses Gradle 8.9.
 - Artifact name: `granpa-pump-selector-debug-apk`.
 - No Git merge conflict markers in workflow files.
+
+## Dropdown / category UX rule
+Use `OptionAdapter` for readable two-line dropdowns. Main pump groups should be easy to understand, and exact catalogue groups should be labelled as sub categories. Do not revert dropdowns to the default one-line Android spinner unless specifically requested.

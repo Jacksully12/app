@@ -73,12 +73,23 @@ public class CatalogueActivity extends Activity {
 
     private List<Option> categoryOptions() {
         ArrayList<Option> o = new ArrayList<>();
-        o.add(new Option("all", "All pump types"));
-        o.add(new Option("monoblock_all", "All Monoblock / Centrifugal"));
-        o.add(new Option("submersible_all", "All Submersible"));
-        o.add(new Option("borewell_all", "All Borewell Submersible"));
-        for (String c : PumpRepository.categories(this)) o.add(new Option(c, c));
+        o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
+        o.add(new Option("borewell_all", "Borewell Submersible", "Main category • all borewell submersible pumps", true));
+        o.add(new Option("monoblock_all", "Monoblock / Centrifugal", "Main category • agricultural and centrifugal monoblock pumps", true));
+        o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • construction, drainage and wastewater pumps", true));
+        for (String c : PumpRepository.categories(this)) {
+            o.add(new Option(c, "Sub category • " + c, categoryDetail(c), false));
+        }
         return o;
+    }
+
+    private String categoryDetail(String c) {
+        String lower = c == null ? "" : c.toLowerCase(java.util.Locale.US);
+        if (lower.contains("borewell")) return "Detailed catalogue group under borewell pumps";
+        if (lower.contains("agricultural")) return "Detailed catalogue group for agricultural monoblock pumps";
+        if (lower.contains("centrifugal")) return "Detailed catalogue group for centrifugal monoblock pumps";
+        if (lower.contains("sewage") || lower.contains("dewatering")) return "Detailed catalogue group for dewatering / sewage pumps";
+        return "Detailed catalogue group";
     }
 
     private String selected(Spinner s) {

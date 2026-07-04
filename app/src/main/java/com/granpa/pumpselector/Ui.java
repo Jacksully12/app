@@ -8,7 +8,6 @@ import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -117,11 +116,11 @@ public class Ui {
 
     public static Spinner spinner(Activity a, List<Option> options) {
         Spinner s = new Spinner(a);
-        ArrayAdapter<Option> adapter = new ArrayAdapter<>(a, android.R.layout.simple_spinner_dropdown_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        OptionAdapter adapter = new OptionAdapter(a, options);
         s.setAdapter(adapter);
-        s.setMinimumHeight(dp(a, 54));
-        s.setPadding(dp(a, 8), 0, dp(a, 8), 0);
+        s.setMinimumHeight(dp(a, 62));
+        s.setPadding(0, 0, 0, 0);
+        s.setDropDownVerticalOffset(dp(a, 6));
         s.setBackground(bg(a, Color.WHITE, BORDER, 16));
         return s;
     }
