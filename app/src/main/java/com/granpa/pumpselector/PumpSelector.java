@@ -118,7 +118,9 @@ public class PumpSelector {
                 {"borewell_all", "Borewell Submersible"},
                 {"openwell_all", "Openwell Submersible"},
                 {"monoblock_all", "Centrifugal / Surface Monoblock"},
-                {"dewatering_all", "Dewatering / Sewage"}
+                {"multistage_all", "Multistage Pumps"},
+                {"dewatering_all", "Dewatering / Sewage"},
+                {"motors_all", "Motors"}
         };
 
         for (String[] g : groups) {
@@ -139,7 +141,7 @@ public class PumpSelector {
         ArrayList<Result> below = new ArrayList<>();
 
         for (PumpRecord r : rows) {
-            if (!cat(r, cat) || !phase(r.phase, phase) || !kw(r, key)) continue;
+            if (!cat(r, cat) || !phase(r, phase) || !kw(r, key)) continue;
             Double q = flowAt(r, head);
             if (q == null) continue;
 
@@ -282,24 +284,40 @@ public class PumpSelector {
         String c = (r.category == null ? "" : r.category).toLowerCase(Locale.US);
         String section = ((r.catalogueSectionText == null ? "" : r.catalogueSectionText) + " " + (r.title == null ? "" : r.title)).toLowerCase(Locale.US);
 
-        if (s.equals("openwell_all")) {
-            return c.contains("openwell") || section.contains("openwell submersible");
-        }
         if (s.equals("borewell_all")) {
-            return c.contains("borewell") || section.contains("borewell");
+            return c.contains("borewell");
         }
-        if (s.equals("dewatering_all")) {
-            return c.contains("dewatering") || c.contains("sewage") || section.contains("dewatering") || section.contains("sewage");
+        if (s.equals("openwell_all")) {
+            return c.contains("openwell");
         }
         if (s.equals("monoblock_all")) {
-            // Important: Openwell Submersible Monoblocks must not be grouped as centrifugal/surface monoblock.
-            if (c.contains("openwell") || section.contains("openwell submersible")) return false;
-            return c.contains("monoblock") || c.contains("centrifugal") || c.contains("agricultural") || section.contains("centrifugal") || section.contains("jet pump");
+            if (c.contains("openwell")) return false;
+            return c.contains("monoblock") || c.contains("jet pump") || c.contains("self priming") || c.contains("centrifugal");
         }
-        if (s.equals("submersible_all")) {
-            return c.contains("submersible");
+        if (s.equals("multistage_all")) {
+            return c.contains("multistage") || c.equals("avrs");
+        }
+        if (s.equals("dewatering_all")) {
+            return c.contains("sewage") || c.contains("dewatering");
+        }
+        if (s.equals("motors_all")) {
+            return c.equals("motors");
         }
         return s.equals(r.category);
+    }
+
+    public static boolean phase(PumpRecord r, String want) {
+        if (want == null || want.equals("any")) return true;
+        String p = r == null || r.phase == null ? "" : r.phase.toUpperCase(Locale.US);
+        String c = r == null || r.category == null ? "" : r.category.toUpperCase(Locale.US);
+        String section = r == null ? "" : ((r.catalogueSectionText == null ? "" : r.catalogueSectionText) + " " + (r.title == null ? "" : r.title)).toUpperCase(Locale.US);
+
+        boolean single = p.contains("S") || c.startsWith("SP ") || section.contains("SINGLE PHASE") || section.contains("1 PHASE");
+        boolean three = p.contains("T") || p.contains("3") || c.startsWith("3 PHASE") || c.equals("MOTORS") || section.contains("THREE PHASE") || section.contains("3 PHASE") || section.contains("415V") || section.contains("380 VOLTS");
+
+        if (want.equals("S")) return single;
+        if (want.equals("T")) return three;
+        return true;
     }
 
     public static boolean phase(String p, String want) {

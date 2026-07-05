@@ -139,3 +139,18 @@ See `AGENTS.md` for full project rules.
 - Catalogue screen is now the proper place for model search.
 - Catalogue search hint improved: ACS1125, ASM SP, Openwell, 50.
 - Grouped All pump type logic remains unchanged.
+
+
+## v3.9.0 detailed section categories + phase mapping
+- Changed detailed categories to shortened catalogue-section names.
+- Category assignment now follows catalogue section boundaries using page and model-prefix splits where a page has multiple sections.
+- Kept separate:
+  - `SP Openwell Monoblock`
+  - `SP Openwell Monoblock Water Cooled`
+- Renamed High Pressure Vertical Multistage to `AVRS`.
+- Changed TP-style names to `3 Phase ...`.
+- Added main filters:
+  - Multistage Pumps
+  - Motors
+- Phase filtering now uses category/title-derived phase rules, with row-level phase preserved for mixed S/T sections.
+- Added `CATEGORY_PHASE_QA_REPORT.txt`.

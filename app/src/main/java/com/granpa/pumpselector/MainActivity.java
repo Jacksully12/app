@@ -157,22 +157,25 @@ public class MainActivity extends Activity {
     List<Option> categories() {
         ArrayList<Option> o = new ArrayList<>();
         o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
-        o.add(new Option("borewell_all", "Borewell Submersible", "Main category • all borewell submersible pumps", true));
-        o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell submersible monoblocks", true));
-        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • centrifugal, agricultural and surface pumps", true));
-        o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • construction, drainage and wastewater pumps", true));
+        o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
+        o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
+        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, centrifugal and agricultural monoblock", true));
+        o.add(new Option("multistage_all", "Multistage Pumps", "Main category • AVRS, vertical inline and horizontal multistage", true));
+        o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • sewage and dewatering pumps", true));
+        o.add(new Option("motors_all", "Motors", "Main category • motor section", true));
         for (String c : PumpRepository.categories(this)) o.add(new Option(c, "Sub category • " + c, detail(c), false));
         return o;
     }
 
     String detail(String c) {
         c = c == null ? "" : c.toLowerCase(Locale.US);
-        if (c.contains("openwell")) return "Detailed catalogue group under openwell submersible pumps";
-        if (c.contains("borewell")) return "Detailed catalogue group under borewell pumps";
-        if (c.contains("agricultural")) return "Detailed catalogue group for agricultural/surface monoblock pumps";
-        if (c.contains("centrifugal")) return "Detailed catalogue group for centrifugal monoblock pumps";
-        if (c.contains("dewatering") || c.contains("sewage")) return "Detailed catalogue group for dewatering / sewage pumps";
-        return "Detailed catalogue group";
+        if (c.contains("openwell")) return "Detailed openwell catalogue section";
+        if (c.contains("borewell")) return "Detailed borewell catalogue section";
+        if (c.contains("avrs") || c.contains("multistage")) return "Detailed multistage catalogue section";
+        if (c.contains("motor")) return "Detailed motor catalogue section";
+        if (c.contains("agricultural") || c.contains("centrifugal") || c.contains("jet") || c.contains("self priming")) return "Detailed surface / monoblock catalogue section";
+        if (c.contains("dewatering") || c.contains("sewage")) return "Detailed dewatering / sewage catalogue section";
+        return "Detailed catalogue section";
     }
 
     List<Option> options(String[][] a) {

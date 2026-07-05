@@ -47,3 +47,13 @@ ASM SP / Openwell check
 Selection rule update - v3.5.0
 - Dealer smart matching uses labelled fallback bands up to ±50%.
 - Result limit remains max 2 above/equal and 2 below target flow.
+
+
+v3.9.0 detailed section categories + phase mapping:
+- Detailed categories now use shortened section names.
+- SP Openwell Monoblock and SP Openwell Monoblock Water Cooled are kept separate.
+- AVRS naming applied.
+- 3 Phase naming applied.
+- Added Multistage Pumps and Motors main filters.
+- Phase filtering uses category/title-derived rules.
+- Added CATEGORY_PHASE_QA_REPORT.txt.

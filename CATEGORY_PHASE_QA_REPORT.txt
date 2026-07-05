@@ -1,0 +1,81 @@
+Granpa Category + Phase Mapping QA - v3.9.0
+========================================================
+
+Category naming rule
+- Detailed category names now follow catalogue section boundaries and shortened names.
+- Similar SP Openwell categories are kept separate as requested:
+  - SP Openwell Monoblock
+  - SP Openwell Monoblock Water Cooled
+- Three Phase names use `3 Phase` instead of `TP`.
+- High Pressure Vertical Multistage section is renamed as `AVRS`.
+
+Main app filters
+- All pump types
+- Borewell Submersible
+- Openwell Submersible
+- Centrifugal / Surface Monoblock
+- Multistage Pumps
+- Dewatering / Sewage
+- Motors
+
+Detailed category counts
+- 3” Borewell Submersible: 47
+- 4” Borewell Submersible: 277
+- 4” Oil Filled Borewell: 28
+- 5” Borewell Mixed Flow: 12
+- 4” SS Borewell Radial Flow: 49
+- 6” SS Borewell Radial Flow: 85
+- 6” Borewell Radial Flow: 353
+- 7” Borewell Mixed Flow: 71
+- 8” Borewell Radial Flow: 124
+- 9” Borewell Mixed Flow: 11
+- 10” Borewell Mixed Flow: 32
+- Openwell Submersible: 20
+- Horizontal Openwell: 16
+- Vertical Openwell: 77
+- AVRS: 50
+- Vertical Inline Multistage: 40
+- Submersible Sewage: 61
+- SP Self Priming: 45
+- SP Centrifugal Monoblock: 63
+- SP Jet Pumps: 48
+- SP Openwell Monoblock Water Cooled: 34
+- SP Openwell Monoblock: 3
+- Motors: 25
+- 3 Phase Agricultural Monoblock: 115
+- 3 Phase Openwell Submersible: 76
+- 3 Phase Horizontal Multistage: 18
+
+Main filter coverage
+- Records covered by exactly one main filter: 1780
+- Records not covered by any main filter: 0
+- Records overlapping multiple main filters: 0
+
+Phase rule
+- Phase is now derived from the category/title section where applicable.
+- SP categories are Single phase.
+- 3 Phase categories and Motors are Three phase.
+- Categories with both variants preserve row-level S / T / S,T values.
+
+Specific checks
+- ACS 1125: page 36, category SP Centrifugal Monoblock, phase S
+- ASM SP 1125SS: page 36, category SP Openwell Monoblock Water Cooled, phase S
+- ASM 30 JSPS: page 37, category SP Openwell Monoblock, phase S
+- AMH 50: page 38, category Motors, phase T
+- AVRS30/7 TO 09: page 29, category AVRS, phase T
+- AHS 02 / 03: page 43, category 3 Phase Horizontal Multistage, phase S
+
+Completeness
+- Missing id: 0
+- Missing model: 0
+- Missing brand: 0
+- Missing category: 0
+- Missing phase: 0
+- Missing hp: 0
+- Missing kw: 0
+- Missing page: 0
+- Missing catalogueSectionText: 0
+- Missing curve: 0
+- Missing size: 0
+- Total records: 1780
+- Non-TEXMO brand records: 0
