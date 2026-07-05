@@ -38,11 +38,7 @@ public class ResultsActivity extends Activity {
         sum.addView(Ui.text(this, PumpSelector.head(head) + " fixed head • " + (req == null ? "Invalid rule" : req.label), 14, Ui.MUTED, 0));
         int matchCount = PumpSelector.realCount(all);
         sum.addView(Ui.text(this, matchCount + " matching models", 24, matchCount == 0 ? Ui.ORANGE : Ui.GREEN, 1));
-        if (req != null) sum.addView(Ui.text(this, "Rule: " + req.rule, 14, Ui.MUTED, 0));
-        if (req != null && !range) sum.addView(Ui.text(this, "Shown result limit: maximum 2 above target + 2 below target. Wider matches are labelled clearly.", 13, Ui.BLUE, 0));
-        if ("all".equals(in.getStringExtra("cat"))) {
-            sum.addView(Ui.text(this, "All pump types is grouped category-wise, so one category cannot hide another category.", 13, Ui.BLUE, 0));
-        }
+        // Keep the results header clean for dealer use. Detailed rule labels remain on result cards.
         root.addView(sum);
 
         EditText search = Ui.input(this, "", android.text.InputType.TYPE_CLASS_TEXT);

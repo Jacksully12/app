@@ -156,3 +156,15 @@ v3.6.0 deep filter/sort QA:
 - Band quality is sorted before HP.
 - Inside same band, lower HP/kW is preferred.
 - Added LOGIC_QA_REPORT.txt.
+
+
+v3.7.0 clean results header:
+- Removed long rule/explanation text from Results screen.
+- Result cards still show match labels.
+- Grouped All pump type logic remains unchanged.
+
+
+v3.8.0 model search moved to catalogue:
+- Removed first-page model/keyword search input.
+- Duty-point search now uses head, flow, pump type and phase only.
+- Catalogue / Model Search is now used for model search.

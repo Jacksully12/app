@@ -107,7 +107,7 @@ public class PumpSelector {
             r.min = x;
             r.max = Double.NaN;
             r.label = "Fixed flow " + formatFlow(x, unit);
-            r.rule = "dealer smart match: for each selected type, show max 2 above + 2 below; bands are ±10%, ±20%, ±30%, last option ±50%";
+            r.rule = "Dealer smart match";
         }
         return r;
     }

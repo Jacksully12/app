@@ -23,15 +23,6 @@ public class MainActivity extends Activity {
 
         LinearLayout card = Ui.card(this);
 
-        card.addView(Ui.label(this, "Search model / keyword"));
-        modelSearch = Ui.input(this, "", InputType.TYPE_CLASS_TEXT);
-        modelSearch.setHint("Type first, e.g. ACS1125, ASM, JRF17");
-        card.addView(modelSearch);
-
-        TextView sh = Ui.text(this, "Search ignores spaces, so ACS1125 finds ACS 1125.", 12, Ui.MUTED, 0);
-        sh.setPadding(0, Ui.dp(this, 6), 0, Ui.dp(this, 8));
-        card.addView(sh);
-
         card.addView(Ui.label(this, "Fixed head"));
         LinearLayout hr = Ui.row(this);
         head = Ui.input(this, "40", Ui.numberInput());
@@ -92,7 +83,7 @@ public class MainActivity extends Activity {
         Ui.mb(this, find, 12);
         card.addView(find);
 
-        Button browse = Ui.blue(this, "Browse full catalogue");
+        Button browse = Ui.blue(this, "Search catalogue / model list");
         card.addView(browse);
 
         root.addView(card);
@@ -126,7 +117,7 @@ public class MainActivity extends Activity {
         t.setOrientation(LinearLayout.VERTICAL);
         t.setPadding(Ui.dp(this, 14), 0, 0, 0);
         t.addView(Ui.text(this, "Granpa", 30, Ui.TEXT, 1));
-        t.addView(Ui.text(this, "Pump selector with chart and WhatsApp image share", 14, Ui.MUTED, 0));
+        t.addView(Ui.text(this, "Duty-point pump selector with catalogue search", 14, Ui.MUTED, 0));
 
         row.addView(t, new LinearLayout.LayoutParams(0, -2, 1));
         h.addView(row);
@@ -159,7 +150,7 @@ public class MainActivity extends Activity {
         i.putExtra("unit", sel(unit));
         i.putExtra("cat", sel(cat));
         i.putExtra("phase", sel(phase));
-        i.putExtra("key", modelSearch.getText().toString());
+        i.putExtra("key", "");
         startActivity(i);
     }
 

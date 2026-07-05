@@ -174,3 +174,19 @@ v2.2.0 chart grid visibility update:
 - Fixed fallback sorting: band quality comes before HP, so a ±50% low-HP item cannot hide a ±10% or ±20% better match.
 - Inside the same band, lower HP/kW is preferred.
 - Added `LOGIC_QA_REPORT.txt` with test results for 40 m and 1200 LPH.
+
+
+## v3.7.0 clean results header
+- Removed the long dealer-rule explanation text from the Results summary card.
+- Removed the “shown result limit” and “All pump types grouped category-wise” text from the Results summary card.
+- Result cards still show useful match labels such as Best match ±10%, Wide match ±30%, and Last option ±50%.
+- Grouped All pump type logic from v3.6.0 remains unchanged.
+
+
+## v3.8.0 model search moved to catalogue
+- Removed the first-page Search model / keyword input from the pump selection form.
+- Duty-point search now uses only head, flow, pump type and phase.
+- Renamed catalogue button to `Search catalogue / model list`.
+- Catalogue screen is now the proper place for model search.
+- Catalogue search hint improved: ACS1125, ASM SP, Openwell, 50.
+- Grouped All pump type logic remains unchanged.
