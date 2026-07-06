@@ -34,8 +34,24 @@ public class PumpListAdapter extends BaseAdapter {
 
         if (it.header) {
             LinearLayout h = Ui.card(a);
-            h.setPadding(Ui.dp(a, 14), Ui.dp(a, 12), Ui.dp(a, 14), Ui.dp(a, 12));
-            h.addView(Ui.text(a, safe(it.groupTitle), 19, Ui.BLUE, Typeface.BOLD));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
+            lp.setMargins(0, pos == 0 ? 0 : Ui.dp(a, 18), 0, Ui.dp(a, 10));
+            h.setLayoutParams(lp);
+            h.setPadding(Ui.dp(a, 16), Ui.dp(a, 14), Ui.dp(a, 16), Ui.dp(a, 12));
+            h.setBackground(Ui.bg(a, Color.rgb(245, 249, 255), Ui.BORDER, 20));
+
+            TextView tag = new TextView(a);
+            tag.setText("CATEGORY");
+            tag.setTextSize(11);
+            tag.setTextColor(Ui.MUTED);
+            tag.setTypeface(Typeface.DEFAULT_BOLD);
+            h.addView(tag);
+
+            TextView title = Ui.text(a, safe(it.groupTitle), 19, Ui.BLUE, Typeface.BOLD);
+            LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-1, -2);
+            tlp.setMargins(0, Ui.dp(a, 4), 0, 0);
+            title.setLayoutParams(tlp);
+            h.addView(title);
             return h;
         }
 

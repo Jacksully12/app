@@ -209,3 +209,8 @@ v2.2.0 chart grid visibility update:
   - Motors
 - Phase filtering now uses category/title-derived phase rules, with row-level phase preserved for mixed S/T sections.
 - Added `CATEGORY_PHASE_QA_REPORT.txt`.
+
+
+## v4.0.0 UI update
+- Added clearer spacing between grouped result categories.
+- Improved category dropdown readability with clearer main vs sub-category styling.
