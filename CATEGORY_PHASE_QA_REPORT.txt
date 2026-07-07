@@ -79,3 +79,11 @@ Completeness
 - Missing size: 0
 - Total records: 1780
 - Non-TEXMO brand records: 0
+
+## v4.5.0 QA fixes
+- Fixed phase filtering so row-level phase is trusted first (`S`, `T`, or `S,T`).
+- Category/title phase wording is now only a fallback when the row phase is missing.
+- Results count now updates when searching inside the results screen.
+- Added a clear empty message when an internal result search has no matches.
+- Removed the unused INTERNET permission from AndroidManifest.xml.
+- Fixed grouped header creation to use the standard header factory.

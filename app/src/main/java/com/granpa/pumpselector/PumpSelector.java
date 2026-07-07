@@ -308,12 +308,25 @@ public class PumpSelector {
 
     public static boolean phase(PumpRecord r, String want) {
         if (want == null || want.equals("any")) return true;
-        String p = r == null || r.phase == null ? "" : r.phase.toUpperCase(Locale.US);
+
+        // Trust the row-level phase first. Category names such as "3 Phase Horizontal Multistage"
+        // must not make a row-level single-phase model appear in the three-phase filter.
+        String p = r == null || r.phase == null ? "" : r.phase.toUpperCase(Locale.US).trim();
+        boolean rowSingle = p.contains("S");
+        boolean rowThree = p.contains("T") || p.contains("3");
+
+        if (rowSingle || rowThree) {
+            if (want.equals("S")) return rowSingle;
+            if (want.equals("T")) return rowThree;
+            return true;
+        }
+
+        // Fallback only when the row phase is blank or unusable.
         String c = r == null || r.category == null ? "" : r.category.toUpperCase(Locale.US);
         String section = r == null ? "" : ((r.catalogueSectionText == null ? "" : r.catalogueSectionText) + " " + (r.title == null ? "" : r.title)).toUpperCase(Locale.US);
 
-        boolean single = p.contains("S") || c.startsWith("SP ") || section.contains("SINGLE PHASE") || section.contains("1 PHASE");
-        boolean three = p.contains("T") || p.contains("3") || c.startsWith("3 PHASE") || c.equals("MOTORS") || section.contains("THREE PHASE") || section.contains("3 PHASE") || section.contains("415V") || section.contains("380 VOLTS");
+        boolean single = c.startsWith("SP ") || section.contains("SINGLE PHASE") || section.contains("1 PHASE");
+        boolean three = c.startsWith("3 PHASE") || c.equals("MOTORS") || section.contains("THREE PHASE") || section.contains("3 PHASE") || section.contains("415V") || section.contains("380 VOLTS");
 
         if (want.equals("S")) return single;
         if (want.equals("T")) return three;
@@ -322,9 +335,11 @@ public class PumpSelector {
 
     public static boolean phase(String p, String want) {
         if (want == null || want.equals("any")) return true;
-        p = (p == null ? "" : p).toUpperCase(Locale.US);
-        if (want.equals("S")) return p.contains("S");
-        if (want.equals("T")) return p.contains("T") || p.contains("3");
+        p = (p == null ? "" : p).toUpperCase(Locale.US).trim();
+        boolean rowSingle = p.contains("S");
+        boolean rowThree = p.contains("T") || p.contains("3");
+        if (want.equals("S")) return rowSingle;
+        if (want.equals("T")) return rowThree;
         return true;
     }
 

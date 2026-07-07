@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
     <queries>
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
@@ -24,7 +23,8 @@
         <activity android:name=".PumpDetailsActivity" android:screenOrientation="portrait" />
         <activity android:name=".CatalogueActivity" android:screenOrientation="portrait" />
         <activity android:name=".ResultsActivity" android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity" android:screenOrientation="portrait" android:exported="true">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
+        <activity android:name=".SplashActivity" android:screenOrientation="portrait" android:exported="true" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

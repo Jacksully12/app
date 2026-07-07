@@ -9,9 +9,15 @@ import java.util.*;
 public class PumpListAdapter extends BaseAdapter {
     Activity a;
     ArrayList<PumpSelector.Result> items = new ArrayList<>();
+    HashSet<String> collapsedGroups = new HashSet<>();
     String displayUnit = "LPH";
 
     public PumpListAdapter(Activity a) { this.a = a; }
+
+    public void setCollapsedGroups(Set<String> groups) {
+        collapsedGroups.clear();
+        if (groups != null) collapsedGroups.addAll(groups);
+    }
 
     public void setDisplayUnit(String unit) {
         displayUnit = PumpSelector.normalizeUnit(unit);
@@ -33,11 +39,14 @@ public class PumpListAdapter extends BaseAdapter {
         PumpSelector.Result it = items.get(pos);
 
         if (it.header) {
+            String base = baseTitle(it.groupTitle);
+            boolean collapsed = collapsedGroups.contains(base);
+
             LinearLayout h = Ui.card(a);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-            lp.setMargins(0, pos == 0 ? 0 : Ui.dp(a, 18), 0, Ui.dp(a, 10));
+            lp.setMargins(0, pos == 0 ? 0 : Ui.dp(a, 18), 0, Ui.dp(a, 12));
             h.setLayoutParams(lp);
-            h.setPadding(Ui.dp(a, 16), Ui.dp(a, 14), Ui.dp(a, 16), Ui.dp(a, 12));
+            h.setPadding(Ui.dp(a, 16), Ui.dp(a, 14), Ui.dp(a, 16), Ui.dp(a, 14));
             h.setBackground(Ui.bg(a, Color.rgb(245, 249, 255), Ui.BORDER, 20));
 
             TextView tag = new TextView(a);
@@ -47,11 +56,24 @@ public class PumpListAdapter extends BaseAdapter {
             tag.setTypeface(Typeface.DEFAULT_BOLD);
             h.addView(tag);
 
+            LinearLayout top = Ui.row(a);
+            LinearLayout.LayoutParams topLp = new LinearLayout.LayoutParams(-1, -2);
+            topLp.setMargins(0, Ui.dp(a, 4), 0, 0);
+            top.setLayoutParams(topLp);
+
             TextView title = Ui.text(a, safe(it.groupTitle), 19, Ui.BLUE, Typeface.BOLD);
-            LinearLayout.LayoutParams tlp = new LinearLayout.LayoutParams(-1, -2);
-            tlp.setMargins(0, Ui.dp(a, 4), 0, 0);
-            title.setLayoutParams(tlp);
-            h.addView(title);
+            top.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
+
+            TextView arrow = Ui.text(a, collapsed ? "Show ▼" : "Hide ▲", 14, Ui.MUTED, Typeface.BOLD);
+            top.addView(arrow);
+
+            h.addView(top);
+
+            TextView hint = Ui.text(a, collapsed ? "Tap to expand this category" : "Tap to collapse this category", 13, Ui.MUTED, Typeface.NORMAL);
+            LinearLayout.LayoutParams hintLp = new LinearLayout.LayoutParams(-1, -2);
+            hintLp.setMargins(0, Ui.dp(a, 4), 0, 0);
+            hint.setLayoutParams(hintLp);
+            h.addView(hint);
             return h;
         }
 
@@ -104,6 +126,10 @@ public class PumpListAdapter extends BaseAdapter {
         return Ui.GREEN;
     }
 
+    String baseTitle(String s) {
+        if (s == null) return "";
+        return s.replaceAll("\\s+•\\s+\\d+\\s+models?$", "").trim();
+    }
     String safe(String s) { return s == null ? "" : s.trim(); }
     String dash(String s) { s = safe(s); return s.isEmpty() ? "-" : s; }
 }

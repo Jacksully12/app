@@ -154,3 +154,25 @@ See `AGENTS.md` for full project rules.
   - Motors
 - Phase filtering now uses category/title-derived phase rules, with row-level phase preserved for mixed S/T sections.
 - Added `CATEGORY_PHASE_QA_REPORT.txt`.
+
+
+v4.3.0
+- Added collapsible grouped category sections in All pump types results.
+- Tap category headers to hide/show the cards under that category.
+- Added clear Show/Hide state on group headers.
+
+
+## v4.4.0 Copy Results text
+- Replaced `Copy CSV` with `Copy Results`.
+- Copied output is now formatted readable text for WhatsApp, SMS, notes and customer sharing.
+- Grouped `All pump types` results copy with category headings and numbered items.
+- Copy respects the current search text, but collapsed/expanded UI state does not remove items from copied text.
+
+
+## v4.5.0 QA fixes
+- Fixed phase filtering so row-level phase is trusted first (`S`, `T`, or `S,T`).
+- Category/title phase wording is now only a fallback when the row phase is missing.
+- Results count now updates when searching inside the results screen.
+- Added a clear empty message when an internal result search has no matches.
+- Removed the unused INTERNET permission from AndroidManifest.xml.
+- Fixed grouped header creation to use the standard header factory.
