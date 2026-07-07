@@ -1,121 +1,72 @@
 package com.granpa.pumpselector;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import java.util.List;
+import android.app.*;
+import android.graphics.*;
+import android.view.*;
+import android.widget.*;
+import java.util.*;
 
 public class OptionAdapter extends ArrayAdapter<Option> {
-    private final Activity a;
-    private final List<Option> opts;
+    Activity a;
+    List<Option> opts;
 
     public OptionAdapter(Activity a, List<Option> o) {
-        super(a, 0, o);
+        super(a, android.R.layout.simple_spinner_item, o);
         this.a = a;
-        this.opts = o;
+        opts = o;
     }
 
-    @Override
-    public int getCount() {
-        return opts.size();
+    public View getView(int pos, View convert, ViewGroup parent) {
+        return itemView(pos, false);
     }
 
-    @Override
-    public Option getItem(int position) {
-        return opts.get(position);
+    public View getDropDownView(int pos, View convert, ViewGroup parent) {
+        return itemView(pos, true);
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return buildRow(position, false);
-    }
-
-    @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return buildRow(position, true);
-    }
-
-    private View buildRow(int position, boolean dropdown) {
-        Option o = getItem(position);
+    private View itemView(int pos, boolean dropdown) {
+        Option it = opts.get(pos);
 
         LinearLayout box = new LinearLayout(a);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER_VERTICAL);
-
-        int padH = Ui.dp(a, dropdown ? 16 : 14);
-        int padV = Ui.dp(a, dropdown ? 12 : 10);
-        box.setPadding(padH, padV, padH, padV);
-
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+        box.setPadding(
+                Ui.dp(a, 14),
+                Ui.dp(a, dropdown ? 12 : 8),
+                Ui.dp(a, 14),
+                Ui.dp(a, dropdown ? 12 : 8)
         );
-        if (dropdown) {
-            lp.setMargins(Ui.dp(a, 8), Ui.dp(a, o.mainCategory ? 6 : 2), Ui.dp(a, 8), Ui.dp(a, o.mainCategory ? 4 : 2));
-        }
-        box.setLayoutParams(lp);
+        box.setMinimumHeight(Ui.dp(a, dropdown ? 76 : 62));
 
-        GradientDrawable bg = new GradientDrawable();
-        bg.setCornerRadius(Ui.dp(a, 16));
-        bg.setStroke(Ui.dp(a, 1), Ui.BORDER);
+        // Same dropdown layout as before, only professionally colorised.
         if (dropdown) {
-            bg.setColor(o.mainCategory ? Color.rgb(245, 249, 255) : Color.WHITE);
+            box.setBackgroundColor(it.mainCategory ? Color.rgb(241, 247, 253) : Color.WHITE);
         } else {
-            bg.setColor(Color.WHITE);
-        }
-        box.setBackground(bg);
-
-        if (dropdown) {
-            TextView badge = new TextView(a);
-            badge.setText(o.mainCategory ? "MAIN CATEGORY" : "SUB CATEGORY");
-            badge.setTextSize(11);
-            badge.setTypeface(Typeface.DEFAULT_BOLD);
-            badge.setTextColor(o.mainCategory ? Ui.BLUE : Ui.MUTED);
-            badge.setLetterSpacing(0.04f);
-            LinearLayout.LayoutParams badgeLp = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-            badgeLp.bottomMargin = Ui.dp(a, 4);
-            badge.setLayoutParams(badgeLp);
-            box.addView(badge);
+            box.setBackgroundColor(Color.WHITE);
         }
 
-        TextView title = new TextView(a);
-        title.setText(dropdown && !o.mainCategory ? "↳ " + safe(o.label) : safe(o.label));
-        title.setTextSize(dropdown ? 18 : 17);
-        title.setTextColor(o.mainCategory ? Ui.BLUE : Ui.TEXT);
-        title.setTypeface(Typeface.DEFAULT, o.mainCategory ? Typeface.BOLD : Typeface.NORMAL);
+        TextView title = Ui.text(
+                a,
+                it.label,
+                16,
+                it.mainCategory ? Ui.BLUE : Ui.TEXT,
+                it.mainCategory ? Typeface.BOLD : Typeface.NORMAL
+        );
         title.setSingleLine(false);
         box.addView(title);
 
-        if (!safe(o.detail).isEmpty()) {
-            TextView detail = new TextView(a);
-            detail.setText(safe(o.detail));
-            detail.setTextSize(dropdown ? 14 : 13);
-            detail.setTextColor(Ui.MUTED);
-            detail.setSingleLine(false);
-            LinearLayout.LayoutParams detailLp = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+        if (it.detail != null && !it.detail.isEmpty()) {
+            TextView d = Ui.text(
+                    a,
+                    it.detail,
+                    12,
+                    it.mainCategory ? Color.rgb(79, 104, 130) : Ui.MUTED,
+                    Typeface.NORMAL
             );
-            detailLp.topMargin = Ui.dp(a, 3);
-            if (dropdown && !o.mainCategory) detailLp.leftMargin = Ui.dp(a, 14);
-            detail.setLayoutParams(detailLp);
-            box.addView(detail);
+            d.setSingleLine(false);
+            box.addView(d);
         }
 
         return box;
-    }
-
-    private String safe(String s) {
-        return s == null ? "" : s.trim();
     }
 }

@@ -214,3 +214,11 @@ v2.2.0 chart grid visibility update:
 ## v4.0.0 UI update
 - Added clearer spacing between grouped result categories.
 - Improved category dropdown readability with clearer main vs sub-category styling.
+
+
+## v4.1.0 simple coloured dropdown
+- Restored the earlier simple pump-type dropdown layout.
+- Removed the large badge/card style from the dropdown.
+- Main categories use a subtle light-blue background with blue bold title.
+- Sub categories stay white with normal dark text.
+- Result category spacing from v4.0.0 is kept.

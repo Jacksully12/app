@@ -181,3 +181,11 @@ Important split:
   - Motors
 - Phase filtering now uses category/title-derived phase rules, with row-level phase preserved for mixed S/T sections.
 - Added `CATEGORY_PHASE_QA_REPORT.txt`.
+
+
+## v4.1.0 simple coloured dropdown
+- Restored the earlier simple pump-type dropdown layout.
+- Removed the large badge/card style from the dropdown.
+- Main categories use a subtle light-blue background with blue bold title.
+- Sub categories stay white with normal dark text.
+- Result category spacing from v4.0.0 is kept.
