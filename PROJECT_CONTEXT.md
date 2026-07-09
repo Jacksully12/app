@@ -246,3 +246,13 @@ v4.3.0
 - Reduced brand screen button sizes so the selection screen looks lighter.
 - Added `KSB_MULTIBRAND_QA_REPORT.txt`.
 - KSB PDF extraction is automatic and should be spot-checked before production use.
+
+
+## v4.9.0 KSB full re-extraction and QA
+- Re-read the whole KSB Domestic PDF table data.
+- Rebuilt `assets/ksb_pumps.json` with 452 KSB records.
+- Fixed the KSB borewell column-shift issue where head/flow values could become fake ST stage numbers.
+- Corrected the CORA 4AA + UMN example: stages are now 6ST, 7ST, 8ST, 10ST, 12ST, 14ST, 15ST, 16ST and 20ST.
+- Fixed KSB unit handling: LPM x 60, LPH unchanged, m3/hr x 1000.
+- Improved KSB dewatering/sewage group filtering for AMA PORTER, AMA DRAINER, KSTP, AMAREX and KRTU.
+- Added `KSB_FULL_REEXTRACTION_QA_REPORT.txt`.

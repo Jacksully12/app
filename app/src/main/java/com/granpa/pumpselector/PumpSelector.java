@@ -302,7 +302,7 @@ public class PumpSelector {
             return c.contains("booster") || c.contains("pressure");
         }
         if (s.equals("dewatering_all")) {
-            return c.contains("sewage") || c.contains("dewatering") || c.contains("drainage");
+            return c.contains("sewage") || c.contains("dewatering") || c.contains("drainage") || c.contains("drainer") || c.contains("porter") || c.contains("kstp") || c.contains("amarex") || c.contains("krtu");
         }
         if (s.equals("motors_all")) {
             return c.equals("motors");
