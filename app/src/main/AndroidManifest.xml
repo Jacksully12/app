@@ -23,6 +23,7 @@
         <activity android:name=".PumpDetailsActivity" android:screenOrientation="portrait" />
         <activity android:name=".CatalogueActivity" android:screenOrientation="portrait" />
         <activity android:name=".ResultsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".CompareResultsActivity" android:screenOrientation="portrait" />
         <activity android:name=".CompareActivity" android:screenOrientation="portrait" />
         <activity android:name=".BrandSelectionActivity" android:screenOrientation="portrait" />
         <activity android:name=".MainActivity" android:screenOrientation="portrait" />

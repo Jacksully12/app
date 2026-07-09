@@ -224,3 +224,11 @@ v4.3.0
 - Added a clear empty message when an internal result search has no matches.
 - Removed the unused INTERNET permission from AndroidManifest.xml.
 - Fixed grouped header creation to use the standard header factory.
+
+
+## v4.7.0 separate Compare Results screen
+- Compare input is now kept on `CompareActivity`.
+- Results now open on a separate `CompareResultsActivity`.
+- The Compare form button is renamed to `Show compare results`.
+- Compare Results screen shows summary, total comparable models, Texmo/Lubi sections and collapsible brand groups.
+- Back button returns to the compare input screen for quick changes.

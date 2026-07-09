@@ -225,3 +225,11 @@ v4.3.0
 - PumpRepository now supports brand-specific data assets.
 - Existing Texmo flow, chart zoom, share image, download image, Copy Results and collapsible groups are retained.
 - Added `MULTIBRAND_LUBI_QA_REPORT.txt`.
+
+
+## v4.7.0 separate Compare Results screen
+- Compare input is now kept on `CompareActivity`.
+- Results now open on a separate `CompareResultsActivity`.
+- The Compare form button is renamed to `Show compare results`.
+- Compare Results screen shows summary, total comparable models, Texmo/Lubi sections and collapsible brand groups.
+- Back button returns to the compare input screen for quick changes.
