@@ -18,11 +18,16 @@ public class PumpDetailsActivity extends Activity {
     boolean has;
     double head, flow;
     String unit = "LPH";
+    String asset = PumpRepository.TEXMO_ASSET;
+    String brand = "TEXMO";
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        rec = PumpRepository.findById(this, getIntent().getStringExtra("id"));
+        asset = PumpRepository.normalizeAsset(getIntent().getStringExtra("asset"));
+        brand = getIntent().getStringExtra("brand");
+        if (brand == null || brand.trim().isEmpty()) brand = PumpRepository.brandName(asset);
+        rec = PumpRepository.findById(this, asset, getIntent().getStringExtra("id"));
         has = getIntent().getBooleanExtra("estimate", false);
         head = getIntent().getDoubleExtra("head", Double.NaN);
         flow = getIntent().getDoubleExtra("flow", Double.NaN);
@@ -101,6 +106,8 @@ public class PumpDetailsActivity extends Activity {
         i.putExtra("head", head);
         i.putExtra("flow", flow);
         i.putExtra("unit", unit);
+        i.putExtra("asset", asset);
+        i.putExtra("brand", brand);
         startActivity(i);
     }
 
@@ -166,7 +173,7 @@ public class PumpDetailsActivity extends Activity {
             }
 
             for (int i = 0; i < pts.length; i++) if (pts[i] != null && pts[i].length >= 2) {
-                String label = i == maxFlow ? "Max Flow" : i == maxHead ? "Max Head" : "BEP";
+                String label = i == maxFlow ? "Max Flow" : i == maxHead ? "Max Head" : "Curve Point";
                 rows.add(new String[]{label, PumpSelector.formatFlow(pts[i][1], unit) + " at " + String.format(Locale.US, "%.1f m", pts[i][0])});
             }
         }

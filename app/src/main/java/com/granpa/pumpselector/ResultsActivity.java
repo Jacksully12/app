@@ -14,6 +14,8 @@ public class ResultsActivity extends Activity {
     HashSet<String> collapsedGroups = new HashSet<>();
     double head;
     String unit = "LPM";
+    String asset = PumpRepository.TEXMO_ASSET;
+    String brand = "TEXMO";
     String selectedCat = "all";
     String selectedPhase = "any";
     String reqLabel = "";
@@ -27,6 +29,9 @@ public class ResultsActivity extends Activity {
         Intent in = getIntent();
         head = in.getDoubleExtra("head", Double.NaN);
         unit = PumpSelector.normalizeUnit(in.getStringExtra("unit"));
+        asset = PumpRepository.normalizeAsset(in.getStringExtra("asset"));
+        brand = in.getStringExtra("brand");
+        if (brand == null || brand.trim().isEmpty()) brand = PumpRepository.brandName(asset);
         boolean range = in.getBooleanExtra("range", false);
         double f1 = in.getDoubleExtra("flow1", Double.NaN), f2 = in.getDoubleExtra("flow2", f1);
 
@@ -35,15 +40,15 @@ public class ResultsActivity extends Activity {
         selectedPhase = in.getStringExtra("phase");
         reqLabel = req == null ? "" : req.label;
         if ("all".equals(selectedCat)) {
-            all = PumpSelector.selectAllMainGroups(PumpRepository.getRecords(this), head, req, selectedPhase, in.getStringExtra("key"));
+            all = PumpSelector.selectAllMainGroups(PumpRepository.getRecords(this, asset), head, req, selectedPhase, in.getStringExtra("key"));
         } else {
-            all = PumpSelector.select(PumpRepository.getRecords(this), head, req, selectedCat, selectedPhase, in.getStringExtra("key"));
+            all = PumpSelector.select(PumpRepository.getRecords(this, asset), head, req, selectedCat, selectedPhase, in.getStringExtra("key"));
         }
 
         LinearLayout root = Ui.root(this);
 
         LinearLayout sum = Ui.card(this);
-        sum.addView(Ui.text(this, "Results", 26, Ui.TEXT, 1));
+        sum.addView(Ui.text(this, brand + " Results", 26, Ui.TEXT, 1));
         sum.addView(Ui.text(this, PumpSelector.head(head) + " fixed head • " + (req == null ? "Invalid rule" : req.label), 14, Ui.MUTED, 0));
         int matchCount = PumpSelector.realCount(all);
         resultCount = Ui.text(this, matchCount + " matching models", 24, matchCount == 0 ? Ui.ORANGE : Ui.GREEN, 1);
@@ -191,6 +196,8 @@ public class ResultsActivity extends Activity {
         i.putExtra("flow", r.flow);
         i.putExtra("estimate", r.estimate);
         i.putExtra("unit", unit);
+        i.putExtra("asset", asset);
+        i.putExtra("brand", brand);
         startActivity(i);
     }
 
@@ -198,7 +205,7 @@ public class ResultsActivity extends Activity {
         ArrayList<PumpSelector.Result> rows = copyRows();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Granpa Pump Selector Results\n\n");
+        sb.append("Granpa ").append(brand).append(" Pump Selector Results\n\n");
         sb.append("Input\n");
         sb.append("-----\n");
         sb.append("Head: ").append(PumpSelector.head(head)).append("\n");
@@ -282,6 +289,7 @@ public class ResultsActivity extends Activity {
         if (c.equals("openwell_all")) return "Openwell Submersible";
         if (c.equals("monoblock_all")) return "Centrifugal / Surface Monoblock";
         if (c.equals("multistage_all")) return "Multistage Pumps";
+        if (c.equals("booster_all")) return "Booster / Pressure Pumps";
         if (c.equals("dewatering_all")) return "Dewatering / Sewage";
         if (c.equals("motors_all")) return "Motors";
         return c;

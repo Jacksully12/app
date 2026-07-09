@@ -1,0 +1,52 @@
+Granpa Pump Selector v4.6.0 - Multi-brand + Lubi PDF Extraction
+========================================================================
+
+App flow added
+- Splash screen now opens BrandSelectionActivity.
+- BrandSelectionActivity has three buttons: TEXMO, LUBI, COMPARE.
+- TEXMO opens the existing Texmo selector using assets/texmo_pumps.json.
+- LUBI opens the Lubi selector using assets/lubi_pumps.json.
+- COMPARE opens CompareActivity and searches both catalogues at the same duty point.
+
+Data files
+- texmo_pumps.json: 1780 records
+- lubi_pumps.json: 1724 extracted records
+- pumps.json is retained for backward compatibility.
+
+Lubi extraction source
+- Source: uploaded Lubi Pumps Performance Booklet PDF, 88 pages.
+- Index page used for category/page mapping.
+- Tables parsed from performance sections, mainly pages 5 to 80.
+- Removed 25 parser artefact rows with zero or impossible HP values.
+- Stage numbers were retained where the PDF table has a Stage column.
+- For many Lubi borewell stage tables, outlet size is printed as a section note rather than a row value, so row-wise size is left blank instead of guessed.
+- Internal flow storage converted to LPH to match Texmo comparison logic.
+
+Lubi categories and counts
+- 100 mm Borewell Submersible: 34
+- 100-250 mm S.S. Borewell Submersible: 424
+- 125-250 mm Borewell Submersible: 800
+- 80 mm Borewell Submersible: 20
+- Auto Boost / Home Booster: 5
+- Centrifugal Monoblock: 54
+- Drainage / Sewage / Grinder / Propeller: 42
+- High / Low Speed Centrifugal Monoblock: 55
+- Home Pressure Booster System: 43
+- Horizontal Openwell Submersible: 98
+- S.S. Shallow Well Jet Pump: 6
+- Self Priming Monoblock: 68
+- Shallow Well Jet Pumps: 4
+- Twin Booster Systems: 46
+- Vertical Multistage Openwell: 25
+
+Main group QA
+- Texmo records covered by exactly one main group: 1780 / 1780
+- Lubi records covered by exactly one main group: 1724 / 1724
+
+Compare logic
+- Uses the same head, flow, unit, category and phase input for both brands.
+- Shows up to 2 above/equal and 2 below target per brand using existing dealer smart rule.
+- Tapping a result opens the correct brand's model detail page.
+
+Important limitation
+- Lubi table extraction is automated from the PDF. It should be spot-checked against the original PDF before dealer production use, especially pages with complex multi-table layouts.

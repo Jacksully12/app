@@ -11,6 +11,8 @@ public class ChartZoomActivity extends Activity {
     boolean has;
     double head, flow;
     String unit = "LPH";
+    String asset = PumpRepository.TEXMO_ASSET;
+    String brand = "TEXMO";
     PerformanceCurveView chart;
     TextView zoomInfo;
 
@@ -18,7 +20,10 @@ public class ChartZoomActivity extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
 
-        rec = PumpRepository.findById(this, getIntent().getStringExtra("id"));
+        asset = PumpRepository.normalizeAsset(getIntent().getStringExtra("asset"));
+        brand = getIntent().getStringExtra("brand");
+        if (brand == null || brand.trim().isEmpty()) brand = PumpRepository.brandName(asset);
+        rec = PumpRepository.findById(this, asset, getIntent().getStringExtra("id"));
         has = getIntent().getBooleanExtra("estimate", false);
         head = getIntent().getDoubleExtra("head", Double.NaN);
         flow = getIntent().getDoubleExtra("flow", Double.NaN);

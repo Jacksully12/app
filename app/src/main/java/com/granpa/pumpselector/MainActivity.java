@@ -13,10 +13,15 @@ public class MainActivity extends Activity {
     Spinner mode, unit, cat, phase;
     LinearLayout flow2Box;
     TextView hint;
+    String asset = PumpRepository.TEXMO_ASSET;
+    String brand = "TEXMO";
 
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        PumpRepository.getRecords(this);
+        asset = PumpRepository.normalizeAsset(getIntent().getStringExtra("asset"));
+        brand = getIntent().getStringExtra("brand");
+        if (brand == null || brand.trim().isEmpty()) brand = PumpRepository.brandName(asset);
+        PumpRepository.getRecords(this, asset);
 
         LinearLayout root = Ui.root(this);
         root.addView(header());
@@ -87,7 +92,7 @@ public class MainActivity extends Activity {
         card.addView(browse);
 
         root.addView(card);
-        root.addView(Ui.text(this, PumpRepository.note(this), 12, Ui.MUTED, 0));
+        root.addView(Ui.text(this, PumpRepository.note(this, asset), 12, Ui.MUTED, 0));
         setContentView(Ui.scroll(this, root));
 
         update();
@@ -102,7 +107,12 @@ public class MainActivity extends Activity {
         });
 
         find.setOnClickListener(v -> openResults());
-        browse.setOnClickListener(v -> startActivity(new Intent(this, CatalogueActivity.class)));
+        browse.setOnClickListener(v -> {
+            Intent ci = new Intent(this, CatalogueActivity.class);
+            ci.putExtra("asset", asset);
+            ci.putExtra("brand", brand);
+            startActivity(ci);
+        });
     }
 
     LinearLayout header() {
@@ -117,7 +127,7 @@ public class MainActivity extends Activity {
         t.setOrientation(LinearLayout.VERTICAL);
         t.setPadding(Ui.dp(this, 14), 0, 0, 0);
         t.addView(Ui.text(this, "Granpa", 30, Ui.TEXT, 1));
-        t.addView(Ui.text(this, "Duty-point pump selector with catalogue search", 14, Ui.MUTED, 0));
+        t.addView(Ui.text(this, brand + " pump selector", 14, Ui.MUTED, 0));
 
         row.addView(t, new LinearLayout.LayoutParams(0, -2, 1));
         h.addView(row);
@@ -151,6 +161,8 @@ public class MainActivity extends Activity {
         i.putExtra("cat", sel(cat));
         i.putExtra("phase", sel(phase));
         i.putExtra("key", "");
+        i.putExtra("asset", asset);
+        i.putExtra("brand", brand);
         startActivity(i);
     }
 
@@ -161,9 +173,10 @@ public class MainActivity extends Activity {
         o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
         o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, centrifugal and agricultural monoblock", true));
         o.add(new Option("multistage_all", "Multistage Pumps", "Main category • AVRS, vertical inline and horizontal multistage", true));
+        o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure pump sections", true));
         o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • sewage and dewatering pumps", true));
         o.add(new Option("motors_all", "Motors", "Main category • motor section", true));
-        for (String c : PumpRepository.categories(this)) o.add(new Option(c, "Sub category • " + c, detail(c), false));
+        for (String c : PumpRepository.categories(this, asset)) o.add(new Option(c, "Sub category • " + c, detail(c), false));
         return o;
     }
 

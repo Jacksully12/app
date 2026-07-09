@@ -9,7 +9,7 @@ public class QAActivity extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
 
-        ArrayList<PumpRecord> rows = PumpRepository.getRecords(this);
+        ArrayList<PumpRecord> rows = PumpRepository.getRecords(this, PumpRepository.TEXMO_ASSET);
         PumpRecord acs = null;
         for (PumpRecord r : rows) if ("ACS 1125".equals(r.model)) acs = r;
         Double q = acs == null ? null : PumpSelector.flowAt(acs, 40);
@@ -18,10 +18,10 @@ public class QAActivity extends Activity {
 
         LinearLayout card = Ui.card(this);
         card.addView(Ui.text(this, "Granpa QA Report", 26, Ui.TEXT, 1));
-        card.addView(Ui.text(this, PumpRepository.note(this), 14, Ui.MUTED, 0));
+        card.addView(Ui.text(this, PumpRepository.note(this, PumpRepository.TEXMO_ASSET), 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Native Android app • no WebView • no HTML wrapper", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Default display unit: LPH. LPM remains available from the unit dropdown.", 14, Ui.MUTED, 0));
-        card.addView(Ui.text(this, "Brand rule: all app records are normalized to TEXMO.", 14, Ui.MUTED, 0));
+        card.addView(Ui.text(this, "Brand rule: app supports separate Texmo and Lubi offline catalogues.", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Checked: dropdown readability, search, fixed flow, range flow, model details, chart, WhatsApp share, download image, GitHub workflow.", 14, Ui.MUTED, 0));
         if (q != null) card.addView(Ui.text(this, "ACS 1125 at 40 m ≈ " + PumpSelector.formatFlow(q, "LPH"), 14, Ui.GREEN, 1));
         root.addView(card);

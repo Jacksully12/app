@@ -119,6 +119,7 @@ public class PumpSelector {
                 {"openwell_all", "Openwell Submersible"},
                 {"monoblock_all", "Centrifugal / Surface Monoblock"},
                 {"multistage_all", "Multistage Pumps"},
+                {"booster_all", "Booster / Pressure Pumps"},
                 {"dewatering_all", "Dewatering / Sewage"},
                 {"motors_all", "Motors"}
         };
@@ -288,7 +289,7 @@ public class PumpSelector {
             return c.contains("borewell");
         }
         if (s.equals("openwell_all")) {
-            return c.contains("openwell");
+            return c.contains("openwell") && !c.contains("multistage");
         }
         if (s.equals("monoblock_all")) {
             if (c.contains("openwell")) return false;
@@ -297,8 +298,11 @@ public class PumpSelector {
         if (s.equals("multistage_all")) {
             return c.contains("multistage") || c.equals("avrs");
         }
+        if (s.equals("booster_all")) {
+            return c.contains("booster") || c.contains("pressure");
+        }
         if (s.equals("dewatering_all")) {
-            return c.contains("sewage") || c.contains("dewatering");
+            return c.contains("sewage") || c.contains("dewatering") || c.contains("drainage");
         }
         if (s.equals("motors_all")) {
             return c.equals("motors");

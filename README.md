@@ -250,3 +250,14 @@ v4.3.0
 - Added a clear empty message when an internal result search has no matches.
 - Removed the unused INTERNET permission from AndroidManifest.xml.
 - Fixed grouped header creation to use the standard header factory.
+
+
+## v4.6.0 multi-brand flow
+- Added BrandSelectionActivity after splash.
+- Added three opening choices: TEXMO, LUBI, COMPARE.
+- Added `texmo_pumps.json` and `lubi_pumps.json` assets.
+- Added Lubi data extracted from the uploaded Lubi Performance Booklet PDF.
+- Added CompareActivity to compare Texmo and Lubi at the same head/flow/type/phase.
+- PumpRepository now supports brand-specific data assets.
+- Existing Texmo flow, chart zoom, share image, download image, Copy Results and collapsible groups are retained.
+- Added `MULTIBRAND_LUBI_QA_REPORT.txt`.
