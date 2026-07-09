@@ -19,6 +19,8 @@ public class QAActivity extends Activity {
         LinearLayout card = Ui.card(this);
         card.addView(Ui.text(this, "Granpa QA Report", 26, Ui.TEXT, 1));
         card.addView(Ui.text(this, PumpRepository.note(this, PumpRepository.TEXMO_ASSET), 14, Ui.MUTED, 0));
+        card.addView(Ui.text(this, PumpRepository.note(this, PumpRepository.LUBI_ASSET), 14, Ui.MUTED, 0));
+        card.addView(Ui.text(this, PumpRepository.note(this, PumpRepository.KSB_ASSET), 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Native Android app • no WebView • no HTML wrapper", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Default display unit: LPH. LPM remains available from the unit dropdown.", 14, Ui.MUTED, 0));
         card.addView(Ui.text(this, "Brand rule: app supports separate Texmo and Lubi offline catalogues.", 14, Ui.MUTED, 0));

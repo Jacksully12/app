@@ -1,0 +1,43 @@
+KSB MULTIBRAND QA REPORT - v4.8.0
+======================================================
+
+Source file: Selection Chart_Domestic.pdf
+Source title: Domestic Pumps Performance Booklet 2026
+PDF pages: 50
+Parsed pump data pages: PDF pages 5-44 / catalogue pages 1-40
+
+Key PDF structure analyzed:
+- Contents page includes KSB domestic pump sections and conversion factors.
+- Conversion factors: 1 m3/hr = 1000 LPH; 1 m3/hr = 16.67 LPM; 1 m = 3.29 ft.
+- Product sections include water-filled borewell, oil-filled borewell, self-priming/monobloc/jet/booster/openwell, and dewatering/sewage pumps.
+
+Extracted KSB records: 322
+
+Extracted category counts:
+- 100 mm Borewell RLX: 11
+- 100 mm Borewell Submersible: 49
+- 100 mm Oil Filled Borewell: 25
+- 75 mm Borewell Submersible: 25
+- AGRIBLOC Monobloc: 92
+- AMA PORTER / AMA DRAINER / KSTP: 7
+- AMAREX IN Sewage: 11
+- AQUA Series Surface Pumps: 26
+- CUTE PLUS / PERISTAR V: 7
+- KRTU Sewage: 2
+- MONOSUB / MULTISUB Openwell: 17
+- MULTIBOOST Pressure Booster: 13
+- PERIBOOST / OPAL i: 9
+- PERIJET / PERIJET PRO: 9
+- PERISTAR GS / ZDX: 10
+- PERISTAR V PLUS / SZX: 7
+- TSJ / TSJ PLUS: 2
+
+Implementation changes:
+- Added ksb_pumps.json asset.
+- Added KSB card on brand selection screen.
+- Compare now includes TEXMO, LUBI and KSB groups.
+- Brand selection buttons reduced from full-width to compact 160dp/190dp buttons.
+- Pump main group matching now recognizes KSB 'monobloc' spelling as surface/monoblock.
+
+Important limitation:
+- KSB data was automatically extracted from complex PDF tables. Spot-check against the original PDF before production use.

@@ -246,3 +246,13 @@ v4.3.0
 - The Compare form button is renamed to `Show compare results`.
 - Compare Results screen shows summary, total comparable models, Texmo/Lubi sections and collapsible brand groups.
 - Back button returns to the compare input screen for quick changes.
+
+
+## v4.8.0 KSB multi-brand update
+- Added KSB as a third brand on the brand/mode selection screen.
+- Added `assets/ksb_pumps.json`.
+- Extracted 322 KSB pump records from `Selection Chart_Domestic.pdf`.
+- Compare now includes Texmo, Lubi and KSB.
+- Reduced brand screen button sizes so the selection screen looks lighter.
+- Added `KSB_MULTIBRAND_QA_REPORT.txt`.
+- KSB PDF extraction is automatic and should be spot-checked before production use.

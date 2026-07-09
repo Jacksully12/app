@@ -9,6 +9,7 @@ import java.util.*;
 public class PumpRepository {
     public static final String TEXMO_ASSET = "texmo_pumps.json";
     public static final String LUBI_ASSET = "lubi_pumps.json";
+    public static final String KSB_ASSET = "ksb_pumps.json";
 
     private static final HashMap<String, ArrayList<PumpRecord>> cache = new HashMap<>();
     private static final HashMap<String, JSONObject> metaCache = new HashMap<>();
@@ -124,6 +125,7 @@ public class PumpRepository {
     public static String brandName(String asset) {
         asset = normalizeAsset(asset).toLowerCase(Locale.US);
         if (asset.contains("lubi")) return "LUBI";
+        if (asset.contains("ksb")) return "KSB";
         return "TEXMO";
     }
 }

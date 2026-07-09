@@ -17,7 +17,7 @@ public class CompareActivity extends Activity {
         LinearLayout root = Ui.root(this);
 
         LinearLayout header = Ui.card(this);
-        header.addView(Ui.text(this, "Compare Texmo vs Lubi", 26, Ui.TEXT, 1));
+        header.addView(Ui.text(this, "Compare brands", 26, Ui.TEXT, 1));
         header.addView(Ui.text(this, "Enter one duty point first. Results will open on the next screen.", 14, Ui.MUTED, 0));
         root.addView(header);
 
@@ -62,10 +62,11 @@ public class CompareActivity extends Activity {
         card.addView(phase);
 
         Button compare = Ui.primary(this, "Show compare results");
+        compare.setTextSize(14);
         card.addView(compare);
         root.addView(card);
 
-        TextView note = Ui.text(this, "The next screen will show Texmo and Lubi matches separately so it is easier to review and open each model.", 13, Ui.MUTED, 0);
+        TextView note = Ui.text(this, "The next screen will show Texmo, Lubi and KSB matches separately so it is easier to review and open each model.", 13, Ui.MUTED, 0);
         root.addView(note);
 
         setContentView(Ui.scroll(this, root));
@@ -96,7 +97,7 @@ public class CompareActivity extends Activity {
         o.add(new Option("all", "All pump types", "Compare all pump categories", true));
         o.add(new Option("borewell_all", "Borewell Submersible", "Main category", true));
         o.add(new Option("openwell_all", "Openwell Submersible", "Main category", true));
-        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Self priming, jet, centrifugal and monoblock", true));
+        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Self priming, jet, centrifugal, monoblock/monobloc", true));
         o.add(new Option("multistage_all", "Multistage Pumps", "Vertical/openwell/horizontal multistage", true));
         o.add(new Option("booster_all", "Booster / Pressure Pumps", "Booster and pressure pump sections", true));
         o.add(new Option("dewatering_all", "Dewatering / Sewage", "Drainage, sewage and similar pumps", true));

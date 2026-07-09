@@ -186,7 +186,7 @@ public class MainActivity extends Activity {
         if (c.contains("borewell")) return "Detailed borewell catalogue section";
         if (c.contains("avrs") || c.contains("multistage")) return "Detailed multistage catalogue section";
         if (c.contains("motor")) return "Detailed motor catalogue section";
-        if (c.contains("agricultural") || c.contains("centrifugal") || c.contains("jet") || c.contains("self priming")) return "Detailed surface / monoblock catalogue section";
+        if (c.contains("agricultural") || c.contains("centrifugal") || c.contains("jet") || c.contains("self priming") || c.contains("monobloc") || c.contains("surface")) return "Detailed surface / monoblock catalogue section";
         if (c.contains("dewatering") || c.contains("sewage")) return "Detailed dewatering / sewage catalogue section";
         return "Detailed catalogue section";
     }

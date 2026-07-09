@@ -293,7 +293,7 @@ public class PumpSelector {
         }
         if (s.equals("monoblock_all")) {
             if (c.contains("openwell")) return false;
-            return c.contains("monoblock") || c.contains("jet pump") || c.contains("self priming") || c.contains("centrifugal");
+            return c.contains("monoblock") || c.contains("monobloc") || c.contains("jet pump") || c.contains("self priming") || c.contains("centrifugal") || c.contains("surface");
         }
         if (s.equals("multistage_all")) {
             return c.contains("multistage") || c.equals("avrs");

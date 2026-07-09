@@ -97,12 +97,13 @@ public class CompareResultsActivity extends Activity {
 
         addBrand("TEXMO", PumpRepository.TEXMO_ASSET, head, req);
         addBrand("LUBI", PumpRepository.LUBI_ASSET, head, req);
+        addBrand("KSB", PumpRepository.KSB_ASSET, head, req);
 
         int total = PumpSelector.realCount(results);
         count.setText(total + " comparable models");
         count.setTextColor(total == 0 ? Ui.ORANGE : Ui.GREEN);
         empty.setVisibility(total == 0 ? View.VISIBLE : View.GONE);
-        empty.setText(total == 0 ? "No comparable model found in either catalogue. Try another pump type, phase, head or flow." : "");
+        empty.setText(total == 0 ? "No comparable model found in the Texmo, Lubi or KSB catalogues. Try another pump type, phase, head or flow." : "");
 
         applyCollapsed();
     }
@@ -138,7 +139,7 @@ public class CompareResultsActivity extends Activity {
         if (r == null || r.header || r.r == null) return;
 
         Intent i = new Intent(this, PumpDetailsActivity.class);
-        i.putExtra("asset", "LUBI".equalsIgnoreCase(r.r.brand) ? PumpRepository.LUBI_ASSET : PumpRepository.TEXMO_ASSET);
+        i.putExtra("asset", assetForBrand(r.r.brand));
         i.putExtra("brand", r.r.brand);
         i.putExtra("id", r.r.id);
         i.putExtra("head", r.head);
@@ -146,6 +147,13 @@ public class CompareResultsActivity extends Activity {
         i.putExtra("estimate", r.estimate);
         i.putExtra("unit", unit);
         startActivity(i);
+    }
+
+    String assetForBrand(String brand) {
+        brand = safe(brand).toUpperCase(Locale.US);
+        if (brand.equals("LUBI")) return PumpRepository.LUBI_ASSET;
+        if (brand.equals("KSB")) return PumpRepository.KSB_ASSET;
+        return PumpRepository.TEXMO_ASSET;
     }
 
     String baseTitle(String s) {
