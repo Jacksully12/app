@@ -161,3 +161,11 @@
   - Motors
 - Phase filtering now uses category/title-derived phase rules, with row-level phase preserved for mixed S/T sections.
 - Added `CATEGORY_PHASE_QA_REPORT.txt`.
+
+## v5.1.0 full UI, chart and data QA update
+- Preserved Texmo category dropdown.
+- Standardized cross-brand categories.
+- Added data-quality eligibility and warnings.
+- Corrected reversed Lubi HP/kW fields and cleaned extracted curves.
+- Improved chart rendering with monotone smoothing and no axis touching.
+- Simplified details/result UI and added live/build-time QA.

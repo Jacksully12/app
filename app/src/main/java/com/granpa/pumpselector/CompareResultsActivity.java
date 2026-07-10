@@ -109,7 +109,7 @@ public class CompareResultsActivity extends Activity {
     }
 
     void addBrand(String brand, String asset, double h, PumpSelector.Req req) {
-        ArrayList<PumpSelector.Result> rows = PumpSelector.select(PumpRepository.getRecords(this, asset), h, req, cat, phase, "");
+        ArrayList<PumpSelector.Result> rows = PumpSelector.selectForCompare(PumpRepository.getRecords(this, asset), h, req, cat, phase);
         if (!rows.isEmpty()) {
             results.add(PumpSelector.header(brand + " • " + rows.size() + " models"));
             results.addAll(rows);

@@ -39,42 +39,11 @@ public class PumpListAdapter extends BaseAdapter {
         PumpSelector.Result it = items.get(pos);
 
         if (it.header) {
-            String base = baseTitle(it.groupTitle);
-            boolean collapsed = collapsedGroups.contains(base);
-
-            LinearLayout h = Ui.card(a);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-            lp.setMargins(0, pos == 0 ? 0 : Ui.dp(a, 18), 0, Ui.dp(a, 12));
-            h.setLayoutParams(lp);
-            h.setPadding(Ui.dp(a, 16), Ui.dp(a, 14), Ui.dp(a, 16), Ui.dp(a, 14));
-            h.setBackground(Ui.bg(a, Color.rgb(245, 249, 255), Ui.BORDER, 20));
-
-            TextView tag = new TextView(a);
-            tag.setText("CATEGORY");
-            tag.setTextSize(11);
-            tag.setTextColor(Ui.MUTED);
-            tag.setTypeface(Typeface.DEFAULT_BOLD);
-            h.addView(tag);
-
-            LinearLayout top = Ui.row(a);
-            LinearLayout.LayoutParams topLp = new LinearLayout.LayoutParams(-1, -2);
-            topLp.setMargins(0, Ui.dp(a, 4), 0, 0);
-            top.setLayoutParams(topLp);
-
-            TextView title = Ui.text(a, safe(it.groupTitle), 19, Ui.BLUE, Typeface.BOLD);
-            top.addView(title, new LinearLayout.LayoutParams(0, -2, 1));
-
-            TextView arrow = Ui.text(a, collapsed ? "Show ▼" : "Hide ▲", 14, Ui.MUTED, Typeface.BOLD);
-            top.addView(arrow);
-
-            h.addView(top);
-
-            TextView hint = Ui.text(a, collapsed ? "Tap to expand this category" : "Tap to collapse this category", 13, Ui.MUTED, Typeface.NORMAL);
-            LinearLayout.LayoutParams hintLp = new LinearLayout.LayoutParams(-1, -2);
-            hintLp.setMargins(0, Ui.dp(a, 4), 0, 0);
-            hint.setLayoutParams(hintLp);
-            h.addView(hint);
-            return h;
+            String base=baseTitle(it.groupTitle); boolean collapsed=collapsedGroups.contains(base);
+            LinearLayout h=Ui.card(a); LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2); lp.setMargins(0,pos==0?0:Ui.dp(a,20),0,Ui.dp(a,10)); h.setLayoutParams(lp);
+            h.setPadding(Ui.dp(a,15),Ui.dp(a,13),Ui.dp(a,15),Ui.dp(a,13)); h.setBackground(Ui.bg(a,Color.rgb(242,247,253),Ui.BORDER,18));
+            LinearLayout top=Ui.row(a); TextView title=Ui.text(a,safe(it.groupTitle),18,Ui.BLUE,Typeface.BOLD); top.addView(title,new LinearLayout.LayoutParams(0,-2,1));
+            top.addView(Ui.text(a,collapsed?"▼":"▲",16,Ui.MUTED,Typeface.BOLD)); h.addView(top); return h;
         }
 
         PumpRecord r = it.r;
@@ -83,17 +52,20 @@ public class PumpListAdapter extends BaseAdapter {
         LinearLayout c = Ui.card(a);
         c.setPadding(Ui.dp(a, 14), Ui.dp(a, 14), Ui.dp(a, 14), Ui.dp(a, 14));
 
-        c.addView(Ui.text(a, safe(r.model), 22, Ui.TEXT, Typeface.BOLD));
-        c.addView(Ui.text(a, PumpSelector.trim(r.hp) + " HP  •  " + PumpSelector.trim(r.kw) + " kW  •  Phase " + phaseShort(r.phase), 15, Ui.MUTED, Typeface.NORMAL));
-        c.addView(Ui.text(a, safe(r.category), 16, Ui.BLUE, Typeface.BOLD));
+        c.addView(Ui.text(a, safe(r.model), 21, Ui.TEXT, Typeface.BOLD));
+        if(!safe(r.variantLabel).isEmpty()) c.addView(Ui.text(a,safe(r.variantLabel),13,Ui.MUTED,Typeface.NORMAL));
+        c.addView(Ui.text(a, PumpSelector.trim(r.hp) + " HP  •  " + PumpSelector.trim(r.kw) + " kW  •  Phase " + phaseShort(r.phase), 14, Ui.MUTED, Typeface.NORMAL));
+        c.addView(Ui.text(a, safe(r.category), 15, Ui.BLUE, Typeface.BOLD));
 
         if (it.estimate) {
             int color = matchColor(it.status);
-            c.addView(Ui.text(a, "At " + PumpSelector.head(it.head) + ": " + PumpSelector.formatFlow(it.flow, u) + "  •  " + it.status, 17, color, Typeface.BOLD));
+            c.addView(Ui.text(a, "At " + PumpSelector.head(it.head) + ": " + PumpSelector.formatFlow(it.flow, u), 17, color, Typeface.BOLD));
+            TextView match=Ui.text(a,it.status,14,color,Typeface.BOLD); match.setPadding(0,Ui.dp(a,3),0,Ui.dp(a,2)); c.addView(match);
         } else {
             c.addView(Ui.text(a, "Head: " + safe(r.headRangeText) + " m  •  Flow: " + rangeFlow(r, u), 15, Ui.MUTED, Typeface.NORMAL));
         }
 
+        if(!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus)) c.addView(Ui.text(a,"⚠ Data needs source verification",13,Ui.ORANGE,Typeface.BOLD));
         String bottom = "Page " + r.page + "  •  Size " + dash(r.size);
         if (!safe(r.brand).isEmpty()) bottom += "  •  " + safe(r.brand);
         c.addView(Ui.text(a, bottom, 15, Ui.MUTED, Typeface.NORMAL));

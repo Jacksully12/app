@@ -31,7 +31,7 @@ public class CatalogueActivity extends Activity {
         root.addView(note);
 
         search = Ui.input(this, "", android.text.InputType.TYPE_CLASS_TEXT);
-        search.setHint("Search here, e.g. model, Openwell, 50");
+        search.setHint("Search model, type, size or category");
         Ui.mb(this, search, 10);
         root.addView(search);
 
@@ -84,15 +84,37 @@ public class CatalogueActivity extends Activity {
 
     List<Option> categories() {
         ArrayList<Option> o = new ArrayList<>();
-        o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
-        o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
-        o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, centrifugal and monoblock", true));
-        o.add(new Option("multistage_all", "Multistage Pumps", "Main category • multistage sections", true));
-        o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure pump sections", true));
-        o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage, sewage and dewatering", true));
-        o.add(new Option("motors_all", "Motors", "Main category • motor section", true));
-        for (String c : PumpRepository.categories(this, asset)) o.add(new Option(c, "Sub category • " + c, "", false));
+
+        // Catalogue browsing uses the same brand-specific category structure as search.
+        if (PumpRepository.TEXMO_ASSET.equals(asset)) {
+            o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
+            o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
+            o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, centrifugal and agricultural monoblock", true));
+            o.add(new Option("multistage_all", "Multistage Pumps", "Main category • AVRS, vertical inline and horizontal multistage", true));
+            o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • sewage and dewatering pumps", true));
+            o.add(new Option("motors_all", "Motors", "Main category • motor section", true));
+        } else if (PumpRepository.LUBI_ASSET.equals(asset)) {
+            o.add(new Option("all", "All pump types", "Main category • full Lubi catalogue", true));
+            o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
+            o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet and monoblock sections", true));
+            o.add(new Option("multistage_all", "Multistage Pumps", "Main category • horizontal and vertical multistage", true));
+            o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
+            o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage, sewage and dewatering", true));
+        } else {
+            o.add(new Option("all", "All pump types", "Main category • full KSB catalogue", true));
+            o.add(new Option("borewell_all", "Borewell Submersible", "Main category • water-filled and oil-filled borewell sections", true));
+            o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, monobloc and surface sections", true));
+            o.add(new Option("multistage_all", "Multistage Pumps", "Main category • multistage sections", true));
+            o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
+            o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage and sewage sections", true));
+        }
+
+        for (String c : PumpRepository.categories(this, asset)) {
+            o.add(new Option(c, "Sub category • " + c, "", false));
+        }
         return o;
     }
 

@@ -142,7 +142,7 @@ public class PumpSelector {
         ArrayList<Result> below = new ArrayList<>();
 
         for (PumpRecord r : rows) {
-            if (!cat(r, cat) || !phase(r, phase) || !kw(r, key)) continue;
+            if (!r.selectable || !cat(r, cat) || !phase(r, phase) || !kw(r, key)) continue;
             Double q = flowAt(r, head);
             if (q == null) continue;
 
@@ -201,6 +201,7 @@ public class PumpSelector {
             if (d != 0) return d;
             return a.r.model.compareToIgnoreCase(b.r.model);
         });
+        if (out.size() > 25) return new ArrayList<>(out.subList(0, 25));
         return out;
     }
 
@@ -245,6 +246,33 @@ public class PumpSelector {
         return 50;
     }
 
+    public static ArrayList<Result> selectForCompare(List<PumpRecord> rows, double head, Req req, String cat, String phase) {
+        ArrayList<Result> found = new ArrayList<>();
+        if (req == null || req.range) return found;
+        for (PumpRecord r : rows) {
+            if (!r.selectable || !cat(r, cat) || !phase(r, phase)) continue;
+            Double q = flowAt(r, head); if (q == null) continue;
+            double signed = q - req.min;
+            int band = toleranceBand(Math.abs(signed) / Math.max(1d, Math.abs(req.min)));
+            if (band == 0) continue;
+            Result x = new Result(); x.r = r; x.head = head; x.flow = q; x.diff = Math.abs(signed); x.estimate = true; x.unit = req.unit;
+            String level = toleranceLabel(band);
+            if (Math.abs(signed) < 1d) x.status = "Exact • " + level;
+            else if (signed > 0) x.status = "Above target • +" + formatFlow(signed, req.unit) + " • " + level;
+            else x.status = "Below target • -" + formatFlow(Math.abs(signed), req.unit) + " • " + level;
+            found.add(x);
+        }
+        Collections.sort(found, (a,b) -> {
+            int band=Integer.compare(resultBand(a), resultBand(b)); if(band!=0)return band;
+            int diff=Double.compare(a.diff,b.diff); if(diff!=0)return diff;
+            int hp=Double.compare(a.r.hp,b.r.hp); if(hp!=0)return hp;
+            int kw=Double.compare(a.r.kw,b.r.kw); if(kw!=0)return kw;
+            return a.r.model.compareToIgnoreCase(b.r.model);
+        });
+        if(found.size()>4)return new ArrayList<>(found.subList(0,4));
+        return found;
+    }
+
     public static ArrayList<Result> catalogue(List<PumpRecord> rows, String cat, String key) {
         ArrayList<Result> out = new ArrayList<>();
         for (PumpRecord r : rows) {
@@ -281,32 +309,15 @@ public class PumpSelector {
 
     public static boolean cat(PumpRecord r, String s) {
         if (s == null || s.equals("all")) return true;
-
-        String c = (r.category == null ? "" : r.category).toLowerCase(Locale.US);
-        String section = ((r.catalogueSectionText == null ? "" : r.catalogueSectionText) + " " + (r.title == null ? "" : r.title)).toLowerCase(Locale.US);
-
-        if (s.equals("borewell_all")) {
-            return c.contains("borewell");
-        }
-        if (s.equals("openwell_all")) {
-            return c.contains("openwell") && !c.contains("multistage");
-        }
-        if (s.equals("monoblock_all")) {
-            if (c.contains("openwell")) return false;
-            return c.contains("monoblock") || c.contains("monobloc") || c.contains("jet pump") || c.contains("self priming") || c.contains("centrifugal") || c.contains("surface");
-        }
-        if (s.equals("multistage_all")) {
-            return c.contains("multistage") || c.equals("avrs");
-        }
-        if (s.equals("booster_all")) {
-            return c.contains("booster") || c.contains("pressure");
-        }
-        if (s.equals("dewatering_all")) {
-            return c.contains("sewage") || c.contains("dewatering") || c.contains("drainage") || c.contains("drainer") || c.contains("porter") || c.contains("kstp") || c.contains("amarex") || c.contains("krtu");
-        }
-        if (s.equals("motors_all")) {
-            return c.equals("motors");
-        }
+        String n = r.normalizedCategory == null ? "OTHER" : r.normalizedCategory;
+        if (s.equals("borewell_all")) return n.equals("BOREWELL_SUBMERSIBLE");
+        if (s.equals("openwell_all")) return n.equals("OPENWELL_SUBMERSIBLE");
+        if (s.equals("monoblock_all")) return n.equals("SURFACE_MONOBLOCK") || n.equals("JET_PUMP");
+        if (s.equals("multistage_all")) return n.equals("MULTISTAGE");
+        if (s.equals("booster_all")) return n.equals("BOOSTER");
+        if (s.equals("dewatering_all")) return n.equals("SEWAGE_DEWATERING");
+        if (s.equals("motors_all")) return n.equals("MOTOR");
+        if (s.equals("solar_all")) return n.equals("SOLAR");
         return s.equals(r.category);
     }
 

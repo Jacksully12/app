@@ -75,7 +75,7 @@ public class PumpDetailsActivity extends Activity {
         LinearLayout c = Ui.card(this);
         c.addView(Ui.text(this, "Performance curve", 20, Ui.TEXT, 1));
 
-        TextView n = Ui.text(this, "Tap the chart to open the closer zoom view. Flow values are shown in " + PumpSelector.unitLabel(unit) + ".", 13, Ui.MUTED, 0);
+        TextView n = Ui.text(this, "Smooth curve through cleaned catalogue points. Orange point is the selected duty point. Flow is shown in " + PumpSelector.unitLabel(unit) + ".", 13, Ui.MUTED, 0);
         Ui.mb(this, n, 8);
         c.addView(n);
 
@@ -186,16 +186,17 @@ public class PumpDetailsActivity extends Activity {
     }
 
     String[][] quickRows() {
-        return new String[][]{
-                {"Delivery / Pipe size", empty(rec.size) ? "-" : rec.size},
-                {"Page", String.valueOf(rec.page)},
-                {"Head range", safe(rec.headRangeText) + " m"},
-                {"Discharge range", flowRange(rec)},
-                {"Flow range", flowRange(rec)},
-                {"Brand", empty(rec.brand) ? "-" : rec.brand},
-                {"Stages", empty(rec.stages) ? "-" : rec.stages},
-                {"Sheet", empty(rec.sheet) ? "Page " + rec.page + " Layout" : rec.sheet}
-        };
+        ArrayList<String[]> rows=new ArrayList<>();
+        rows.add(new String[]{"Delivery / Pipe size",empty(rec.size)?"-":rec.size});
+        rows.add(new String[]{"Page",String.valueOf(rec.page)});
+        rows.add(new String[]{"Head range",safe(rec.headRangeText)+" m"});
+        rows.add(new String[]{"Flow range",flowRange(rec)});
+        rows.add(new String[]{"Phase",phaseLabel(rec.phase)});
+        rows.add(new String[]{"Brand",empty(rec.brand)?"-":rec.brand});
+        if(!empty(rec.stages))rows.add(new String[]{"Stages",rec.stages});
+        if(!empty(rec.variantLabel))rows.add(new String[]{"Variant",rec.variantLabel});
+        rows.add(new String[]{"Data status",statusLabel(rec)});
+        return rows.toArray(new String[0][]);
     }
 
     LinearLayout detailCard(String title, String[][] rows) {
@@ -237,6 +238,12 @@ public class PumpDetailsActivity extends Activity {
         if (s) return "Single Phase";
         if (t) return "Three Phase";
         return p.isEmpty() ? "Phase -" : p;
+    }
+
+    String statusLabel(PumpRecord r){
+        if(!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus))return "Needs source review";
+        if("AUTO_FIXED".equals(r.dataStatus))return "Automatically corrected and checked";
+        return "Automatically checked";
     }
 
     String safe(String s) { return s == null ? "" : s.trim(); }

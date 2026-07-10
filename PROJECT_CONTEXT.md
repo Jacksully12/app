@@ -256,3 +256,20 @@ v4.3.0
 - Fixed KSB unit handling: LPM x 60, LPH unchanged, m3/hr x 1000.
 - Improved KSB dewatering/sewage group filtering for AMA PORTER, AMA DRAINER, KSTP, AMAREX and KRTU.
 - Added `KSB_FULL_REEXTRACTION_QA_REPORT.txt`.
+
+
+## v5.0.0 brand-specific category dropdowns
+- Preserved the established Texmo main-category dropdown exactly.
+- Removed Booster / Pressure Pumps from the Texmo main-category list.
+- Kept all Texmo detailed categories below the main categories.
+- Search and Catalogue screens now use the same Texmo category structure.
+- Lubi and KSB use their own relevant main-category lists with the same professional dropdown styling.
+- Added `TEXMO_CATEGORY_DROPDOWN_QA_REPORT.txt`.
+
+## v5.1.0 full UI, chart and data QA update
+- Preserved Texmo category dropdown.
+- Standardized cross-brand categories.
+- Added data-quality eligibility and warnings.
+- Corrected reversed Lubi HP/kW fields and cleaned extracted curves.
+- Improved chart rendering with monotone smoothing and no axis touching.
+- Simplified details/result UI and added live/build-time QA.

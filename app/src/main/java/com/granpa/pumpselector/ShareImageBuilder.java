@@ -153,6 +153,7 @@ public class ShareImageBuilder {
         c.drawText("Performance Curve", outer.left + 32, outer.top + 42, title);
 
         RectF plot = new RectF(outer.left + 95, outer.top + 82, outer.right - 35, outer.bottom - 160);
+        RectF dataPlot = new RectF(plot.left + 16, plot.top + 16, plot.right - 16, plot.bottom - 16);
 
         ArrayList<double[]> real = new ArrayList<>();
         if (r.curve != null) {
@@ -163,21 +164,21 @@ public class ShareImageBuilder {
         Collections.sort(real, Comparator.comparingDouble(a -> a[1]));
         if (real.isEmpty()) return;
 
-        ArrayList<double[]> pts = displayPoints(real, has ? head : null, has ? PumpSelector.fromLPH(flow, unit) : null);
+        ArrayList<double[]> pts = real;
 
         double maxF = 0, maxH = 0;
         for (double[] q : pts) {
             maxF = Math.max(maxF, q[1]);
             maxH = Math.max(maxH, q[0]);
         }
-        double axisF = roundUp(maxF * 1.04, niceFlowStep(maxF, unit));
-        double axisH = roundUp(maxH * 1.08, 10);
+        double axisF = roundUp(maxF * 1.10, niceFlowStep(maxF, unit));
+        double axisH = roundUp(maxH * 1.12, 10);
 
         Paint grid = new Paint(1);
         grid.setColor(Color.rgb(194, 208, 224));
         grid.setStrokeWidth(2.0f);
         grid.setStyle(Paint.Style.STROKE);
-        grid.setPathEffect(new DashPathEffect(new float[]{8, 8}, 0));
+        grid.setPathEffect(null);
 
         Paint minorGrid = new Paint(1);
         minorGrid.setColor(Color.rgb(218, 228, 239));
@@ -234,21 +235,12 @@ public class ShareImageBuilder {
         cp.setStrokeCap(Paint.Cap.ROUND);
         cp.setStrokeJoin(Paint.Join.ROUND);
 
-        Path path = new Path();
-        for (int i = 0; i < pts.size(); i++) {
-            float cx = x(pts.get(i)[1], axisF, plot), cy = y(pts.get(i)[0], axisH, plot);
-            if (i == 0) path.moveTo(cx, cy);
-            else {
-                float px = x(pts.get(i - 1)[1], axisF, plot), py = y(pts.get(i - 1)[0], axisH, plot);
-                float mx = (px + cx) / 2f;
-                path.cubicTo(mx, py, mx, cy, cx, cy);
-            }
-        }
-        c.drawPath(path, cp);
+        Path path = monotonePath(pts, axisF, axisH, dataPlot);
+        Paint glow=new Paint(cp);glow.setStrokeWidth(12);glow.setColor(Color.argb(32,0,96,216));c.drawPath(path,glow);c.drawPath(path,cp);
 
         if (has) {
             double flowDisplay = PumpSelector.fromLPH(flow, unit);
-            float sx = x(flowDisplay, axisF, plot), sy = y(head, axisH, plot);
+            float sx = x(flowDisplay, axisF, dataPlot), sy = y(head, axisH, dataPlot);
 
             Paint dash = new Paint(1);
             dash.setColor(Color.rgb(255, 132, 0));
@@ -261,10 +253,10 @@ public class ShareImageBuilder {
             drawHeadBadge(c, formatHead(head), plot.left, sy);
             drawFlowBadge(c, PumpSelector.formatFlowNumber(flowDisplay, unit), sx, plot.bottom + 34, plot);
 
-            Paint glow = new Paint(1);
-            glow.setStyle(Paint.Style.FILL);
-            glow.setColor(Color.argb(45, 255, 132, 0));
-            c.drawCircle(sx, sy, 30, glow);
+            Paint selectedGlow = new Paint(1);
+            selectedGlow.setStyle(Paint.Style.FILL);
+            selectedGlow.setColor(Color.argb(45, 255, 132, 0));
+            c.drawCircle(sx, sy, 30, selectedGlow);
 
             Paint halo = new Paint(1);
             halo.setColor(Color.WHITE);
@@ -328,6 +320,31 @@ public class ShareImageBuilder {
 
     static String formatHead(double v) {
         return Math.abs(v - Math.round(v)) < 0.05 ? String.format(Locale.US, "%.0f", v) : String.format(Locale.US, "%.1f", v);
+    }
+
+
+    static Path monotonePath(ArrayList<double[]> pts, double maxF, double maxH, RectF plot) {
+        int n = pts.size();
+        float[] x = new float[n], y = new float[n];
+        for (int i = 0; i < n; i++) { x[i] = x(pts.get(i)[1], maxF, plot); y[i] = y(pts.get(i)[0], maxH, plot); }
+        if (n == 1) { Path single = new Path(); single.moveTo(x[0], y[0]); return single; }
+        float[] d = new float[n - 1], m = new float[n];
+        for (int i = 0; i < n - 1; i++) d[i] = (y[i + 1] - y[i]) / Math.max(1f, x[i + 1] - x[i]);
+        m[0] = d[0]; m[n - 1] = d[n - 2];
+        for (int i = 1; i < n - 1; i++) m[i] = (d[i - 1] + d[i]) / 2f;
+        for (int i = 0; i < n - 1; i++) {
+            if (Math.abs(d[i]) < 1e-6f) { m[i] = 0; m[i + 1] = 0; }
+            else {
+                float a = m[i] / d[i], b = m[i + 1] / d[i], sum = a * a + b * b;
+                if (sum > 9f) { float scale = 3f / (float)Math.sqrt(sum); m[i] = scale * a * d[i]; m[i + 1] = scale * b * d[i]; }
+            }
+        }
+        Path path = new Path(); path.moveTo(x[0], y[0]);
+        for (int i = 0; i < n - 1; i++) {
+            float width = x[i + 1] - x[i];
+            path.cubicTo(x[i] + width / 3f, y[i] + m[i] * width / 3f, x[i + 1] - width / 3f, y[i + 1] - m[i + 1] * width / 3f, x[i + 1], y[i + 1]);
+        }
+        return path;
     }
 
     static ArrayList<double[]> displayPoints(ArrayList<double[]> real, Double selH, Double selFDisplay) {

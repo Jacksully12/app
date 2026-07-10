@@ -65,7 +65,7 @@ public class PumpRepository {
                 in = c.getAssets().open(asset);
             } catch (Exception missing) {
                 // Backward compatibility with earlier project versions.
-                in = c.getAssets().open("pumps.json");
+                in = c.getAssets().open(TEXMO_ASSET);
             }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -119,7 +119,7 @@ public class PumpRepository {
             }
         }
         if (rows.isEmpty()) return brand + " • No records loaded";
-        return brand + " • " + rows.size() + " pump records • Pages " + min + "–" + max + " • Offline catalogue";
+        int review=0; for(PumpRecord r:rows) if(!r.selectable) review++; return brand + " • " + rows.size() + " records • Pages " + min + "–" + max + (review>0 ? " • " + review + " need review" : " • QA checked") + " • Offline";
     }
 
     public static String brandName(String asset) {

@@ -1,0 +1,21 @@
+TEXMO CATEGORY DROPDOWN QA - v5.0.0
+==============================================
+
+Texmo main categories preserved exactly:
+- All pump types
+- Borewell Submersible
+- Openwell Submersible
+- Centrifugal / Surface Monoblock
+- Multistage Pumps
+- Dewatering / Sewage
+- Motors
+
+Booster / Pressure Pumps is NOT added to the Texmo main category list.
+All Texmo detailed categories continue below the main categories.
+Texmo detailed categories found in asset: 26
+
+The same Texmo category list is used in:
+- Main pump search
+- Browse full catalogue
+
+Lubi and KSB retain their own brand-specific main categories.

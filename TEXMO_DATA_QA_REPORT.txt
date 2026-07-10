@@ -1,0 +1,22 @@
+TEXMO DATA QA REPORT v5.1.0
+====================================================
+
+Total records: 1780
+Selectable recommendations: 1779
+Needs source review: 1
+Automatically fixed: 174
+Automatically checked: 1605
+
+Normalized selection groups:
+- BOREWELL_SUBMERSIBLE: 1088
+- JET_PUMP: 48
+- MOTOR: 25
+- MULTISTAGE: 108
+- OPENWELL_SUBMERSIBLE: 226
+- SEWAGE_DEWATERING: 61
+- SURFACE_MONOBLOCK: 223
+
+Records requiring manual source review:
+- Page 9: F22 — Power rating requires manual source check; Source sheet lists 1.5 HP / 1.5 kW; requires catalogue confirmation
+
+Rule: records requiring review remain searchable in the catalogue but are excluded from automatic duty-point results and brand comparison.

@@ -38,7 +38,7 @@ public class BrandSelectionActivity extends Activity {
 
         root.addView(modeCard(
                 "LUBI",
-                "Use Lubi performance data extracted from the uploaded booklet.",
+                "Use the Lubi pump catalogue.",
                 "Open Lubi",
                 PumpRepository.LUBI_ASSET,
                 "LUBI"
@@ -46,7 +46,7 @@ public class BrandSelectionActivity extends Activity {
 
         root.addView(modeCard(
                 "KSB",
-                "Use KSB domestic pump performance data extracted from the uploaded 2026 booklet.",
+                "Use the KSB domestic pump catalogue.",
                 "Open KSB",
                 PumpRepository.KSB_ASSET,
                 "KSB"
@@ -64,6 +64,8 @@ public class BrandSelectionActivity extends Activity {
 
         btn.setOnClickListener(v -> startActivity(new Intent(this, CompareActivity.class)));
         root.addView(compare);
+
+        Button qa=Ui.secondary(this,"Data QA status"); qa.setTextSize(13); LinearLayout.LayoutParams qlp=new LinearLayout.LayoutParams(Ui.dp(this,150),Ui.dp(this,44)); qlp.setMargins(0,0,0,Ui.dp(this,8)); root.addView(qa,qlp); qa.setOnClickListener(v->startActivity(new Intent(this,QAActivity.class)));
 
         setContentView(Ui.scroll(this, root));
     }

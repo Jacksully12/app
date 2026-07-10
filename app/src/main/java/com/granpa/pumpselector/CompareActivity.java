@@ -18,7 +18,7 @@ public class CompareActivity extends Activity {
 
         LinearLayout header = Ui.card(this);
         header.addView(Ui.text(this, "Compare brands", 26, Ui.TEXT, 1));
-        header.addView(Ui.text(this, "Enter one duty point first. Results will open on the next screen.", 14, Ui.MUTED, 0));
+        header.addView(Ui.text(this, "Enter one duty point and choose a pump type for a like-for-like comparison across brands.", 14, Ui.MUTED, 0));
         root.addView(header);
 
         LinearLayout card = Ui.card(this);
@@ -94,7 +94,6 @@ public class CompareActivity extends Activity {
 
     List<Option> categories() {
         ArrayList<Option> o = new ArrayList<>();
-        o.add(new Option("all", "All pump types", "Compare all pump categories", true));
         o.add(new Option("borewell_all", "Borewell Submersible", "Main category", true));
         o.add(new Option("openwell_all", "Openwell Submersible", "Main category", true));
         o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Self priming, jet, centrifugal, monoblock/monobloc", true));

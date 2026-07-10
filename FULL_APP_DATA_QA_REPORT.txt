@@ -1,0 +1,34 @@
+FULL APP + DATA QA REPORT v5.1.0
+======================================================
+
+Implemented:
+- Preserved the established Texmo main + subcategory dropdown.
+- Added controlled cross-brand category mapping for selection and comparison.
+- Corrected clearly reversed Lubi HP/kW fields.
+- Cleaned shifted/trailing OCR curve points and excluded unresolved rows from recommendations.
+- Added duplicate variant labels.
+- Improved chart with monotone smoothing, curve glow, dense minor grids, axis padding and selected-point overlay without reshaping the curve.
+- Reduced button/input sizes, improved result cards, range labels, brand navigation and details.
+- Removed duplicate legacy pumps.json.
+- Added live QA screen and build-time data validation.
+
+TEXMO:
+- Records: 1780
+- Selectable: 1779
+- Needs review: 1
+- HP/kW corrected: 0
+- Curves corrected: 174
+
+LUBI:
+- Records: 1724
+- Selectable: 1682
+- Needs review: 42
+- HP/kW corrected: 424
+- Curves corrected: 314
+
+KSB:
+- Records: 452
+- Selectable: 452
+- Needs review: 0
+- HP/kW corrected: 0
+- Curves corrected: 17

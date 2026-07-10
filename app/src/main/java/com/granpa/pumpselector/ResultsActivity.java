@@ -57,7 +57,7 @@ public class ResultsActivity extends Activity {
         root.addView(sum);
 
         EditText search = Ui.input(this, "", android.text.InputType.TYPE_CLASS_TEXT);
-        search.setHint("Search within results, e.g. ACS1125");
+        search.setHint("Search model or category");
         Ui.mb(this, search, 10);
         root.addView(search);
 
