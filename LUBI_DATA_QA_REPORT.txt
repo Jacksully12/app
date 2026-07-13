@@ -1,63 +1,20 @@
-LUBI DATA QA REPORT v5.1.0
+LUBI DATA QA REPORT v5.4.0
 ====================================================
-
 Total records: 1724
-Selectable recommendations: 1682
-Needs source review: 42
-Automatically fixed: 706
-Automatically checked: 976
+Selectable: 1724
+Needs source review: 0
+Source-confirmed table repairs applied: 42
+Automatically corrected records: 706
 
-Normalized selection groups:
-- BOOSTER: 94
-- BOREWELL_SUBMERSIBLE: 1237
-- JET_PUMP: 14
-- MULTISTAGE: 25
-- OPENWELL_SUBMERSIBLE: 98
-- SEWAGE_DEWATERING: 42
-- SURFACE_MONOBLOCK: 172
+Source-confirmed repaired families
+- LGS-75F: 2 variants
+- LRS-6A / LDS-6A: 1 variant
+- LRS-6H: 1 variant
+- LSKN-70 AF: 5 variants
+- LSF-100: 9 variants
+- LSF-80ZP: 6 variants
+- LSF-120ZP: 10 variants
+- LSF-200ZP: 7 variants
+- MDH-35 / 335: 1 variant
 
-Records requiring manual source review:
-- Page 18: LGS-75F — Insufficient valid curve points
-- Page 18: LGS-75F — Insufficient valid curve points
-- Page 22: LRS-6A / LDS-6A — Power rating requires manual source check; Insufficient valid curve points
-- Page 22: LRS-6H — Power rating requires manual source check; Insufficient valid curve points; Source columns are shifted for this row
-- Page 32: LSKN - 70 AF — Insufficient valid curve points
-- Page 32: LSKN - 70 AF — Insufficient valid curve points
-- Page 32: LSKN - 70 AF — Insufficient valid curve points
-- Page 32: LSKN - 70 AF — Insufficient valid curve points
-- Page 32: LSKN - 70 AF — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 35: LSF - 100 — Insufficient valid curve points
-- Page 36: LSF-80ZP — Insufficient valid curve points
-- Page 36: LSF-80ZP — Insufficient valid curve points
-- Page 36: LSF-80ZP — Insufficient valid curve points
-- Page 36: LSF-80ZP — Insufficient valid curve points
-- Page 36: LSF-80ZP — Insufficient valid curve points
-- Page 36: LSF-80ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-120ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 37: LSF-200ZP — Insufficient valid curve points
-- Page 67: MDH-35 / 335 — Insufficient valid curve points
-
-Rule: records requiring review remain searchable in the catalogue but are excluded from automatic duty-point results and brand comparison.
+The repaired rows now use the correct kW, HP, stages, outlet size and manufacturer head-flow points. No Lubi record remains excluded for source review.

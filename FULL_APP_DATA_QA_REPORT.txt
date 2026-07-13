@@ -1,34 +1,36 @@
-FULL APP + DATA QA REPORT v5.1.0
+FULL APP + DATA QA REPORT v5.4.0
 ======================================================
 
-Implemented:
-- Preserved the established Texmo main + subcategory dropdown.
-- Added controlled cross-brand category mapping for selection and comparison.
-- Corrected clearly reversed Lubi HP/kW fields.
-- Cleaned shifted/trailing OCR curve points and excluded unresolved rows from recommendations.
-- Added duplicate variant labels.
-- Improved chart with monotone smoothing, curve glow, dense minor grids, axis padding and selected-point overlay without reshaping the curve.
-- Reduced button/input sizes, improved result cards, range labels, brand navigation and details.
-- Removed duplicate legacy pumps.json.
-- Added live QA screen and build-time data validation.
+Packaged catalogue status
+-------------------------
+TEXMO
+- Records: 1819
+- Pumps: 1784
+- Motors: 35
+- Selectable: 1819
+- Needs source review: 0
 
-TEXMO:
-- Records: 1780
-- Selectable: 1779
-- Needs review: 1
-- HP/kW corrected: 0
-- Curves corrected: 174
-
-LUBI:
+LUBI
 - Records: 1724
-- Selectable: 1682
-- Needs review: 42
-- HP/kW corrected: 424
-- Curves corrected: 314
+- Selectable: 1724
+- Needs source review: 0
+- Source-confirmed table repairs applied: 42
 
-KSB:
-- Records: 452
-- Selectable: 452
-- Needs review: 0
-- HP/kW corrected: 0
-- Curves corrected: 17
+KSB
+- Records: 455
+- Selectable: 455
+- Needs source review: 0
+- Four OPAL models are stored separately.
+- Structured technical fields prevent pipe size, cable size, free passage and impeller diameter from being mixed.
+
+Validation completed
+--------------------
+- Unique record IDs checked.
+- Selectable pump records contain usable performance curves.
+- Curves checked for ordered head-flow behaviour.
+- HP/kW correspondence checked.
+- Phase and normalized-category coverage checked.
+- Unit conversion uses LPH internally.
+- Cross-brand comparison excludes unrelated categories and non-selectable rows.
+
+Final status: 3,998 packaged records, zero records marked Needs source review.

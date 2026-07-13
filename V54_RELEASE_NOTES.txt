@@ -1,0 +1,22 @@
+GRANPA PUMP SELECTOR v5.4.0
+================================
+DATA
+- Texmo complete: 1,819 records.
+- Lubi complete: 1,724 records; all 42 pending variants repaired.
+- KSB restructured: 455 records; OPAL models split and technical fields corrected.
+
+UI / UX
+- Progressive selector and optional filters.
+- Compact result cards and sorting.
+- Side-by-side-style three-brand comparison cards.
+- Structured details and improved performance chart/table.
+- Shortlist, recent activity and catalogue information.
+
+SHARING
+- Copy customer-friendly text.
+- Share model, comparison or shortlist as PNG image.
+- PDF sharing is intentionally not included.
+
+BUILD
+- APK-ready Android Studio project.
+- App version: 5.4.0 (versionCode 54).

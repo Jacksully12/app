@@ -80,7 +80,7 @@ public class PumpRepository {
             JSONArray arr = root.optJSONArray("records");
             for (int i = 0; arr != null && i < arr.length(); i++) {
                 PumpRecord r = PumpRecord.fromJson(arr.getJSONObject(i));
-                if (!Double.isNaN(r.hp) && r.curve.length > 0) rows.add(r);
+                if (!Double.isNaN(r.hp) && (r.curve.length > 0 || r.isMotor())) rows.add(r);
             }
         } catch (Exception e) {
             rows = new ArrayList<>();

@@ -1,3 +1,12 @@
+# Latest release — v5.4.0
+
+- Texmo: 1,819 records, zero review items.
+- Lubi: 1,724 records, all 42 source-confirmed repairs applied.
+- KSB: 455 records, OPAL split and structured technical fields applied.
+- Redesigned selector, results, comparison, model details and chart.
+- Added shortlist, recent activity and catalogue information.
+- Sharing is text or PNG image only; there is no PDF share feature.
+
 # Granpa Pump Selector
 
 Native Android pump selector app for Granpa. The app loads catalogue data from brand-specific assets in `app/src/main/assets/` and works offline for pump search, selection, details and share image generation.
@@ -306,3 +315,17 @@ v4.3.0
 - Corrected reversed Lubi HP/kW fields and cleaned extracted curves.
 - Improved chart rendering with monotone smoothing and no axis touching.
 - Simplified details/result UI and added live/build-time QA.
+
+
+## v5.2.0 Texmo F22 source-confirmed correction
+- Corrected Texmo model `F22` to `1.5 HP / 1.1 kW`.
+- Marked F22 as source confirmed and selectable.
+- Texmo now has 1,780 selectable records and zero records needing source review.
+
+## v5.3.0 Texmo complete workbook update
+- Texmo now contains 1,819 catalogue records: 1,784 pumps and 35 motors.
+- The established Texmo category dropdown is preserved.
+- Motor selection opens catalogue mode and shows RPM, insulation class and frame size instead of pump curves.
+- 25 agricultural monoblock pumps were moved out of Motors.
+- Four missing Page 32 construction-dewatering models were restored.
+- Lubi still has 42 source-confirmed repairs pending; those rows remain excluded from recommendations until applied.

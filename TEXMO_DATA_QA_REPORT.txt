@@ -1,22 +1,16 @@
-TEXMO DATA QA REPORT v5.1.0
+TEXMO DATA QA REPORT v5.4.0
 ====================================================
+Total records: 1819
+Pump records: 1784
+Motor records: 35
+Selectable: 1819
+Needs source review: 0
 
-Total records: 1780
-Selectable recommendations: 1779
-Needs source review: 1
-Automatically fixed: 174
-Automatically checked: 1605
+Confirmed corrections
+- F22: 1.5 HP / 1.1 kW.
+- Added the 35 bare-motor records from the workbook.
+- Moved 25 AMH/AMM agricultural monoblocks out of Motors and into Surface Monoblock.
+- Restored CRDS 204S, CDS 204S, CDS 308S and CDP01180S with the table duty points.
+- SP300SM stored as 3 HP / 2.2 kW.
 
-Normalized selection groups:
-- BOREWELL_SUBMERSIBLE: 1088
-- JET_PUMP: 48
-- MOTOR: 25
-- MULTISTAGE: 108
-- OPENWELL_SUBMERSIBLE: 226
-- SEWAGE_DEWATERING: 61
-- SURFACE_MONOBLOCK: 223
-
-Records requiring manual source review:
-- Page 9: F22 — Power rating requires manual source check; Source sheet lists 1.5 HP / 1.5 kW; requires catalogue confirmation
-
-Rule: records requiring review remain searchable in the catalogue but are excluded from automatic duty-point results and brand comparison.
+All Texmo records are available in their appropriate pump or motor workflow.

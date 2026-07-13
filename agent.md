@@ -1,3 +1,12 @@
+# Latest release — v5.4.0
+
+- Texmo: 1,819 records, zero review items.
+- Lubi: 1,724 records, all 42 source-confirmed repairs applied.
+- KSB: 455 records, OPAL split and structured technical fields applied.
+- Redesigned selector, results, comparison, model details and chart.
+- Added shortlist, recent activity and catalogue information.
+- Sharing is text or PNG image only; there is no PDF share feature.
+
 See `AGENTS.md` for full project rules.
 
 
@@ -232,3 +241,16 @@ v4.3.0
 - Corrected reversed Lubi HP/kW fields and cleaned extracted curves.
 - Improved chart rendering with monotone smoothing and no axis touching.
 - Simplified details/result UI and added live/build-time QA.
+
+
+## v5.2.0 Texmo F22 source-confirmed correction
+- Corrected Texmo model `F22` to `1.5 HP / 1.1 kW`.
+- Marked F22 as source confirmed and selectable.
+- Texmo now has 1,780 selectable records and zero records needing source review.
+
+## v5.3.0 Texmo workbook completion
+- Texmo now has 1,819 records: 1,784 pump records and 35 motor records.
+- Added dedicated motor catalogue/detail presentation with RPM, insulation class and frame size.
+- Reclassified 25 Page 38 AMH/AMM models as three-phase agricultural monoblock pumps.
+- Restored four Page 32 single-phase construction-dewatering models and corrected phase/delivery-size mappings.
+- Lubi still has 42 source-confirmed repairs pending in its JSON data.

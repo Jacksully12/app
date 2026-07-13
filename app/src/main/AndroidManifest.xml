@@ -18,6 +18,9 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
+        <activity android:name=".CatalogueInfoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RecentActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ShortlistActivity" android:screenOrientation="portrait" />
         <activity android:name=".QAActivity" android:screenOrientation="portrait" />
         <activity android:name=".ChartZoomActivity" android:screenOrientation="portrait" />
         <activity android:name=".PumpDetailsActivity" android:screenOrientation="portrait" />

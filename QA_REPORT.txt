@@ -1,3 +1,7 @@
+FINAL v5.4.0 STATUS
+===================
+Texmo 1,819 / Lubi 1,724 / KSB 455. All records selectable; zero source-review items. Lubi 42-row repair and KSB OPAL/technical restructuring are applied. Image sharing only; no PDF sharing.
+
 Granpa Pump Selector - QA Summary
 
 Version: 2.0.0
@@ -270,3 +274,19 @@ v4.3.0
 - Corrected reversed Lubi HP/kW fields and cleaned extracted curves.
 - Improved chart rendering with monotone smoothing and no axis touching.
 - Simplified details/result UI and added live/build-time QA.
+
+
+## v5.2.0 Texmo F22 source-confirmed correction
+- Corrected Texmo model `F22` to `1.5 HP / 1.1 kW`.
+- Marked F22 as source confirmed and selectable.
+- Texmo now has 1,780 selectable records and zero records needing source review.
+
+v5.3.0 TEXMO COMPLETE WORKBOOK UPDATE:
+- Texmo catalogue increased from 1780 to 1819 records.
+- Added 35 real motor records from workbook Pages 37-38.
+- Added motor-specific UI for RPM, insulation class and frame size.
+- Reclassified 25 AMH/AMM pumps from Motors to 3 Phase Agricultural Monoblock.
+- Restored CRDS 204S, CDS 204S, CDS 308S and CDP01180S.
+- Corrected the Page 32 construction-dewatering models to Single Phase and fixed delivery sizes.
+- Texmo now has zero unresolved source rows.
+- Lubi remains at 42 review records pending source-confirmed JSON replacement.

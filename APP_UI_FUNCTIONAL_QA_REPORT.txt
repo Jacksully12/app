@@ -1,30 +1,25 @@
-APP UI + FUNCTIONAL QA REPORT v5.1.0
+APP UI + FUNCTIONAL QA REPORT v5.4.0
 ===============================================
+Implemented
+- Compact brand-selection cards and dealer-tool shortcuts.
+- Progressive selector: category, phase and duty point.
+- Texmo detailed category dropdown preserved.
+- Category-specific motor workflow with head/flow hidden.
+- Optional filters for HP, kW, size, oversupply and close matches.
+- Inline input validation.
+- Compact result cards, sorting, search, sticky-style summary and edit action.
+- Result scroll position restored after returning from details.
+- Redesigned three-brand comparison with best matches, highlights and alternatives.
+- Structured model details for pumps, sewage models and motors.
+- Improved curve with catalogue-point dots, monotone interpolation, selected point, labelled axes, point tap, zoom and reset.
+- Curve/performance-table switch.
+- Customer shortlist, recently viewed models and recent searches.
+- Copy/share as text or PNG image only. No PDF-generation or PDF-sharing feature.
+- Catalogue-information and live QA screens.
+- Fully offline catalogue operation.
 
-UI updates:
-- Preserved Texmo main and detailed category dropdown.
-- Brand-specific detailed categories remain available for Lubi and KSB.
-- Reduced input, spinner and button heights.
-- Added Change brand action.
-- Improved minimum/maximum flow labels in range mode.
-- Simplified grouped category headers and model result cards.
-- Added variant labels for repeated family names.
-- Removed duplicate Discharge range and internal Sheet rows from model details.
-- Added visible data status.
-
-Chart updates:
-- Selected point no longer changes the catalogue curve shape.
-- Monotone cubic smoothing prevents curve overshoot.
-- Added curve glow, dense minor gridlines and clearer major gridlines.
-- Added inner data padding so the curve does not touch either axis.
-- Selected flow/head guide lines remain visible.
-- Pinch zoom, drag, double-tap reset and tap-to-open remain supported.
-- Share-image curve uses the same safer smoothing and plot padding.
-
-Functional controls:
-- Live result count and no-result messages.
-- Collapsible result groups.
-- Copy Results uses readable customer-facing text.
-- Range results capped to 25 best low-power matches.
-- QA screen reads live asset status.
-- GitHub Actions runs tools/validate_data.py before APK build.
+Static QA
+- Java syntax parsed successfully for all source files.
+- Android manifest activity registrations checked.
+- No INTERNET permission is present.
+- JSON asset validation passed.

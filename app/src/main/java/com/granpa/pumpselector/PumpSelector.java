@@ -360,7 +360,7 @@ public class PumpSelector {
 
     public static boolean kw(PumpRecord r, String k) {
         if (k == null || k.trim().isEmpty()) return true;
-        String hay = (r.model + " " + r.brand + " " + r.category + " " + r.size + " " + r.catalogueSectionText).toLowerCase(Locale.US);
+        String hay = (r.model + " " + r.brand + " " + r.category + " " + r.size + " " + r.catalogueSectionText + " " + r.rpm + " " + r.insulationClass + " " + r.frameSize + " " + r.motorType).toLowerCase(Locale.US);
         return hay.contains(k.toLowerCase(Locale.US)) || norm(hay).contains(norm(k));
     }
 
