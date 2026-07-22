@@ -1,0 +1,78 @@
+KSB DOMESTIC + AGRICULTURAL FULL INTEGRATION AND QA REPORT
+Version: 5.5.0
+======================================================================
+
+SOURCES
+- KSB Domestic Pumps Performance Booklet 2026: authoritative domestic source.
+- KSB Domestic Pumps Selection Chart 2025: cross-check source. Its duplicate domestic rows were not added a second time.
+- KSB Agricultural Pumps Performance Booklet 2025: agricultural pumps and SPM motor source.
+
+FINAL KSB DATASET
+- Total KSB records: 1273
+- Domestic records: 455
+- Agricultural records: 818
+- Automatically selectable records: 1226
+- Records retained for catalogue browsing but excluded from recommendation: 47
+- KSB detailed categories: 28
+
+AGRICULTURAL ADDITION
+- Agricultural pump records: 811
+- Agricultural SPM motor records: 7
+- Covered source ranges:
+  * 100, 125, 150, 175 and 200 mm borewell pumps
+  * 100 and 150 mm stainless-steel borewell pumps
+  * ULTRA+ agricultural centrifugal monobloc pumps
+  * single- and three-phase horizontal openwell pumps
+  * vertical openwell / VO / MRV / MREG ranges
+  * SPM single-phase induction motors
+- Cable and control-panel pages remain source reference material and were intentionally not added as pump-selection records.
+
+DOMESTIC CORRECTIONS APPLIED
+- MR(S) openwell models corrected to Single Phase.
+- MULTI-SUB PLUS corrected to Single Phase.
+- PERIBOOST PLUS and OPAL phase availability corrected.
+- OPAL 05 i, 10 i, 10CX i and 15 i split into separate source records.
+- AQUA, CUTE and PERISTAR surface-family phase mappings corrected from page-local power-supply headings.
+- PERIJET pipe size corrected to 25 x 25 mm.
+- AQUA ULTIMA II pipe size corrected to 25 x 25 mm.
+- MULTIBOOST PLUS pipe sizes corrected.
+- KSTP pipe size and maximum-solid-size fields separated.
+- AMA PORTER cable size and free-passage fields separated.
+- AMAREX and KRTU outlet/DN, free passage and impeller diameter separated.
+
+APPLICATION CHANGES
+- Added KSB Motors as a main category.
+- Added structured KSB technical fields to model details.
+- Added source catalogue, source page and cross-check information.
+- Removed silent fallback to Texmo when a KSB/Lubi asset fails to load.
+- Compare now shows the closest technically compatible model outside ±50% instead of hiding the brand.
+- Version updated to 5.5.0 / versionCode 55.
+
+QA CONTROLS
+- Unique record IDs checked.
+- All selectable pump records have at least two curve points.
+- All selectable pump curves pass monotonic-flow validation.
+- HP/kW correspondence checked.
+- Table-local phase detection used where one PDF page contains more than one phase table.
+- Original LPM values converted internally using 1 LPM = 60 LPH.
+- Known comparison fixture confirmed: MR(S) 10CX gives 1,440 LPH at 30 m.
+
+REMAINING SOURCE-REVIEW ROWS
+47 agricultural rows are intentionally excluded from automatic selection because Camelot/table extraction produced a severe curve inversion or ambiguous grouped cells. They remain visible in catalogue browsing so no source model is silently lost.
+
+Review pages: 24: 4, 29: 2, 31: 1, 42: 1, 44: 4, 45: 5, 46: 3, 47: 3, 48: 8, 49: 3, 53: 1, 60: 1, 61: 3, 62: 1, 63: 1, 65: 4, 67: 2
+
+Review categories:
+- KSB Agri 150 mm Borewell: 7
+- KSB Agri 200 mm Borewell: 27
+- KSB Agri Centrifugal Monobloc: 1
+- KSB Agri Horizontal Openwell: 6
+- KSB Agri Vertical Openwell: 6
+
+These rows require manual page-by-page transcription before they can be marked selectable. The app does not recommend or compare them in the current build.
+
+SOURCE PRIORITY RULE
+The 2026 Domestic booklet supersedes the 2025 Domestic chart whenever both contain the same domestic range. The 2025 chart is used to verify model separation, phase and technical columns; duplicating those rows would incorrectly double catalogue results.
+
+BUILD STATUS
+This package is an APK-ready Android Studio/Gradle source project. An APK was not compiled in this environment because an Android Gradle wrapper/toolchain is not present in the supplied project.

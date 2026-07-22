@@ -1,25 +1,28 @@
-APP UI + FUNCTIONAL QA REPORT v5.4.0
+APP UI + FUNCTIONAL QA REPORT v5.3.0
 ===============================================
-Implemented
-- Compact brand-selection cards and dealer-tool shortcuts.
-- Progressive selector: category, phase and duty point.
-- Texmo detailed category dropdown preserved.
-- Category-specific motor workflow with head/flow hidden.
-- Optional filters for HP, kW, size, oversupply and close matches.
-- Inline input validation.
-- Compact result cards, sorting, search, sticky-style summary and edit action.
-- Result scroll position restored after returning from details.
-- Redesigned three-brand comparison with best matches, highlights and alternatives.
-- Structured model details for pumps, sewage models and motors.
-- Improved curve with catalogue-point dots, monotone interpolation, selected point, labelled axes, point tap, zoom and reset.
-- Curve/performance-table switch.
-- Customer shortlist, recently viewed models and recent searches.
-- Copy/share as text or PNG image only. No PDF-generation or PDF-sharing feature.
-- Catalogue-information and live QA screens.
-- Fully offline catalogue operation.
 
-Static QA
-- Java syntax parsed successfully for all source files.
-- Android manifest activity registrations checked.
-- No INTERNET permission is present.
-- JSON asset validation passed.
+Texmo category behavior:
+- Preserved the existing Texmo main and detailed category dropdown.
+- Motors remains a main category.
+- Added three detailed motor sections from Pages 37-38.
+- Selecting a motor category hides irrelevant head/flow inputs.
+- The primary action changes to Show matching motors.
+- Catalogue phase filtering works for both pumps and motors.
+
+Motor UI:
+- Motor cards show HP, kW, phase, RPM, insulation class and frame size.
+- Motor details use a dedicated motor-specification layout.
+- Pump performance curves and pump sharing actions are not shown for motor-only records.
+
+Pump UI retained:
+- Fixed-flow and range selection.
+- Brand-specific category dropdowns.
+- Collapsible result groups.
+- Improved monotone performance curves, selected-point guides and chart zoom.
+- Customer-facing Copy Results output.
+
+Static checks:
+- Java brace consistency checked.
+- JSON identifiers checked for uniqueness.
+- All selectable pump curves validated for at least two usable points and monotonic order.
+- All motor records validated for RPM, insulation class and frame size.

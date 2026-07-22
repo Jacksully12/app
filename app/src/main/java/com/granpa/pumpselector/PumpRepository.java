@@ -60,13 +60,7 @@ public class PumpRepository {
         JSONObject metadata = new JSONObject();
 
         try {
-            InputStream in;
-            try {
-                in = c.getAssets().open(asset);
-            } catch (Exception missing) {
-                // Backward compatibility with earlier project versions.
-                in = c.getAssets().open(TEXMO_ASSET);
-            }
+            InputStream in = c.getAssets().open(asset);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buf = new byte[16384];

@@ -248,29 +248,42 @@ public class PumpSelector {
 
     public static ArrayList<Result> selectForCompare(List<PumpRecord> rows, double head, Req req, String cat, String phase) {
         ArrayList<Result> found = new ArrayList<>();
+        ArrayList<Result> outside = new ArrayList<>();
         if (req == null || req.range) return found;
         for (PumpRecord r : rows) {
             if (!r.selectable || !cat(r, cat) || !phase(r, phase)) continue;
             Double q = flowAt(r, head); if (q == null) continue;
             double signed = q - req.min;
-            int band = toleranceBand(Math.abs(signed) / Math.max(1d, Math.abs(req.min)));
-            if (band == 0) continue;
+            double pct = Math.abs(signed) / Math.max(1d, Math.abs(req.min));
+            int band = toleranceBand(pct);
             Result x = new Result(); x.r = r; x.head = head; x.flow = q; x.diff = Math.abs(signed); x.estimate = true; x.unit = req.unit;
+            if (band == 0) {
+                String direction = signed >= 0 ? "above" : "below";
+                x.status = "Closest available • outside ±50% • " + formatFlow(Math.abs(signed), req.unit) + " " + direction + " target";
+                outside.add(x);
+                continue;
+            }
             String level = toleranceLabel(band);
             if (Math.abs(signed) < 1d) x.status = "Exact • " + level;
             else if (signed > 0) x.status = "Above target • +" + formatFlow(signed, req.unit) + " • " + level;
             else x.status = "Below target • -" + formatFlow(Math.abs(signed), req.unit) + " • " + level;
             found.add(x);
         }
-        Collections.sort(found, (a,b) -> {
+        Comparator<Result> rank = (a,b) -> {
             int band=Integer.compare(resultBand(a), resultBand(b)); if(band!=0)return band;
             int diff=Double.compare(a.diff,b.diff); if(diff!=0)return diff;
             int hp=Double.compare(a.r.hp,b.r.hp); if(hp!=0)return hp;
             int kw=Double.compare(a.r.kw,b.r.kw); if(kw!=0)return kw;
             return a.r.model.compareToIgnoreCase(b.r.model);
+        };
+        Collections.sort(found, rank);
+        if (!found.isEmpty()) return found.size()>4 ? new ArrayList<>(found.subList(0,4)) : found;
+        Collections.sort(outside, (a,b) -> {
+            int diff=Double.compare(a.diff,b.diff); if(diff!=0)return diff;
+            int hp=Double.compare(a.r.hp,b.r.hp); if(hp!=0)return hp;
+            return a.r.model.compareToIgnoreCase(b.r.model);
         });
-        if(found.size()>4)return new ArrayList<>(found.subList(0,4));
-        return found;
+        return outside.size()>2 ? new ArrayList<>(outside.subList(0,2)) : outside;
     }
 
     public static ArrayList<Result> catalogue(List<PumpRecord> rows, String cat, String key) {

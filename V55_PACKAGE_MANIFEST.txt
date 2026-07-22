@@ -1,0 +1,23 @@
+GRANPA PUMP SELECTOR v5.5.0 — PACKAGE MANIFEST
+==============================================================
+
+Package type: APK-ready native Android Studio/Gradle source
+APK compiled in this environment: No
+
+KSB final dataset:
+- Total records: 1273
+- Domestic records: 455
+- Agricultural records: 818
+- Selectable records: 1226
+- Source-review records: 47
+
+Source policy:
+- Domestic 2026 is authoritative for duplicate domestic ranges.
+- Domestic 2025 is used as a cross-check and is not duplicated.
+- Agricultural 2025 supplies agricultural pumps and SPM motors.
+
+Important:
+- The 47 review rows remain visible in catalogue browsing.
+- They are excluded from automatic recommendation and brand comparison.
+- See KSB_DOMESTIC_AGRICULTURAL_FULL_QA_REPORT.txt and
+  KSB_AGRICULTURAL_REVIEW_ROWS.csv for exact details.

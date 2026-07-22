@@ -1,12 +1,3 @@
-# Latest release — v5.4.0
-
-- Texmo: 1,819 records, zero review items.
-- Lubi: 1,724 records, all 42 source-confirmed repairs applied.
-- KSB: 455 records, OPAL split and structured technical fields applied.
-- Redesigned selector, results, comparison, model details and chart.
-- Added shortlist, recent activity and catalogue information.
-- Sharing is text or PNG image only; there is no PDF share feature.
-
 # UI Rules
 
 ## Dropdowns

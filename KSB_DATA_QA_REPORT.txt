@@ -1,15 +1,21 @@
-KSB DATA QA REPORT v5.4.0
+KSB DATA QA REPORT v5.1.0
 ====================================================
-Total records: 455
-Selectable: 455
+
+Total records: 452
+Selectable recommendations: 452
 Needs source review: 0
-Source-confirmed/structured records: 72
+Automatically fixed: 17
+Automatically checked: 435
 
-Confirmed restructuring
-- Split OPAL 05 i, OPAL 10 i, OPAL 10CX i and OPAL 15 i into separate selectable models.
-- Corrected affected surface and booster pipe sizes.
-- Stored pipe/delivery size, cable size, free passage, impeller diameter, NRV size, rated current, speed and solid passage separately.
-- Corrected AMA PORTER, KSTP, AMAREX IN and KRTU technical labels.
-- Retained the corrected CORA stage/model extraction.
+Normalized selection groups:
+- BOOSTER: 17
+- BOREWELL_SUBMERSIBLE: 193
+- JET_PUMP: 9
+- OPENWELL_SUBMERSIBLE: 14
+- SEWAGE_DEWATERING: 62
+- SURFACE_MONOBLOCK: 157
 
-All KSB records pass the current curve, power, category and selectable-status checks.
+Records requiring manual source review:
+- None currently quarantined.
+
+Rule: records requiring review remain searchable in the catalogue but are excluded from automatic duty-point results and brand comparison.

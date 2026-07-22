@@ -1,10 +1,22 @@
-CROSS-BRAND COMPARISON QA REPORT v5.4.0
+CROSS-BRAND COMPARISON QA REPORT v5.1.0
 ====================================================
-- Comparison requires a specific normalized pump type.
-- Texmo, Lubi and KSB are evaluated at the same head, flow and phase.
-- Each brand shows one best match first and up to three alternatives.
-- Ranking prioritizes tolerance band, closest duty-point difference, then connected power.
-- Highlights identify closest duty-point match, lowest connected power and least oversupply.
-- The app does not claim hydraulic efficiency without manufacturer efficiency data.
-- Comparison can be copied or shared as one PNG image.
-- Manual comparison uses the customer shortlist.
+
+Implemented controls:
+- Compare requires a selected pump type; the broad All pump types option was removed from compare mode.
+- All companies use the same normalized internal categories.
+- Only selectable/QA-cleared records can be recommended.
+- Compare ranking prioritizes tolerance band, then closest duty-point difference, then lower connected HP/kW.
+- Phase filtering trusts row-level phase before category text.
+- Flow is normalized internally to LPH and converted only for display.
+
+Normalized groups:
+- Borewell Submersible
+- Openwell Submersible
+- Surface Monoblock / Jet
+- Multistage
+- Booster / Pressure
+- Sewage / Dewatering
+- Motors (Texmo where available)
+
+Limitation:
+- Comparison states closest duty-point/lower connected power. It does not claim hydraulic efficiency because the catalogues do not consistently provide efficiency curves.

@@ -128,6 +128,7 @@ public class CatalogueActivity extends Activity {
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • multistage sections", true));
             o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage and sewage sections", true));
+            o.add(new Option("motors_all", "Motors", "Main category • KSB agricultural SPM motor models", true));
         }
         for (String c : PumpRepository.categories(this, asset)) o.add(new Option(c, "Sub category • " + c, "", false));
         return o;

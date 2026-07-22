@@ -1,0 +1,26 @@
+LUBI PENDING SOURCE-CONFIRMED REPAIR REPORT v5.3.0
+==============================================================
+
+Current embedded Lubi data:
+- Total records: 1724
+- Available for automatic pump recommendation: 1682
+- Still marked Needs review: 42
+
+The newly rechecked Lubi Performance Booklet contains enough source data to repair all 42 rows. No source information is missing. The remaining work is to transcribe and replace the exact HP/kW, stages and head-flow tables in lubi_pumps.json, then rerun automated QA.
+
+Pending families:
+- Page 18: LGS-75F — 2 variants
+- Page 22: LRS-6A / LDS-6A — 1 variant
+- Page 22: LRS-6H — 1 variant
+- Page 32: LSKN-70 AF — 5 variants
+- Page 35: LSF-100 — 9 variants
+- Page 36: LSF-80ZP — 6 variants
+- Page 37: LSF-120ZP — 10 variants
+- Page 37: LSF-200ZP — 7 variants
+- Page 67: MDH-35 / 335 — 1 variant
+
+Total pending: 42 records.
+
+Safety behavior retained:
+- These 42 rows remain searchable in catalogue browsing.
+- They remain excluded from automatic duty-point recommendations and cross-brand comparison until the source-confirmed values are applied.

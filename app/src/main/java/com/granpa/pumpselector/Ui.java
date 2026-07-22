@@ -1,43 +1,12 @@
 package com.granpa.pumpselector;
-
-import android.app.*;
-import android.graphics.*;
-import android.graphics.drawable.*;
-import android.text.InputType;
-import android.view.*;
-import android.widget.*;
-import java.util.*;
-
-public class Ui {
-    public static final int BG=Color.rgb(246,248,251), CARD=Color.WHITE, TEXT=Color.rgb(16,32,51), MUTED=Color.rgb(96,112,133);
-    public static final int BORDER=Color.rgb(220,229,239), ORANGE=Color.rgb(242,103,34), BLUE=Color.rgb(18,67,114);
-    public static final int GREEN=Color.rgb(18,126,76), RED=Color.rgb(180,55,35), SOFT_BLUE=Color.rgb(239,246,255);
-
-    public static int dp(Activity a,int v){return(int)(v*a.getResources().getDisplayMetrics().density+.5f);}
-    public static int dp(View v,int x){return(int)(x*v.getResources().getDisplayMetrics().density+.5f);}
-    public static int topSafe(Activity a){int st=0;try{int id=a.getResources().getIdentifier("status_bar_height","dimen","android");if(id>0)st=a.getResources().getDimensionPixelSize(id);}catch(Exception ignored){}return Math.max(dp(a,22),st+dp(a,8));}
-
-    public static GradientDrawable bg(Activity a,int fill,int stroke,int rad){GradientDrawable g=new GradientDrawable();g.setColor(fill);g.setCornerRadius(dp(a,rad));g.setStroke(dp(a,1),stroke);return g;}
-    public static GradientDrawable solid(Activity a,int fill,int rad){GradientDrawable g=new GradientDrawable();g.setColor(fill);g.setCornerRadius(dp(a,rad));return g;}
-
-    public static TextView text(Activity a,String s,int sp,int color,int style){TextView t=new TextView(a);t.setText(s);t.setTextSize(sp);t.setTextColor(color);t.setTypeface(Typeface.DEFAULT,style);t.setLineSpacing(0,1.08f);return t;}
-    public static TextView label(Activity a,String s){TextView t=text(a,s,13,TEXT,Typeface.BOLD);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(a,12),0,dp(a,6));t.setLayoutParams(lp);return t;}
-    public static TextView step(Activity a,String n,String title){TextView t=text(a,n+"  "+title,15,BLUE,Typeface.BOLD);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(a,6),0,dp(a,7));t.setLayoutParams(lp);return t;}
-    public static TextView badge(Activity a,String s,int color){TextView t=text(a,s,12,color,Typeface.BOLD);t.setGravity(Gravity.CENTER);t.setPadding(dp(a,10),dp(a,5),dp(a,10),dp(a,5));t.setBackground(bg(a,Color.WHITE,color,12));return t;}
-
-    public static LinearLayout root(Activity a){LinearLayout r=new LinearLayout(a);r.setOrientation(LinearLayout.VERTICAL);r.setPadding(dp(a,16),topSafe(a),dp(a,16),dp(a,16));r.setBackgroundColor(BG);return r;}
-    public static ScrollView scroll(Activity a,View child){ScrollView s=new ScrollView(a);s.setFillViewport(false);s.addView(child);return s;}
-    public static LinearLayout row(Activity a){LinearLayout r=new LinearLayout(a);r.setOrientation(LinearLayout.HORIZONTAL);r.setGravity(Gravity.CENTER_VERTICAL);return r;}
-    public static LinearLayout card(Activity a){LinearLayout c=new LinearLayout(a);c.setOrientation(LinearLayout.VERTICAL);c.setPadding(dp(a,16),dp(a,16),dp(a,16),dp(a,16));c.setBackground(bg(a,CARD,BORDER,20));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,0,0,dp(a,14));c.setLayoutParams(lp);return c;}
-
-    public static EditText input(Activity a,String v,int type){EditText e=new EditText(a);e.setText(v);e.setTextSize(16);e.setSingleLine(true);e.setInputType(type);e.setPadding(dp(a,14),0,dp(a,14),0);e.setMinHeight(dp(a,50));e.setBackground(bg(a,Color.WHITE,BORDER,15));return e;}
-    public static Spinner spinner(Activity a,List<Option> opts){Spinner s=new Spinner(a);s.setAdapter(new OptionAdapter(a,opts));s.setMinimumHeight(dp(a,54));s.setDropDownVerticalOffset(dp(a,6));s.setBackground(bg(a,Color.WHITE,BORDER,15));return s;}
-
-    public static Button primary(Activity a,String s){Button b=new Button(a);b.setText(s);b.setAllCaps(false);b.setTextColor(Color.WHITE);b.setTextSize(14);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(solid(a,ORANGE,15));b.setMinHeight(dp(a,48));return b;}
-    public static Button secondary(Activity a,String s){Button b=new Button(a);b.setText(s);b.setAllCaps(false);b.setTextColor(BLUE);b.setTextSize(14);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(bg(a,SOFT_BLUE,Color.rgb(207,221,236),15));b.setMinHeight(dp(a,46));return b;}
-    public static Button blue(Activity a,String s){Button b=primary(a,s);b.setBackground(solid(a,BLUE,15));return b;}
-    public static Button compact(Activity a,String s){Button b=secondary(a,s);b.setTextSize(12);b.setMinHeight(dp(a,40));b.setPadding(dp(a,10),0,dp(a,10),0);return b;}
-
-    public static void mb(Activity a,View v,int b){LinearLayout.LayoutParams lp=(v.getLayoutParams() instanceof LinearLayout.LayoutParams)?(LinearLayout.LayoutParams)v.getLayoutParams():new LinearLayout.LayoutParams(-1,-2);lp.setMargins(lp.leftMargin,lp.topMargin,lp.rightMargin,dp(a,b));v.setLayoutParams(lp);}
-    public static int numberInput(){return InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL;}
+import android.app.*;import android.graphics.*;import android.graphics.drawable.*;import android.text.InputType;import android.view.*;import android.widget.*;import java.util.*;
+public class Ui { public static final int BG=Color.rgb(246,248,251),CARD=Color.WHITE,TEXT=Color.rgb(16,32,51),MUTED=Color.rgb(96,112,133),BORDER=Color.rgb(220,229,239),ORANGE=Color.rgb(242,103,34),BLUE=Color.rgb(18,67,114),GREEN=Color.rgb(18,126,76),RED=Color.rgb(180,55,35);
+ public static int dp(Activity a,int v){return(int)(v*a.getResources().getDisplayMetrics().density+.5f);} public static int dp(View v,int x){return(int)(x*v.getResources().getDisplayMetrics().density+.5f);} public static int topSafe(Activity a){int st=0;try{int id=a.getResources().getIdentifier("status_bar_height","dimen","android");if(id>0)st=a.getResources().getDimensionPixelSize(id);}catch(Exception e){}return Math.max(dp(a,22),st+dp(a,8));}
+ public static GradientDrawable bg(Activity a,int fill,int stroke,int rad){GradientDrawable g=new GradientDrawable();g.setColor(fill);g.setCornerRadius(dp(a,rad));g.setStroke(dp(a,1),stroke);return g;} public static GradientDrawable solid(Activity a,int fill,int rad){GradientDrawable g=new GradientDrawable();g.setColor(fill);g.setCornerRadius(dp(a,rad));return g;}
+ public static TextView text(Activity a,String s,int sp,int color,int style){TextView t=new TextView(a);t.setText(s);t.setTextSize(sp);t.setTextColor(color);t.setTypeface(Typeface.DEFAULT,style);t.setLineSpacing(0,1.08f);return t;} public static TextView label(Activity a,String s){TextView t=text(a,s,13,TEXT,Typeface.BOLD);LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,dp(a,14),0,dp(a,7));t.setLayoutParams(lp);return t;}
+ public static LinearLayout root(Activity a){LinearLayout r=new LinearLayout(a);r.setOrientation(LinearLayout.VERTICAL);r.setPadding(dp(a,16),topSafe(a),dp(a,16),dp(a,16));r.setBackgroundColor(BG);return r;} public static ScrollView scroll(Activity a,View child){ScrollView s=new ScrollView(a);s.setFillViewport(false);s.addView(child);return s;} public static LinearLayout row(Activity a){LinearLayout r=new LinearLayout(a);r.setOrientation(LinearLayout.HORIZONTAL);r.setGravity(Gravity.CENTER_VERTICAL);return r;}
+ public static LinearLayout card(Activity a){LinearLayout c=new LinearLayout(a);c.setOrientation(LinearLayout.VERTICAL);c.setPadding(dp(a,16),dp(a,16),dp(a,16),dp(a,16));c.setBackground(bg(a,CARD,BORDER,20));LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(0,0,0,dp(a,14));c.setLayoutParams(lp);return c;}
+ public static EditText input(Activity a,String v,int type){EditText e=new EditText(a);e.setText(v);e.setTextSize(16);e.setSingleLine(true);e.setInputType(type);e.setPadding(dp(a,14),0,dp(a,14),0);e.setMinHeight(dp(a,52));e.setBackground(bg(a,Color.WHITE,BORDER,16));return e;} public static Spinner spinner(Activity a,List<Option> opts){Spinner s=new Spinner(a);s.setAdapter(new OptionAdapter(a,opts));s.setMinimumHeight(dp(a,58));s.setDropDownVerticalOffset(dp(a,6));s.setBackground(bg(a,Color.WHITE,BORDER,16));return s;}
+ public static Button primary(Activity a,String s){Button b=new Button(a);b.setText(s);b.setAllCaps(false);b.setTextColor(Color.WHITE);b.setTextSize(14);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(solid(a,ORANGE,16));b.setMinHeight(dp(a,50));return b;} public static Button secondary(Activity a,String s){Button b=new Button(a);b.setText(s);b.setAllCaps(false);b.setTextColor(BLUE);b.setTextSize(14);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(bg(a,Color.rgb(239,246,255),Color.rgb(207,221,236),16));b.setMinHeight(dp(a,48));return b;} public static Button blue(Activity a,String s){Button b=primary(a,s);b.setBackground(solid(a,BLUE,16));return b;}
+ public static void mb(Activity a,View v,int b){LinearLayout.LayoutParams lp=(v.getLayoutParams() instanceof LinearLayout.LayoutParams)?(LinearLayout.LayoutParams)v.getLayoutParams():new LinearLayout.LayoutParams(-1,-2);lp.setMargins(lp.leftMargin,lp.topMargin,lp.rightMargin,dp(a,b));v.setLayoutParams(lp);} public static int numberInput(){return InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL;}
 }

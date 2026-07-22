@@ -1,16 +1,43 @@
-TEXMO DATA QA REPORT v5.4.0
+TEXMO DATA QA REPORT v5.3.0
 ====================================================
-Total records: 1819
+
+Source: Texmo-Diary-data (1).xlsx
+
+Total catalogue records: 1819
 Pump records: 1784
 Motor records: 35
-Selectable: 1819
-Needs source review: 0
+Records needing source review: 0
 
-Confirmed corrections
-- F22: 1.5 HP / 1.1 kW.
-- Added the 35 bare-motor records from the workbook.
-- Moved 25 AMH/AMM agricultural monoblocks out of Motors and into Surface Monoblock.
-- Restored CRDS 204S, CDS 204S, CDS 308S and CDP01180S with the table duty points.
-- SP300SM stored as 3 HP / 2.2 kW.
+Corrections applied in v5.3.0:
+- Added 35 motor records from Page 37 and Page 38.
+  - 10 three-phase B14 flange motors, 2 pole
+  - 16 three-phase bare motors, 4 pole
+  - 9 single-phase bare motors
+- Added dedicated motor fields: RPM, insulation class, frame size and motor type.
+- Corrected SP300SM to 3 HP / 2.2 kW because the source row HP/kW columns were reversed.
+- Reclassified 25 AMH/AMM agricultural monoblock pumps from Motors to 3 Phase Agricultural Monoblock.
+- Restored four Page 32 models:
+  - CRDS 204S
+  - CDS 204S
+  - CDS 308S
+  - CDP01180S
+- Corrected the Page 32 construction-dewatering section to Single Phase.
+- Corrected Page 32 delivery-size mappings for 50 mm and 80 mm variants.
+- Retained the source-confirmed F22 correction: 1.5 HP / 1.1 kW.
 
-All Texmo records are available in their appropriate pump or motor workflow.
+Normalized selection groups:
+- BOREWELL_SUBMERSIBLE: 1089
+- JET_PUMP: 48
+- MOTOR: 35
+- MULTISTAGE: 108
+- OPENWELL_SUBMERSIBLE: 226
+- SEWAGE_DEWATERING: 65
+- SURFACE_MONOBLOCK: 248
+
+Motor behavior:
+- Motor records are available through the existing Texmo category dropdown.
+- Selecting Motors hides pump head/flow inputs and opens the motor catalogue.
+- Motor details show HP, kW, phase, RPM, insulation class and frame size.
+- Motors are not passed through pump duty-point interpolation or cross-brand pump comparison.
+
+Result: No Texmo source rows remain unresolved in this project.

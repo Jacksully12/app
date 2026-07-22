@@ -1,12 +1,3 @@
-# Latest release — v5.4.0
-
-- Texmo: 1,819 records, zero review items.
-- Lubi: 1,724 records, all 42 source-confirmed repairs applied.
-- KSB: 455 records, OPAL split and structured technical fields applied.
-- Redesigned selector, results, comparison, model details and chart.
-- Added shortlist, recent activity and catalogue information.
-- Sharing is text or PNG image only; there is no PDF share feature.
-
 # AGENTS.md — Granpa Pump Selector Rules
 
 ## Product rules
@@ -305,3 +296,12 @@ v4.3.0
 - Reclassified 25 Page 38 AMH/AMM models as three-phase agricultural monoblock pumps.
 - Restored four Page 32 single-phase construction-dewatering models and corrected phase/delivery-size mappings.
 - Lubi still has 42 source-confirmed repairs pending in its JSON data.
+
+## v5.5.0 KSB domestic + agricultural integration
+- KSB now contains 1,273 records: 455 domestic and 818 agricultural.
+- Domestic 2026 remains authoritative; Domestic 2025 is used as a cross-check without duplicate rows.
+- Added KSB agricultural borewell, monobloc, openwell, vertical openwell and SPM motor ranges.
+- 47 ambiguous agricultural rows are visible in catalogue but excluded from recommendations.
+- Corrected KSB phase, OPAL model splitting, pipe-size and sewage technical-field mappings.
+- Compare now returns the closest compatible model outside tolerance when no in-tolerance match exists.
+- Added KSB structured technical specifications and source provenance to model details.

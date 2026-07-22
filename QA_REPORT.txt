@@ -1,7 +1,3 @@
-FINAL v5.4.0 STATUS
-===================
-Texmo 1,819 / Lubi 1,724 / KSB 455. All records selectable; zero source-review items. Lubi 42-row repair and KSB OPAL/technical restructuring are applied. Image sharing only; no PDF sharing.
-
 Granpa Pump Selector - QA Summary
 
 Version: 2.0.0
@@ -290,3 +286,12 @@ v5.3.0 TEXMO COMPLETE WORKBOOK UPDATE:
 - Corrected the Page 32 construction-dewatering models to Single Phase and fixed delivery sizes.
 - Texmo now has zero unresolved source rows.
 - Lubi remains at 42 review records pending source-confirmed JSON replacement.
+
+## v5.5.0 KSB domestic + agricultural integration
+- KSB now contains 1,273 records: 455 domestic and 818 agricultural.
+- Domestic 2026 remains authoritative; Domestic 2025 is used as a cross-check without duplicate rows.
+- Added KSB agricultural borewell, monobloc, openwell, vertical openwell and SPM motor ranges.
+- 47 ambiguous agricultural rows are visible in catalogue but excluded from recommendations.
+- Corrected KSB phase, OPAL model splitting, pipe-size and sewage technical-field mappings.
+- Compare now returns the closest compatible model outside tolerance when no in-tolerance match exists.
+- Added KSB structured technical specifications and source provenance to model details.
