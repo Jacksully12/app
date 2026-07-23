@@ -95,3 +95,12 @@ The included workflow pins:
 - Android Gradle Plugin 8.13.2
 
 It runs the data validator, JVM tests, Android lint and debug APK assembly, and uploads the APK/test/lint reports.
+
+V5.9.1 API-23 BUILD COMPATIBILITY FIX
+-------------------------------------
+PASS  tools/check_min_sdk_compat.py (minSdk 23)
+PASS  Source-aware data validation (Texmo 1820, Lubi 1871, KSB 1273)
+PASS  Pure-Java compilation of PumpSelector and CurveUtils with Java 17
+PASS  Curve validation/interpolation/share-gating smoke test
+PASS  No remaining computeIfAbsent, Double.isFinite, or Comparator.comparingDouble calls under app/src
+PENDING Android lint/unit/APK build on GitHub Actions after rerun

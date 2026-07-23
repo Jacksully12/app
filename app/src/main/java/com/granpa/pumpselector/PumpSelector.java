@@ -300,7 +300,7 @@ public class PumpSelector {
     }
 
     public static Double flowAt(PumpRecord r, double head) {
-        if (r == null || !Double.isFinite(head) || head < 0) return null;
+        if (r == null || Double.isNaN(head) || Double.isInfinite(head) || head < 0) return null;
         ArrayList<double[]> unique = CurveUtils.interpolationPointsLPH(r.curve);
         if (unique.size() < 2) return null;
         for (double[] point : unique) {

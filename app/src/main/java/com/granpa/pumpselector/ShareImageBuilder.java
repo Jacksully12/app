@@ -371,7 +371,11 @@ public class ShareImageBuilder {
             for (double[] p : pts) if (Math.abs(p[0] - selH) < 0.01 && Math.abs(p[1] - selFDisplay) < 0.01) duplicate = true;
             if (!duplicate) pts.add(new double[]{selH, selFDisplay});
         }
-        Collections.sort(pts, Comparator.comparingDouble(a -> a[1]));
+        Collections.sort(pts, new Comparator<double[]>() {
+            @Override public int compare(double[] first, double[] second) {
+                return Double.compare(first[1], second[1]);
+            }
+        });
         return pts;
     }
 

@@ -110,3 +110,13 @@ REMOVED FROM ORIGINAL ROOT
 - V56_SOURCE_SAFE_DATA_QA_REPORT.txt
 - V57_PACKAGE_MANIFEST.txt
 - V58_PACKAGE_MANIFEST.txt
+
+v5.9.1 build compatibility correction:
+- app/build.gradle (versionCode 60, versionName 5.9.1)
+- app/src/main/java/com/granpa/pumpselector/CurveUtils.java
+- app/src/main/java/com/granpa/pumpselector/PumpSelector.java
+- app/src/main/java/com/granpa/pumpselector/ShareImageBuilder.java
+- tools/check_min_sdk_compat.py
+- .github/workflows/android.yml
+- BUILD_FIX_V591.md
+- TEST_RESULTS_V59.txt

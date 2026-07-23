@@ -22,11 +22,16 @@ public final class CurveUtils {
 
         for (double[] point : curve) {
             if (point == null || point.length < 2
-                    || !Double.isFinite(point[0]) || !Double.isFinite(point[1])
+                    || !isFinite(point[0]) || !isFinite(point[1])
                     || point[0] < 0 || point[1] < 0) {
                 return new ArrayList<>();
             }
-            byHead.computeIfAbsent(point[0], ignored -> new ArrayList<>()).add(point[1]);
+            ArrayList<Double> flowsAtHead = byHead.get(point[0]);
+            if (flowsAtHead == null) {
+                flowsAtHead = new ArrayList<>();
+                byHead.put(point[0], flowsAtHead);
+            }
+            flowsAtHead.add(point[1]);
             points.add(new double[]{point[0], point[1]});
         }
         if (byHead.size() < 2) return new ArrayList<>();
@@ -41,7 +46,11 @@ public final class CurveUtils {
             previousAverage = average;
         }
 
-        Collections.sort(points, Comparator.comparingDouble(point -> point[1]));
+        Collections.sort(points, new Comparator<double[]>() {
+            @Override public int compare(double[] first, double[] second) {
+                return Double.compare(first[1], second[1]);
+            }
+        });
         return points;
     }
 
@@ -59,7 +68,12 @@ public final class CurveUtils {
         if (validatedPointsLPH(curve).size() < 2) return new ArrayList<>();
         TreeMap<Double, ArrayList<Double>> groups = new TreeMap<>();
         for (double[] point : curve) {
-            groups.computeIfAbsent(point[0], ignored -> new ArrayList<>()).add(point[1]);
+            ArrayList<Double> flowsAtHead = groups.get(point[0]);
+            if (flowsAtHead == null) {
+                flowsAtHead = new ArrayList<>();
+                groups.put(point[0], flowsAtHead);
+            }
+            flowsAtHead.add(point[1]);
         }
         ArrayList<double[]> unique = new ArrayList<>();
         for (Map.Entry<Double, ArrayList<Double>> entry : groups.entrySet()) {
@@ -68,6 +82,10 @@ public final class CurveUtils {
             unique.add(new double[]{entry.getKey(), total / entry.getValue().size()});
         }
         return unique;
+    }
+
+    private static boolean isFinite(double value) {
+        return !Double.isNaN(value) && !Double.isInfinite(value);
     }
 
     public static boolean isValid(double[][] curve) {
