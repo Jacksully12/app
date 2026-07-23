@@ -1,0 +1,24 @@
+﻿id,area,severity,status,issue,resolution_or_next_action
+GPS-001,Data,Critical,Fixed,Texmo Page 32 shifted cells,Four records corrected from authoritative layout worksheet.
+GPS-002,Data,Critical,Fixed,Lubi Pages 70–72 missing,82 source-confirmed performance records added.
+GPS-003,Data,High,Fixed,Lubi Page 74 bare pumps missing,Four variants added as catalogue-only/nonselectable.
+GPS-004,Data,High,Fixed,Lubi repeated Page 30/31 rows,24 excess exact technical duplicates removed.
+GPS-005,Data,High,Fixed,Damaged Lubi AS aliases,Seven obsolete rows removed; correct LAS rows retained.
+GPS-006,Data,Critical,Controlled exclusion,KSB source-table anomalies,13 printed curves preserved but excluded pending manufacturer confirmation.
+GPS-007,Logic,Critical,Fixed,Jet and monoblock category mixing,Separate normalized selection groups added.
+GPS-008,Logic,Critical,Fixed,Single/three phase mixing,Explicit phase required for recommendations and comparison.
+GPS-009,Logic,High,Fixed,Different selector/compare ranking,Shared quality-band-first ranking applied.
+GPS-010,Chart,Critical,Fixed,On-screen/share validation mismatch,Both paths now use CurveUtils and source-point markers.
+GPS-011,Security,Critical,Fixed,Unverified customer sharing,Share/download disabled for nonapproved records.
+GPS-012,Performance,Medium,Fixed,Large JSON parsing on UI thread,All brands preload off the main thread.
+GPS-013,Performance,Medium,Fixed,Search on every keystroke,Catalogue filtering debounced.
+GPS-014,UI,Medium,Fixed,Modern edge-to-edge overlap risk,System-bar inset handling added.
+GPS-015,Build,High,Fixed in configuration,Outdated target/build toolchain,"API 36, AGP 8.13.2 and Gradle 8.13 pinned in CI."
+GPS-016,Build,Critical,Pending external execution,No Android SDK/Gradle in audit runtime,CI/device build must be run outside this environment.
+GPS-017,Release,Critical,Pending,Release signing and signed-artifact smoke test,Organisation keystore and final device test required.
+GPS-018,QA,High,Pending,Physical-device/accessibility regression,Complete phone/tablet/TalkBack/share/download matrix.
+GPS-019,Build,Medium,Pending,Gradle wrapper not bundled,Pinned CI works; add official wrapper files for fully self-contained local builds.
+GPS-020,Compatibility,High,Fixed,Android 6–9 downloaded images were stored in an app-private folder,System document picker now saves to a user-selected location without broad storage permission.
+GPS-021,Logic,Medium,Fixed,Full-text phase labels could be tokenised ambiguously,Phase parsing now uses exact S/T/single/three tokens with regression tests.
+GPS-022,UI,Medium,Fixed,Form values could reset after configuration recreation,Main selector compare form and catalogue filters now save and restore state.
+GPS-023,Documentation,Medium,Fixed,Historical instructions contained stale build and record counts,Current v5.9 precedence notices and corrected build rules added; old reports archived.

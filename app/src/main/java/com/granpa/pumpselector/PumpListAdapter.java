@@ -25,7 +25,7 @@ public class PumpListAdapter extends BaseAdapter {
         PumpSelector.Result it = items.get(pos);
         if (it.header) {
             String base = baseTitle(it.groupTitle); boolean collapsed = collapsedGroups.contains(base);
-            LinearLayout h = Ui.card(a);
+            LinearLayout h = recycledCard(cv);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
             lp.setMargins(0, pos == 0 ? 0 : Ui.dp(a, 20), 0, Ui.dp(a, 10));
             h.setLayoutParams(lp);
@@ -41,8 +41,12 @@ public class PumpListAdapter extends BaseAdapter {
 
         PumpRecord r = it.r;
         String u = it.unit == null ? displayUnit : it.unit;
-        LinearLayout c = Ui.card(a);
+        LinearLayout c = recycledCard(cv);
         c.setPadding(Ui.dp(a, 14), Ui.dp(a, 14), Ui.dp(a, 14), Ui.dp(a, 14));
+        c.setBackground(Ui.bg(a, Ui.CARD, Ui.BORDER, 20));
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(-1, -2);
+        cardParams.setMargins(0, 0, 0, Ui.dp(a, 14));
+        c.setLayoutParams(cardParams);
         c.addView(Ui.text(a, safe(r.model), 21, Ui.TEXT, Typeface.BOLD));
         if (!safe(r.variantLabel).isEmpty()) c.addView(Ui.text(a, safe(r.variantLabel), 13, Ui.MUTED, Typeface.NORMAL));
         c.addView(Ui.text(a, PumpSelector.trim(r.hp) + " HP  •  " + PumpSelector.trim(r.kw) + " kW  •  " + phaseLong(r.phase), 14, Ui.MUTED, Typeface.NORMAL));
@@ -62,13 +66,29 @@ public class PumpListAdapter extends BaseAdapter {
             c.addView(Ui.text(a, "Head: " + safe(r.headRangeText) + " m  •  Flow: " + rangeFlow(r, u), 15, Ui.MUTED, Typeface.NORMAL));
         }
 
-        if (!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus)) c.addView(Ui.text(a, "⚠ Data needs source verification", 13, Ui.ORANGE, Typeface.BOLD));
+        if (!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus) || "SOURCE_ANOMALY".equals(r.dataStatus)
+                || "SOURCE_CONFIRMED_CATALOGUE_ONLY".equals(r.dataStatus) || (!r.isMotor() && !CurveUtils.isValid(r.curve))) {
+            String warning = "SOURCE_CONFIRMED_CATALOGUE_ONLY".equals(r.dataStatus)
+                    ? "⚠ Catalogue-only variant — not used for recommendations"
+                    : "⚠ Data needs source verification — sharing disabled";
+            c.addView(Ui.text(a, warning, 13, Ui.ORANGE, Typeface.BOLD));
+        }
         String bottom = "Page " + r.page;
         if (r.isMotor() && !safe(r.frameSize).isEmpty()) bottom += "  •  Frame " + safe(r.frameSize);
         else bottom += "  •  Size " + dash(r.size);
         if (!safe(r.brand).isEmpty()) bottom += "  •  " + safe(r.brand);
         c.addView(Ui.text(a, bottom, 15, Ui.MUTED, Typeface.NORMAL));
         return c;
+    }
+
+
+    LinearLayout recycledCard(View convertView) {
+        LinearLayout card = convertView instanceof LinearLayout
+                ? (LinearLayout) convertView
+                : Ui.card(a);
+        card.removeAllViews();
+        card.setOrientation(LinearLayout.VERTICAL);
+        return card;
     }
 
     String rangeFlow(PumpRecord r, String unit) {

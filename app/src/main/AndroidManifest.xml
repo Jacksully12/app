@@ -4,7 +4,7 @@
         <package android:name="com.whatsapp.w4b" />
     </queries>
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/app_logo"
         android:roundIcon="@drawable/app_logo"
         android:label="Granpa"
@@ -18,16 +18,16 @@
             android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name=".QAActivity" android:screenOrientation="portrait" />
-        <activity android:name=".ChartZoomActivity" android:screenOrientation="portrait" />
-        <activity android:name=".PumpDetailsActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CatalogueActivity" android:screenOrientation="portrait" />
-        <activity android:name=".ResultsActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CompareResultsActivity" android:screenOrientation="portrait" />
-        <activity android:name=".CompareActivity" android:screenOrientation="portrait" />
-        <activity android:name=".BrandSelectionActivity" android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
-        <activity android:name=".SplashActivity" android:screenOrientation="portrait" android:exported="true" android:noHistory="true">
+        <activity android:name=".QAActivity" />
+        <activity android:name=".ChartZoomActivity" />
+        <activity android:name=".PumpDetailsActivity" />
+        <activity android:name=".CatalogueActivity" />
+        <activity android:name=".ResultsActivity" />
+        <activity android:name=".CompareResultsActivity" />
+        <activity android:name=".CompareActivity" />
+        <activity android:name=".BrandSelectionActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SplashActivity" android:exported="true" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

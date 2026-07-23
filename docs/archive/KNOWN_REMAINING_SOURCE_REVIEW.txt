@@ -1,0 +1,18 @@
+KNOWN REMAINING SOURCE COVERAGE — v5.8.0
+============================================================
+
+TEXMO
+- No source-review records.
+- Complete workbook rows are represented.
+
+LUBI
+- No currently loaded record remains under source review.
+- Remaining missing catalogue coverage:
+  - Page 70: higher-power LBH continuation table.
+  - Pages 71–72: additional LBH and LBL tables.
+  - Page 73: remaining LBI close-coupled range.
+- Pages 69, 76, 77 and 78 supplied during QA are now integrated.
+
+KSB
+- 47 agricultural source-review records remain excluded.
+- See KSB_AGRICULTURAL_REVIEW_ROWS.csv.

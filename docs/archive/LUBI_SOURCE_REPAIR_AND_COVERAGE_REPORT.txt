@@ -1,0 +1,21 @@
+LUBI SOURCE REPAIR AND COVERAGE — v5.6.0
+============================================================
+
+Current records: 1734
+Selectable: 1699
+Needs review: 35
+
+Completed:
+- Rebuilt all 42 previously quarantined rows.
+- Corrected seven openwell categories.
+- Added LHMS-110/7 and LHMS-115/9.
+- Added eight powered LBM self-priming mud-pump variants.
+- Quarantined all current Page 77 rows.
+- Quarantined the two severe shifted LSD curve records.
+
+Still pending for a later source-complete Lubi release:
+- Complete LBH/LBL extraction from pages 69–72.
+- Complete remaining families on pages 76 and 78.
+- Manual reconstruction of the complex Page 77 tables.
+
+The pending rows/sections are not used for automatic recommendations.

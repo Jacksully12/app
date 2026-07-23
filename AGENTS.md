@@ -3,13 +3,13 @@
 ## Product rules
 - App name: Granpa.
 - Native Android app only. Do not convert to WebView, HTML, Flutter or React Native unless explicitly requested.
-- Core data lives in `app/src/main/assets/pumps.json`.
+- Core data lives in `app/src/main/assets/texmo_pumps.json`, `lubi_pumps.json` and `ksb_pumps.json`.
 - App should remain useful offline.
 
 ## Selection logic rules
-- Fixed head only.
+- Fixed-head selection is supported; the main selector also preserves its established fixed-flow/range-flow input modes.
 - No 10% upper limit.
-- Fixed flow mode: estimated flow at selected head must be greater than or equal to required flow.
+- Fixed-flow dealer mode returns at most two source-valid models above and two below the requested flow, limited to the established ±10/20/30/50% quality bands and clearly labelled by direction.
 - Range mode: estimated flow must be inside normalized min/max range.
 - Reverse flow range must be accepted.
 - Convert all units internally to LPH.
@@ -28,12 +28,14 @@
 - One curve line per model.
 - Y-axis = Head (m), X-axis = Flow Rate (LPH).
 - Curve should visually run end-to-end from head side to flow side.
-- Selected operating point is orange with dashed guide lines.
+- Selected operating point is orange with dashed guide lines. Manufacturer source points must be shown on both app and shared charts. All chart paths must use `CurveUtils`.
 
 ## Build rules
 - Java 17.
-- Gradle 8.9 in GitHub Actions.
+- Gradle 8.13 in GitHub Actions with AGP 8.13.2, compile/target API 36 and Java 17.
 - APK artifact name: granpa-pump-selector-debug-apk.
+
+> **Current-state precedence (v5.9.0):** The rules above and the v5.9 files (`README.md`, `FINAL_AUDIT_AND_CHANGELOG_V59.md`, `QA_REPORT_V59.md`) supersede all historical version notes below. Historical counts and pending-item statements are retained only as changelog history and must not be treated as the current dataset state. Current counts are Texmo 1,820; Lubi 1,871; KSB 1,273.
 
 
 ## v2.1.0 chart cleanup
@@ -305,3 +307,30 @@ v4.3.0
 - Corrected KSB phase, OPAL model splitting, pipe-size and sewage technical-field mappings.
 - Compare now returns the closest compatible model outside tolerance when no in-tolerance match exists.
 - Added KSB structured technical specifications and source provenance to model details.
+
+
+## v5.6.0 source-safe rebuild
+- Rebuilt all Texmo curves and phases from the uploaded workbook.
+- Split the combined SMES90/09 TO 10 row into two model variants.
+- Repaired 42 Lubi rows and added recoverable LHMS/LBM models.
+- Quarantined unresolved Lubi Page 77 and severe shifted curves.
+- Preserved the 47 KSB agricultural review exclusions.
+- Selection now rejects invalid curves.
+- Charts display source-point markers and do not silently clean bad data.
+- Added source-aware release validation.
+
+## v5.7.0 Lubi page 40/41/77 source repair
+- Rebuilt LSD-233 and LSD-240.
+- Rebuilt every LHP/LGP row on page 77.
+- Added LHP-3535U2, LGP-1235/1235F and LGP-1335/1335F.
+- Lubi now has zero loaded records under source review.
+- Catalogue coverage remains pending for pages 69–72, 76 and 78.
+
+
+## v5.8.0 Lubi new source tables
+- Added all 29 Page 69 LBH/LMH rows from the supplied source table.
+- Corrected CSP521T and CSP551T.
+- Added MSP551T and all supplied LAP/LFP Page 76 variants.
+- Added all supplied LAS/LBP/LLP Page 78 variants.
+- Lubi now contains 1,816 selectable records with zero loaded review rows.
+- Remaining Lubi catalogue coverage is limited to Pages 70–73.

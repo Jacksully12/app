@@ -1,0 +1,60 @@
+GRANPA PUMP SELECTOR v5.6.0 — SOURCE-SAFE DATA QA
+================================================================
+
+BUILD TYPE
+- APK-ready native Android Studio/Gradle source.
+- APK compiled in this environment: No.
+- Base source branch: v5.5.0 / older complete branch.
+- Newer Manual Shortlist and Comparison Highlights UI shown in screenshots
+  may belong to a separate branch and is not guaranteed in this source.
+
+TEXMO
+- Source workbook rows: 1,819
+- App model variants: 1820
+- Reason for +1 variant: SMES90/09 TO 10 was split into Stage 9 and Stage 10.
+- Selectable: 1820
+- Needs review: 0
+- Source-unit distribution: {'LPH': 584, 'LPM': 967, 'LPS': 216, 'M3H': 18, 'MOTOR': 35}
+- Phase distribution: {'S': 338, 'S, T': 274, 'T': 1208}
+- Every curve was regenerated from the workbook's actual source unit.
+- Row-level source phases were reapplied.
+- F22 remains 1.5 HP / 1.1 kW.
+- Page 32 merged-cell dewatering values use the user-confirmed table.
+- SP300SM remains 3 HP / 2.2 kW.
+
+LUBI
+- Records: 1734
+- Selectable: 1699
+- Needs review: 35
+- Repaired malformed source rows: 42.
+- Added recoverable models: 2 LHMS + 8 powered LBM variants.
+- Corrected seven openwell model categories.
+- Page 77 and two severe shifted LSD curves remain safely excluded.
+- Remaining catalogue coverage still requiring full reconstruction:
+  LBH/LBL pages 69–72 and portions of pages 76 and 78.
+
+KSB
+- Records: 1273
+- Selectable: 1226
+- Needs review: 47
+- The 47 agricultural review rows remain excluded.
+- Domestic/OPAL/phase/technical-field corrections from v5.5 are preserved.
+
+CHART AND SELECTION SAFETY
+- Invalid or non-monotonic curves are rejected by selection logic.
+- The chart no longer silently removes source points.
+- Invalid curves show “Curve data requires source review”.
+- Actual catalogue points are drawn as visible markers.
+- Comparison retains the closest-outside-tolerance fallback from v5.5.
+
+VALIDATION
+- Duplicate IDs
+- Valid phases
+- Valid normalized categories
+- Selectable curve monotonicity
+- HP/kW plausibility
+- Texmo source-unit fixtures
+- Texmo phase fixtures
+- Texmo split-stage fixtures
+- Lubi added/repaired fixtures
+- KSB count/review/OPAL/MR(S) fixtures

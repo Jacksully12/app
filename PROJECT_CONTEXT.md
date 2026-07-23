@@ -19,6 +19,16 @@ Important split:
 - In-app details are technical and include page number.
 - Share/download image is customer-facing and hides page number.
 
+## Current authoritative state — v5.9.0
+
+- Data assets: `texmo_pumps.json` (1,820), `lubi_pumps.json` (1,871), `ksb_pumps.json` (1,273).
+- Recommendation eligible: 4,947 of 4,964 total records.
+- Four Lubi Page 74 bare-pump variants are catalogue-only.
+- Thirteen exact KSB source anomalies are preserved but excluded; no values are guessed.
+- Selection, comparison, app charts and shared images use the same curve-validation/interpolation rules.
+- Explicit electrical phase is required for automatic recommendations and comparison.
+- The v5.9 audit files supersede historical counts and pending statements below, which are retained only as changelog history.
+
 
 ## v2.1.0 chart cleanup
 - Removed white catalogue point markers from the performance chart.
@@ -295,3 +305,30 @@ v4.3.0
 - Corrected KSB phase, OPAL model splitting, pipe-size and sewage technical-field mappings.
 - Compare now returns the closest compatible model outside tolerance when no in-tolerance match exists.
 - Added KSB structured technical specifications and source provenance to model details.
+
+
+## v5.6.0 source-safe rebuild
+- Rebuilt all Texmo curves and phases from the uploaded workbook.
+- Split the combined SMES90/09 TO 10 row into two model variants.
+- Repaired 42 Lubi rows and added recoverable LHMS/LBM models.
+- Quarantined unresolved Lubi Page 77 and severe shifted curves.
+- Preserved the 47 KSB agricultural review exclusions.
+- Selection now rejects invalid curves.
+- Charts display source-point markers and do not silently clean bad data.
+- Added source-aware release validation.
+
+## v5.7.0 Lubi page 40/41/77 source repair
+- Rebuilt LSD-233 and LSD-240.
+- Rebuilt every LHP/LGP row on page 77.
+- Added LHP-3535U2, LGP-1235/1235F and LGP-1335/1335F.
+- Lubi now has zero loaded records under source review.
+- Catalogue coverage remains pending for pages 69–72, 76 and 78.
+
+
+## v5.8.0 Lubi new source tables
+- Added all 29 Page 69 LBH/LMH rows from the supplied source table.
+- Corrected CSP521T and CSP551T.
+- Added MSP551T and all supplied LAP/LFP Page 76 variants.
+- Added all supplied LAS/LBP/LLP Page 78 variants.
+- Lubi now contains 1,816 selectable records with zero loaded review rows.
+- Remaining Lubi catalogue coverage is limited to Pages 70–73.

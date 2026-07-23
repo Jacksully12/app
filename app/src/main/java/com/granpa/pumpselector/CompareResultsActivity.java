@@ -16,7 +16,7 @@ public class CompareResultsActivity extends Activity {
     double head, flow;
     String unit = "LPH";
     String cat = "all";
-    String phase = "any";
+    String phase = "";
 
     protected void onCreate(Bundle b) {
         super.onCreate(b);
@@ -27,7 +27,6 @@ public class CompareResultsActivity extends Activity {
         cat = safe(getIntent().getStringExtra("cat"));
         if (cat.isEmpty()) cat = "all";
         phase = safe(getIntent().getStringExtra("phase"));
-        if (phase.isEmpty()) phase = "any";
 
         LinearLayout root = Ui.root(this);
 
@@ -83,8 +82,8 @@ public class CompareResultsActivity extends Activity {
     }
 
     void runCompare() {
-        if (Double.isNaN(head) || head < 0 || Double.isNaN(flow) || flow <= 0) {
-            empty.setText("Invalid compare input. Go back and enter valid head and flow values.");
+        if (Double.isNaN(head) || head < 0 || Double.isNaN(flow) || flow <= 0 || phase.isEmpty()) {
+            empty.setText("Invalid compare input. Go back and enter valid head, flow and electrical phase.");
             empty.setVisibility(View.VISIBLE);
             count.setText("0 comparable models");
             adapter.setItems(new ArrayList<>());
@@ -167,6 +166,7 @@ public class CompareResultsActivity extends Activity {
         if (c.equals("borewell_all")) return "Borewell Submersible";
         if (c.equals("openwell_all")) return "Openwell Submersible";
         if (c.equals("monoblock_all")) return "Centrifugal / Surface Monoblock";
+        if (c.equals("jet_all")) return "Jet Pumps";
         if (c.equals("multistage_all")) return "Multistage Pumps";
         if (c.equals("booster_all")) return "Booster / Pressure Pumps";
         if (c.equals("dewatering_all")) return "Dewatering / Sewage";
@@ -178,7 +178,7 @@ public class CompareResultsActivity extends Activity {
         p = safe(p);
         if (p.equals("S")) return "Single phase";
         if (p.equals("T")) return "Three phase";
-        return "Any phase";
+        return "Phase not selected";
     }
 
     String safe(String s) { return s == null ? "" : s.trim(); }

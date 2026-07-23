@@ -16,7 +16,15 @@ Page N • Size X • BRAND
 Show full technical details, chart, catalogue section and share/download actions.
 
 ## Share image
-Clean customer-facing PNG. No page number. No sheet name. No overlapping text.
+Clean customer-facing PNG. No page number. No sheet name. No overlapping text. Use the same `CurveUtils` validation/interpolation and manufacturer source-point markers as the in-app chart. Disable sharing for nonselectable, catalogue-only, `NEEDS_REVIEW` or `SOURCE_ANOMALY` records.
+
+## Current v5.9 UI precedence
+
+- Apply system-bar insets so controls do not overlap Android 15/16 edge-to-edge areas.
+- Preserve form/filter state across rotation and configuration recreation.
+- Catalogue browsing may use “Any phase”; automatic recommendation and comparison must require an explicit phase.
+- Show clear warning/status UI for controlled exclusions and disable their customer-facing share/download actions.
+- Historical UI notes below are changelog history; where they conflict, these current rules take precedence.
 
 
 ## v2.1.0 chart cleanup

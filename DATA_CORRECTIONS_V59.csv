@@ -1,0 +1,193 @@
+﻿brand,action,id,model,page,summary
+TEXMO,MODIFIED,r1338,CRDP03S,32,"Updated size, curve, dataNote"
+TEXMO,MODIFIED,r1339,CDP0380S,32,"Updated curve, dataNote"
+TEXMO,MODIFIED,r1344,CDP0780S,32,"Updated curve, dataNote"
+TEXMO,MODIFIED,r1347,CRDP11S,32,"Updated curve, dataNote"
+LUBI,ADDED,lubi_70_lbh_11_v59_a_class_three_phase_2880_rpm_page_70,LBH-11,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_11h_v59_a_class_three_phase_2880_rpm_page_70,LBH-11H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_11hl_v59_a_class_three_phase_2880_rpm_page_70,LBH-11HL,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_12_v59_a_class_three_phase_2880_rpm_page_70,LBH-12,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_12h_v59_a_class_three_phase_2880_rpm_page_70,LBH-12H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_12hl_v59_a_class_three_phase_2880_rpm_page_70,LBH-12HL,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_14_v59_a_class_three_phase_2880_rpm_page_70,LBH-14,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_14h_v59_a_class_three_phase_2880_rpm_page_70,LBH-14H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_14hs_v59_a_class_three_phase_2880_rpm_page_70,LBH-14HS,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_15_v59_a_class_three_phase_2880_rpm_page_70,LBH-15,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_17_v59_a_class_three_phase_2880_rpm_page_70,LBH-17,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_18h_v59_a_class_three_phase_2880_rpm_page_70,LBH-18H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_20a_v59_a_class_three_phase_2880_rpm_page_70,LBH-20A,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_20h_v59_a_class_three_phase_2880_rpm_page_70,LBH-20H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_21a_v59_a_class_three_phase_2880_rpm_page_70,LBH-21A,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_22h_v59_a_class_three_phase_2880_rpm_page_70,LBH-22H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_24_v59_a_class_three_phase_2880_rpm_page_70,LBH-24,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_24h_v59_a_class_three_phase_2880_rpm_page_70,LBH-24H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_25_v59_a_class_three_phase_2880_rpm_page_70,LBH-25,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_29_v59_a_class_three_phase_2880_rpm_page_70,LBH-29,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_29a_v59_a_class_three_phase_2880_rpm_page_70,LBH-29A,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_30_v59_a_class_three_phase_2880_rpm_page_70,LBH-30,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_31_v59_a_class_three_phase_2880_rpm_page_70,LBH-31,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_32_v59_a_class_three_phase_2880_rpm_page_70,LBH-32,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_38a_v59_a_class_three_phase_2880_rpm_page_70,LBH-38A,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_38b_v59_a_class_three_phase_2880_rpm_page_70,LBH-38B,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_40_v59_a_class_three_phase_2880_rpm_page_70,LBH-40,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_41a_v59_a_class_three_phase_2880_rpm_page_70,LBH-41A,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_41ah_v59_a_class_three_phase_2880_rpm_page_70,LBH-41AH,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_43_v59_a_class_three_phase_2880_rpm_page_70,LBH-43,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_44_v59_a_class_three_phase_2880_rpm_page_70,LBH-44,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_45_v59_a_class_three_phase_2880_rpm_page_70,LBH-45,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_47_v59_a_class_three_phase_2880_rpm_page_70,LBH-47,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_70_lbh_49h_v59_a_class_three_phase_2880_rpm_page_70,LBH-49H,70,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_11_v59_b_class_three_phase_2880_rpm_page_71,LBH-11,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_1_v59_b_class_three_phase_2880_rpm_page_71,LBH-1,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_2_v59_b_class_three_phase_2880_rpm_page_71,LBH-2,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_2a_v59_b_class_three_phase_2880_rpm_page_71,LBH-2A,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_4_v59_b_class_three_phase_2880_rpm_page_71,LBH-4,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_4a_v59_b_class_three_phase_2880_rpm_page_71,LBH-4A,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_5_v59_b_class_three_phase_2880_rpm_page_71,LBH-5,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_5a_v59_b_class_three_phase_2880_rpm_page_71,LBH-5A,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_6_v59_b_class_three_phase_2880_rpm_page_71,LBH-6,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_7_v59_b_class_three_phase_2880_rpm_page_71,LBH-7,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_8_v59_b_class_three_phase_2880_rpm_page_71,LBH-8,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbh_9_v59_b_class_three_phase_2880_rpm_page_71,LBH-9,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_51c_v59_a_class_three_phase_1440_rpm_page_71,LBL-51C,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_51d_v59_a_class_three_phase_1440_rpm_page_71,LBL-51D,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_51e_v59_a_class_three_phase_1440_rpm_page_71,LBL-51E,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_52c_v59_a_class_three_phase_1440_rpm_page_71,LBL-52C,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_52d_v59_a_class_three_phase_1440_rpm_page_71,LBL-52D,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_52e_v59_a_class_three_phase_1440_rpm_page_71,LBL-52E,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_52f_v59_a_class_three_phase_1440_rpm_page_71,LBL-52F,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_53d_v59_a_class_three_phase_1440_rpm_page_71,LBL-53D,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_53e_v59_a_class_three_phase_1440_rpm_page_71,LBL-53E,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_53g_v59_a_class_three_phase_1440_rpm_page_71,LBL-53G,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_53h_v59_a_class_three_phase_1440_rpm_page_71,LBL-53H,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_54_v59_a_class_three_phase_1440_rpm_page_71,LBL-54,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_54a_v59_a_class_three_phase_1440_rpm_page_71,LBL-54A,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_54b_v59_a_class_three_phase_1440_rpm_page_71,LBL-54B,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_71_lbl_54hh_v59_a_class_three_phase_1440_rpm_page_71,LBL-54HH,71,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_50cv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-50CV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_50ev_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-50EV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_51av_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-51AV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_51bv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-51BV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_51dv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-51DV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_51ev_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-51EV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_52bv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-52BV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_52dv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-52DV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_52ev_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-52EV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_52hv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-52HV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_53hv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-53HV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_53hvn_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-53HVN,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_54c_v59_a_class_three_phase_1440_rpm_page_72,LBL-54C,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_54d_v59_a_class_three_phase_1440_rpm_page_72,LBL-54D,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_54hv_v59_a_class_volute_type_three_phase_1440_rpm_page_72,LBL-54HV,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_56_v59_a_class_three_phase_1440_rpm_page_72,LBL-56,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_56as_v59_a_class_three_phase_1440_rpm_page_72,LBL-56AS,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_56b_v59_a_class_three_phase_1440_rpm_page_72,LBL-56B,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_56c_v59_a_class_three_phase_1440_rpm_page_72,LBL-56C,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_56d_v59_a_class_three_phase_1440_rpm_page_72,LBL-56D,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_72_lbl_57d_v59_a_class_three_phase_1440_rpm_page_72,LBL-57D,72,Added source-confirmed record; status=SOURCE_CONFIRMED; selectable=True
+LUBI,ADDED,lubi_74_lbm_10_bare_v59,LBM-10,74,Added source-confirmed record; status=SOURCE_CONFIRMED_CATALOGUE_ONLY; selectable=False
+LUBI,ADDED,lubi_74_lbm_20_bare_v59,LBM-20,74,Added source-confirmed record; status=SOURCE_CONFIRMED_CATALOGUE_ONLY; selectable=False
+LUBI,ADDED,lubi_74_lbm_30_bare_v59,LBM-30,74,Added source-confirmed record; status=SOURCE_CONFIRMED_CATALOGUE_ONLY; selectable=False
+LUBI,ADDED,lubi_74_lbm_55_bare_v59,LBM-55,74,Added source-confirmed record; status=SOURCE_CONFIRMED_CATALOGUE_ONLY; selectable=False
+LUBI,REMOVED,lubi_31_4_lsk_70_af_420,LSK - 70 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_4_lsk_70_af_421,LSK - 70 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_4_lsk_70_af_422,LSK - 70 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_4_lsk_70_af_423,LSK - 70 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_4_lsk_70_af_424,LSK - 70 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_4_lsk_70_af_425,LSK - 70 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_5_lsk_80_af_426,LSK - 80 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_5_lsk_80_af_427,LSK - 80 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_5_lsk_80_af_428,LSK - 80 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_5_lsk_80_af_429,LSK - 80 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_5_lsk_80_af_430,LSK - 80 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_5_lsk_80_af_431,LSK - 80 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_432,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_433,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_434,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_435,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_436,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_437,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_6_lsk_100_af_438,LSK - 100 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_7_lsk_120_af_439,LSK - 120 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_7_lsk_120_af_440,LSK - 120 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_7_lsk_120_af_441,LSK - 120 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_7_lsk_120_af_442,LSK - 120 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_31_7_lsk_120_af_443,LSK - 120 AF,31,Removed exact technical duplicate
+LUBI,REMOVED,lubi_78_1_as_3735_1742,AS 3735,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,REMOVED,lubi_78_1_as_41035_1743,AS 41035,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,REMOVED,lubi_78_1_as_41535_1744,AS 41535,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,REMOVED,lubi_78_1_as_42035_1745,AS 42035,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,REMOVED,lubi_78_2_as_61035_1747,AS 61035,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,REMOVED,lubi_78_2_as_61535_1748,AS 61535,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,REMOVED,lubi_78_2_as_6735_1746,AS 6735,78,Removed damaged legacy parser row superseded by correct LAS record
+LUBI,MODIFIED,lubi_30_0_lsk_70_af_336,LSK - 70 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_0_lsk_70_af_337,LSK - 70 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_0_lsk_70_af_338,LSK - 70 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_0_lsk_70_af_339,LSK - 70 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_0_lsk_70_af_340,LSK - 70 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_0_lsk_70_af_341,LSK - 70 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_1_lsk_80_af_350,LSK - 80 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_1_lsk_80_af_351,LSK - 80 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_1_lsk_80_af_352,LSK - 80 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_1_lsk_80_af_353,LSK - 80 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_1_lsk_80_af_354,LSK - 80 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_1_lsk_80_af_355,LSK - 80 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_364,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_365,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_366,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_367,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_368,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_369,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_2_lsk_100_af_370,LSK - 100 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_3_lsk_120_af_379,LSK - 120 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_3_lsk_120_af_380,LSK - 120 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_3_lsk_120_af_381,LSK - 120 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_3_lsk_120_af_382,LSK - 120 AF,"30, 31",Updated dataNote
+LUBI,MODIFIED,lubi_30_3_lsk_120_af_383,LSK - 120 AF,"30, 31",Updated dataNote
+KSB,MODIFIED,ksb_agri_bpha_333_2c_uma_150_8_pump_6_motor_combination_mixed_flow_p44,"BPHA 333 2C + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",44,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_2e_uma_150_8_pump_6_motor_combination_mixed_flow_p44,"BPHA 333 2E + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",44,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_2e_uma_150_8_pump_6_motor_combination_mixed_flow_p44_2,"BPHA 333 2E + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",44,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_3c_hbc_small_mixed_flow_p45,BPHA 333 3C + HBC (SMALL) (Mixed flow),45,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_3c_uma_150_8_pump_6_motor_combination_mixed_flow_p44,"BPHA 333 3C + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",44,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_4c_hbc_small_mixed_flow_p45,BPHA 333 4C + HBC (SMALL) (Mixed flow),45,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_4f_hbc_small_mixed_flow_p45_2,BPHA 333 4F + HBC (SMALL) (Mixed flow),45,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_5f_hbc_small_mixed_flow_p45_3,BPHA 333 5F + HBC (SMALL) (Mixed flow),45,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_333_6c_hbc_small_mixed_flow_p45,BPHA 333 6C + HBC (SMALL) (Mixed flow),45,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_373_1a_uma_150_8_pump_6_motor_mixed_flow_p46,"BPHA 373 1A + UMA 150 (8"" Pump + 6"" Motor - Mixed flow)",46,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_373_1b_uma_150_8_pump_6_motor_mixed_flow_p46,"BPHA 373 1B + UMA 150 (8"" Pump + 6"" Motor - Mixed flow)",46,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_373_1d_uma_150_8_pump_6_motor_mixed_flow_p46,"BPHA 373 1D + UMA 150 (8"" Pump + 6"" Motor - Mixed flow)",46,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_05d_hbcn_big_mixed_flow_p49,BPHA 384 05D + HBCN (BIG) (Mixed flow),49,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_06d_hbcn_big_mixed_flow_p49,BPHA 384 06D + HBCN (BIG) (Mixed flow),49,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_07g_hbcn_big_mixed_flow_p49,BPHA 384 07G + HBCN (BIG) (Mixed flow),49,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_2d_hbc_small_mixed_flow_p48,BPHA 384 2D + HBC (SMALL) (Mixed flow),48,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_2d_uma_150_8_pump_6_motor_combination_mixed_flow_p47,"BPHA 384 2D + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",47,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_2g_hbc_small_mixed_flow_p48,BPHA 384 2G + HBC (SMALL) (Mixed flow),48,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_3d_hbc_small_mixed_flow_p48,BPHA 384 3D + HBC (SMALL) (Mixed flow),48,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_3g_hbc_small_mixed_flow_p48,BPHA 384 3G + HBC (SMALL) (Mixed flow),48,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_3g_uma_150_8_pump_6_motor_combination_mixed_flow_p47,"BPHA 384 3G + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",47,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_3h_hbc_small_mixed_flow_p48,BPHA 384 3H + HBC (SMALL) (Mixed flow),48,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_3h_uma_150_8_pump_6_motor_combination_mixed_flow_p47,"BPHA 384 3H + UMA 150 (8"" Pump + 6"" Motor combination - Mixed flow)",47,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_4d_hbc_small_mixed_flow_p48,BPHA 384 4D + HBC (SMALL) (Mixed flow),48,"Updated curve, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_4j_hbc_small_mixed_flow_p48,BPHA 384 4J + HBC (SMALL) (Mixed flow),48,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_bpha_384_5j_hbc_small_mixed_flow_p48,BPHA 384 5J + HBC (SMALL) (Mixed flow),48,"Updated curve, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mr_15_fc_80_65_56_p62,MR 15 FC- 80-65-56,62,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mr_15_fc_90_80_39_p61,MR 15 FC- 90-80-39,61,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mr_25_c_125_100_38_p63,MR 25 C- 125-100-38,63,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mr_30_c_100_75_60_p61,MR 30 C- 100-75-60,61,"Updated curve, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mr_30_c_125_100_45_p61,MR 30 C- 125-100-45,61,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mr_7_5_a_7_5_c_65_50_39_p60,MR 7.5 A / 7.5 C- 65-50-39,60,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mrv_t_plus_02_5_0_hp_dol_p65,MRV(T) PLUS - 02/5.0 HP DOL,65,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mrv_t_plus_02_7_5_hp_sd_p65,MRV(T) PLUS - 02/7.5 HP SD,65,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mrv_t_plus_n_02_5_0_hp_dol_p65,MRV(T) PLUS N- 02/5.0 HP DOL,65,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_mrv_t_plus_n_02_7_5_hp_dol_p65,MRV(T) PLUS N- 02/7.5 HP DOL,65,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_ultra_516_4040_i_p53,ULTRA+ 516 4040 I,53,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_upfn_125_6st_umai_h_150_radial_flow_p29,UPFN 125 6ST + UMAI / H 150 (Radial Flow),29,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_upfn_125_6st_umai_h_150_radial_flow_p29_2,UPFN 125 6ST + UMAI / H 150 (Radial Flow),29,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_upfn_200_2st_umai_h_150_radial_flow_p31,UPFN 200 2ST + UMAI / H 150 (Radial Flow),31,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_upha_293_5a_hbc_small_radial_flow_p42_2,UPHA 293 5A + HBC (SMALL) (Radial flow),42,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_uqd_182_3st_umai_150_radial_flow_p24,UQD 182 3ST + UMAI 150 (Radial Flow),24,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_uqd_182_4st_umai_150_radial_flow_p24,UQD 182 4ST + UMAI 150 (Radial Flow),24,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_uqd_182_6st_umai_150_radial_flow_p24,UQD 182 6ST + UMAI 150 (Radial Flow),24,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_uqd_182_9st_umai_150_radial_flow_p24,UQD 182 9ST + UMAI 150 (Radial Flow),24,"Updated curve, selectable, dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_vo_100_7_p67,VO 100 / 7,67,"Updated dataStatus, dataNote"
+KSB,MODIFIED,ksb_agri_vo_150_4_p67,VO 150 / 4,67,"Updated dataStatus, dataNote"

@@ -17,17 +17,18 @@ public class OptionAdapter extends ArrayAdapter<Option> {
     }
 
     public View getView(int pos, View convert, ViewGroup parent) {
-        return itemView(pos, false);
+        return itemView(pos, false, convert);
     }
 
     public View getDropDownView(int pos, View convert, ViewGroup parent) {
-        return itemView(pos, true);
+        return itemView(pos, true, convert);
     }
 
-    private View itemView(int pos, boolean dropdown) {
+    private View itemView(int pos, boolean dropdown, View convert) {
         Option it = opts.get(pos);
 
-        LinearLayout box = new LinearLayout(a);
+        LinearLayout box = convert instanceof LinearLayout ? (LinearLayout) convert : new LinearLayout(a);
+        box.removeAllViews();
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER_VERTICAL);
         box.setPadding(

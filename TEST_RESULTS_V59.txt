@@ -1,0 +1,97 @@
+Granpa Pump Selector v5.9.0 — Test Results
+Audit date: 2026-07-23
+
+PASSED LOCALLY
+==============
+
+1. Source-aware data validator
+   Command: python3 tools/validate_data.py
+   Result:
+   - texmo_pumps.json: 1,820 records / 1,820 selectable
+   - lubi_pumps.json: 1,871 records / 1,867 selectable
+   - ksb_pumps.json: 1,273 records / 1,260 selectable
+   - Source-aware data validation passed
+
+   Validator coverage includes:
+   - expected counts and metadata
+   - duplicate IDs and technical duplicate signatures
+   - required source file/page provenance
+   - phase/category validity
+   - curve point validity and monotonicity policy
+   - min/max range metadata consistency
+   - Lubi Page 70/71/72 fixtures and Page 74 catalogue-only variants
+   - removal of repeated Page 30/31 Lubi records and damaged AS aliases
+   - authoritative Texmo Page 32 fixtures
+   - exact controlled set of 13 KSB SOURCE_ANOMALY records
+   - rejection of any remaining NEEDS_REVIEW record
+
+2. Core Java logic harness
+   Result: Core Java logic tests passed
+
+   Covered:
+   - LPH/LPM/LPS/m³/h conversions
+   - duplicate-head averaging and interpolation
+   - rejection of materially inverted curves
+   - jet/monoblock category separation
+   - exact-token phase parsing for S/T and Single Phase/Three Phase
+   - main selector/comparison ranking consistency
+   - exclusion of anomalies and catalogue-only rows
+   - approved-record share eligibility
+
+3. Python syntax/bytecode
+   Command: python3 -m py_compile tools/validate_data.py
+   Result: PASS
+
+4. Android resource XML parsing
+   Result: PASS — all Android XML files parsed successfully
+
+5. GitHub Actions YAML parsing
+   Result: PASS
+
+6. Java delimiter/static parse scan
+   Result: PASS — 21 Java source/test files checked
+
+7. javac parser diagnostics without Android SDK
+   Result: PASS for Java syntax — zero syntax/parse diagnostics.
+   Expected unresolved Android/JUnit/org.json symbols were reported because the Android SDK and Gradle dependency classpath are not installed in this runtime.
+
+8. Manifest/security assertions
+   Result: PASS
+   - no INTERNET permission
+   - allowBackup=false
+   - usesCleartextTraffic=false
+   - FileProvider exported=false
+   - no manifest-level debuggable flag
+
+9. Project hygiene
+   Result: PASS
+   - stale QA reports archived under docs/archive
+   - fixed core files synchronized with standalone harness
+   - no compiled APK, build directory or private signing key included
+
+CONFIGURED BUT NOT EXECUTED LOCALLY
+===================================
+
+The audit runtime has no Android SDK, sdkmanager, Gradle installation or Gradle wrapper, and cannot retrieve that toolchain from the shell. Therefore these Android tasks require GitHub Actions or Android Studio:
+
+- gradle --no-daemon testDebugUnitTest
+- gradle --no-daemon lintDebug
+- gradle --no-daemon assembleDebug
+- APK installation and runtime smoke test
+- Android 6–9 Storage Access Framework download test
+- Android 10+ MediaStore download test
+- WhatsApp/WhatsApp Business sharing test
+- phone/tablet/foldable and accessibility matrix
+- release signing and signed-artifact verification
+
+CI CONFIGURATION
+================
+
+The included workflow pins:
+- Java 17
+- Android platform API 36
+- Android Build Tools 36.0.0
+- Gradle 8.13
+- Android Gradle Plugin 8.13.2
+
+It runs the data validator, JVM tests, Android lint and debug APK assembly, and uploads the APK/test/lint reports.

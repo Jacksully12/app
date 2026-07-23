@@ -46,7 +46,7 @@ public class BrandSelectionActivity extends Activity {
 
         root.addView(modeCard(
                 "KSB",
-                "Use the KSB domestic pump catalogue.",
+                "Use the KSB domestic and agricultural pump catalogue.",
                 "Open KSB",
                 PumpRepository.KSB_ASSET,
                 "KSB"

@@ -1,38 +1,54 @@
-name: Build Android APK
+name: Validate and Build Android APK
 
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
-      - name: Show files
-        run: ls -la
-      - name: Set up Java
+
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+
       - name: Install Android platform
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
-      - name: Set up Gradle
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Set up pinned Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.9
-      - name: Validate pump data
+          gradle-version: '8.13'
+
+      - name: Validate source datasets
         run: python3 tools/validate_data.py
 
+      - name: Run unit tests
+        run: gradle --no-daemon testDebugUnitTest
+
+      - name: Run Android lint
+        run: gradle --no-daemon lintDebug
+
       - name: Build debug APK
-        run: gradle assembleDebug
-      - name: Upload APK
+        run: gradle --no-daemon assembleDebug
+
+      - name: Upload debug APK and reports
         uses: actions/upload-artifact@v4
         with:
-          name: granpa-pump-selector-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: granpa-pump-selector-v59-debug
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/reports/tests/testDebugUnitTest/**
+            app/build/reports/lint-results-debug.html
+          if-no-files-found: error

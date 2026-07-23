@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
 
         card.addView(Ui.label(this, "Phase"));
         phase = Ui.spinner(this, options(new String[][]{
-                {"any", "Any phase", "Show single and three phase models"},
+                {"", "Select electrical phase", "Required for safe automatic recommendations"},
                 {"S", "Single phase", "Usually 220–240 V supply"},
                 {"T", "Three phase", "Usually 380–415 V supply"}
         }));
@@ -108,7 +108,8 @@ public class MainActivity extends Activity {
         cat.setOnItemSelectedListener(updater);
 
         find.setOnClickListener(v -> openResults());
-        browse.setOnClickListener(v -> openCatalogue(sel(cat), sel(phase)));
+        browse.setOnClickListener(v -> openCatalogue(sel(cat), sel(phase).isEmpty() ? "any" : sel(phase)));
+        if (b != null) restoreState(b);
         update();
     }
 
@@ -168,7 +169,11 @@ public class MainActivity extends Activity {
 
     void openResults() {
         if (isMotorCategory(sel(cat))) {
-            openCatalogue(sel(cat), sel(phase));
+            openCatalogue(sel(cat), sel(phase).isEmpty() ? "any" : sel(phase));
+            return;
+        }
+        if (sel(phase).isEmpty()) {
+            Toast.makeText(this, "Select single phase or three phase before requesting a recommendation", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -199,7 +204,8 @@ public class MainActivity extends Activity {
             o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
             o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
             o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, centrifugal and agricultural monoblock", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, centrifugal and agricultural monoblock", true));
+            o.add(new Option("jet_all", "Jet Pumps", "Main category • shallow-well and pressure jet pumps", true));
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • AVRS, vertical inline and horizontal multistage", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • sewage and dewatering pumps", true));
             o.add(new Option("motors_all", "Motors", "Main category • 35 bare and flange motor models", true));
@@ -207,7 +213,8 @@ public class MainActivity extends Activity {
             o.add(new Option("all", "All pump types", "Main category • full Lubi catalogue", true));
             o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
             o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet and monoblock sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming and monoblock sections", true));
+            o.add(new Option("jet_all", "Jet Pumps", "Main category • shallow-well jet pump sections", true));
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • horizontal and vertical multistage", true));
             o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage, sewage and dewatering", true));
@@ -215,7 +222,8 @@ public class MainActivity extends Activity {
             o.add(new Option("all", "All pump types", "Main category • full KSB catalogue", true));
             o.add(new Option("borewell_all", "Borewell Submersible", "Main category • water-filled and oil-filled borewell sections", true));
             o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, monobloc and surface sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, monobloc and surface sections", true));
+            o.add(new Option("jet_all", "Jet Pumps", "Main category • PERIJET and other jet-pump sections", true));
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • multistage sections", true));
             o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage and sewage sections", true));
@@ -234,7 +242,8 @@ public class MainActivity extends Activity {
         if (c.contains("borewell")) return "Detailed borewell catalogue section";
         if (c.contains("avrs") || c.contains("multistage")) return "Detailed multistage catalogue section";
         if (c.contains("motor")) return "Detailed motor catalogue section with RPM, insulation and frame size";
-        if (c.contains("agricultural") || c.contains("centrifugal") || c.contains("jet") || c.contains("self priming") || c.contains("monobloc") || c.contains("surface")) return "Detailed surface / monoblock catalogue section";
+        if (c.contains("jet")) return "Detailed jet-pump catalogue section";
+        if (c.contains("agricultural") || c.contains("centrifugal") || c.contains("self priming") || c.contains("monobloc") || c.contains("surface")) return "Detailed surface / monoblock catalogue section";
         if (c.contains("dewatering") || c.contains("sewage")) return "Detailed dewatering / sewage catalogue section";
         return "Detailed catalogue section";
     }
@@ -249,6 +258,38 @@ public class MainActivity extends Activity {
         if (s == null || s.getSelectedItem() == null) return "";
         Object o = s.getSelectedItem();
         return o instanceof Option ? ((Option) o).value : String.valueOf(o);
+    }
+
+    void selectValue(Spinner spinner, String value) {
+        if (spinner == null || value == null) return;
+        for (int i = 0; i < spinner.getCount(); i++) {
+            Object item = spinner.getItemAtPosition(i);
+            if (item instanceof Option && value.equals(((Option) item).value)) {
+                spinner.setSelection(i);
+                return;
+            }
+        }
+    }
+
+    void restoreState(Bundle state) {
+        head.setText(state.getString("head", head.getText().toString()));
+        flow1.setText(state.getString("flow1", flow1.getText().toString()));
+        flow2.setText(state.getString("flow2", flow2.getText().toString()));
+        selectValue(mode, state.getString("mode", sel(mode)));
+        selectValue(unit, state.getString("unit", sel(unit)));
+        selectValue(cat, state.getString("cat", sel(cat)));
+        selectValue(phase, state.getString("phase", sel(phase)));
+    }
+
+    @Override protected void onSaveInstanceState(Bundle out) {
+        out.putString("head", head == null ? "" : head.getText().toString());
+        out.putString("flow1", flow1 == null ? "" : flow1.getText().toString());
+        out.putString("flow2", flow2 == null ? "" : flow2.getText().toString());
+        out.putString("mode", sel(mode));
+        out.putString("unit", sel(unit));
+        out.putString("cat", sel(cat));
+        out.putString("phase", sel(phase));
+        super.onSaveInstanceState(out);
     }
 
     double val(EditText e) {

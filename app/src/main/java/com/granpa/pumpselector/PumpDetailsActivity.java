@@ -2,6 +2,9 @@ package com.granpa.pumpselector;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class PumpDetailsActivity extends Activity {
+    static final int REQUEST_CREATE_IMAGE = 5901;
     PumpRecord rec;
     boolean has;
     double head, flow;
@@ -52,6 +56,7 @@ public class PumpDetailsActivity extends Activity {
             String[][] technical = technicalRows();
             if (technical.length > 0) root.addView(detailCard("Technical specifications", technical));
             root.addView(catalogueCard());
+            if (!CurveUtils.canShare(rec)) root.addView(shareWarningCard());
             root.addView(actions());
         }
         setContentView(Ui.scroll(this, root));
@@ -131,6 +136,16 @@ public class PumpDetailsActivity extends Activity {
         return c;
     }
 
+    LinearLayout shareWarningCard() {
+        LinearLayout c = Ui.card(this);
+        c.setBackground(Ui.bg(this, android.graphics.Color.rgb(255, 248, 238), Ui.ORANGE, 18));
+        c.addView(Ui.text(this, "Internal review record", 18, Ui.ORANGE, 1));
+        c.addView(Ui.text(this,
+                "This model is excluded from automatic recommendations and customer image sharing because its source curve is incomplete, anomalous, catalogue-only, or not yet approved.",
+                14, Ui.TEXT, 0));
+        return c;
+    }
+
     LinearLayout actions() {
         LinearLayout outer = new LinearLayout(this);
         outer.setOrientation(LinearLayout.VERTICAL);
@@ -157,8 +172,25 @@ public class PumpDetailsActivity extends Activity {
         row2.addView(back, bp);
         outer.addView(row2);
 
+        boolean shareable = CurveUtils.canShare(rec);
+        wa.setEnabled(shareable);
+        dl.setEnabled(shareable);
+        wa.setAlpha(shareable ? 1f : 0.45f);
+        dl.setAlpha(shareable ? 1f : 0.45f);
+        wa.setContentDescription(shareable ? "Share recommendation through WhatsApp" : "Sharing unavailable: record needs source approval");
+        dl.setContentDescription(shareable ? "Download recommendation image" : "Download unavailable: record needs source approval");
         wa.setOnClickListener(v -> ShareImageBuilder.shareWhatsApp(this, rec, has, head, flow, unit));
-        dl.setOnClickListener(v -> ShareImageBuilder.download(this, rec, has, head, flow, unit));
+        dl.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= 29) {
+                ShareImageBuilder.download(this, rec, has, head, flow, unit);
+            } else {
+                Intent create = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                create.addCategory(Intent.CATEGORY_OPENABLE);
+                create.setType("image/png");
+                create.putExtra(Intent.EXTRA_TITLE, ShareImageBuilder.fileName(rec));
+                startActivityForResult(create, REQUEST_CREATE_IMAGE);
+            }
+        });
         copy.setOnClickListener(v -> {
             ((android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("model", rec.model));
             Toast.makeText(this, "Model copied", Toast.LENGTH_SHORT).show();
@@ -166,6 +198,15 @@ public class PumpDetailsActivity extends Activity {
         back.setOnClickListener(v -> finish());
 
         return outer;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CREATE_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri target = data.getData();
+            if (target != null) ShareImageBuilder.downloadToUri(this, rec, has, head, flow, unit, target);
+        }
     }
 
     String[][] curveRows() {
@@ -291,7 +332,7 @@ public class PumpDetailsActivity extends Activity {
         String source = safe(rec.sourceFile);
         if (!source.isEmpty()) s += "\nSource: " + source + (empty(rec.sourcePage) ? "" : " • Page " + rec.sourcePage);
         if (!empty(rec.crossCheckedWith)) s += "\nCross-check: " + rec.crossCheckedWith;
-        if (!empty(rec.dataNote) && (!rec.selectable || "NEEDS_REVIEW".equals(rec.dataStatus))) s += "\nQA note: " + rec.dataNote;
+        if (!empty(rec.dataNote) && (!rec.selectable || "NEEDS_REVIEW".equals(rec.dataStatus) || "SOURCE_ANOMALY".equals(rec.dataStatus))) s += "\nQA note: " + rec.dataNote;
         return s;
     }
 
@@ -306,11 +347,13 @@ public class PumpDetailsActivity extends Activity {
     }
 
     String statusLabel(PumpRecord r){
-        if(!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus))return "Needs source review";
-        if("AUTO_FIXED".equals(r.dataStatus))return "Automatically corrected and checked";
-        if("SOURCE_CONFIRMED".equals(r.dataStatus))return "Source confirmed";
-        if("SOURCE_EXTRACTED".equals(r.dataStatus))return "Source extracted";
-        if("AUTO_CHECKED".equals(r.dataStatus))return "Automatically checked against source structure";
+        if("SOURCE_ANOMALY".equals(r.dataStatus)) return "Source anomaly — excluded from recommendations";
+        if("SOURCE_CONFIRMED_CATALOGUE_ONLY".equals(r.dataStatus)) return "Catalogue-only variant — not recommendation eligible";
+        if(!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus)) return "Needs source review";
+        if("AUTO_FIXED".equals(r.dataStatus)) return "Automatically corrected and checked";
+        if("SOURCE_CONFIRMED".equals(r.dataStatus)) return "Source confirmed";
+        if("SOURCE_EXTRACTED".equals(r.dataStatus)) return "Source extracted";
+        if("AUTO_CHECKED".equals(r.dataStatus)) return "Automatically checked against source structure";
         return "Automatically checked";
     }
 

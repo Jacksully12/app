@@ -1,0 +1,40 @@
+LUBI NEW SOURCE TABLE INTEGRATION — v5.8.0
+============================================================
+
+SOURCE TABLES INTEGRATED
+
+Page 69 — LBH 2880 RPM high-speed centrifugal monoblocks
+- 29 source rows added.
+- Three Phase, 415 V, 50 Hz.
+- Source discharge unit: LPM.
+- App normalization: LPM × 60 = LPH.
+- Includes LMH-30 and LBH models from 2 HP to 7.5 HP.
+
+Page 76
+- CSP521T and CSP551T corrected.
+- MSP551T added.
+- 14 LAP phase-specific records added.
+- 10 LFP phase-specific records added.
+- Correct outlet sizes, solid passage, start method and curves added.
+- F suffix means the float-switch version.
+
+Page 78
+- 15 LAS phase-specific/heavy-duty records added.
+- 6 LBP effluent-vortex records added.
+- 4 LLP large-volume records added.
+
+RESULT
+- Previous Lubi records: 1,737
+- New rows added: 79
+- Existing rows corrected: 2
+- Final Lubi records: 1816
+- Selectable records: 1816
+- Review records: 0
+
+REMAINING CATALOGUE COVERAGE
+- Page 70: continuing higher-power LBH models.
+- Pages 71–72: additional LBH and LBL low-speed models.
+- Page 73: remaining LBI close-coupled models.
+
+These are missing coverage items, not known errors in the currently loaded
+1,816 Lubi records.

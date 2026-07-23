@@ -1,0 +1,82 @@
+Model,Page,Category,Phase,kW,HP,Size,Curve points,Status
+LBH-1,69,High Speed Centrifugal Monoblock,T,2.2,3.0,50 mm,7,SOURCE_CONFIRMED
+LBH-10,69,High Speed Centrifugal Monoblock,T,5.5,7.5,80 mm,7,SOURCE_CONFIRMED
+LBH-1A,69,High Speed Centrifugal Monoblock,T,1.5,2.0,50 mm,6,SOURCE_CONFIRMED
+LBH-2,69,High Speed Centrifugal Monoblock,T,2.2,3.0,50 mm,5,SOURCE_CONFIRMED
+LBH-2A,69,High Speed Centrifugal Monoblock,T,2.2,3.0,65 mm,5,SOURCE_CONFIRMED
+LBH-2H,69,High Speed Centrifugal Monoblock,T,2.2,3.0,50 mm,6,SOURCE_CONFIRMED
+LBH-3,69,High Speed Centrifugal Monoblock,T,2.2,3.0,65 mm,7,SOURCE_CONFIRMED
+LBH-33,69,High Speed Centrifugal Monoblock,T,2.2,3.0,38 mm,6,SOURCE_CONFIRMED
+LBH-36,69,High Speed Centrifugal Monoblock,T,3.7,5.0,38 mm,7,SOURCE_CONFIRMED
+LBH-37,69,High Speed Centrifugal Monoblock,T,5.5,7.5,38 mm,8,SOURCE_CONFIRMED
+LBH-37A,69,High Speed Centrifugal Monoblock,T,5.5,7.5,50 mm,6,SOURCE_CONFIRMED
+LBH-37H,69,High Speed Centrifugal Monoblock,T,5.5,7.5,50 mm,8,SOURCE_CONFIRMED
+LBH-4,69,High Speed Centrifugal Monoblock,T,3.7,5.0,50 mm,5,SOURCE_CONFIRMED
+LBH-46,69,High Speed Centrifugal Monoblock,T,3.7,5.0,50 mm,6,SOURCE_CONFIRMED
+LBH-46H,69,High Speed Centrifugal Monoblock,T,3.7,5.0,50 mm,7,SOURCE_CONFIRMED
+LBH-46HB,69,High Speed Centrifugal Monoblock,T,3.7,5.0,50 mm,7,SOURCE_CONFIRMED
+LBH-48,69,High Speed Centrifugal Monoblock,T,5.5,7.5,50 mm,5,SOURCE_CONFIRMED
+LBH-48H,69,High Speed Centrifugal Monoblock,T,5.5,7.5,50 mm,6,SOURCE_CONFIRMED
+LBH-4A,69,High Speed Centrifugal Monoblock,T,3.7,5.0,65 mm,5,SOURCE_CONFIRMED
+LBH-5,69,High Speed Centrifugal Monoblock,T,3.7,5.0,65 mm,5,SOURCE_CONFIRMED
+LBH-5A,69,High Speed Centrifugal Monoblock,T,3.7,5.0,80 mm,6,SOURCE_CONFIRMED
+LBH-5H,69,High Speed Centrifugal Monoblock,T,3.7,5.0,65 mm,5,SOURCE_CONFIRMED
+LBH-6,69,High Speed Centrifugal Monoblock,T,3.7,5.0,50 mm,5,SOURCE_CONFIRMED
+LBH-6B,69,High Speed Centrifugal Monoblock,T,3.7,5.0,80 mm,6,SOURCE_CONFIRMED
+LBH-8,69,High Speed Centrifugal Monoblock,T,5.5,7.5,50 mm,5,SOURCE_CONFIRMED
+LBH-9,69,High Speed Centrifugal Monoblock,T,5.5,7.5,65 mm,5,SOURCE_CONFIRMED
+LBH-9A,69,High Speed Centrifugal Monoblock,T,5.5,7.5,80 mm,9,SOURCE_CONFIRMED
+LBH-9H,69,High Speed Centrifugal Monoblock,T,5.5,7.5,65 mm,6,SOURCE_CONFIRMED
+LMH-30,69,High Speed Centrifugal Monoblock,T,2.2,3.0,50 mm,6,SOURCE_CONFIRMED
+CSP521T,76,Cast Iron Submersible Drainage Pump,"S, T",0.18,0.25,38 mm (1.5 in),7,SOURCE_CONFIRMED
+CSP551T,76,Cast Iron Submersible Drainage Pump,"S, T",0.37,0.5,38 mm (1.5 in),6,SOURCE_CONFIRMED
+MSP551T,76,Corrosion Proof Submersible Drainage Pump,"S, T",0.37,0.5,38 mm (1.5 in),10,SOURCE_CONFIRMED
+LAP-2015/2015F,76,Drainage Pump,S,0.37,0.5,50 mm (2 in),3,SOURCE_CONFIRMED
+LAP-2035/2035F,76,Drainage Pump,T,0.37,0.5,50 mm (2 in),3,SOURCE_CONFIRMED
+LAP-2115/2115F,76,Drainage Pump,S,0.75,1.0,50 mm (2 in),4,SOURCE_CONFIRMED
+LAP-2135/2135F,76,Drainage Pump,T,0.75,1.0,50 mm (2 in),4,SOURCE_CONFIRMED
+LAP-21A15/21A15F,76,Drainage Pump,S,1.1,1.5,50 mm (2 in),5,SOURCE_CONFIRMED
+LAP-21A35/21A35F,76,Drainage Pump,T,1.1,1.5,50 mm (2 in),5,SOURCE_CONFIRMED
+LAP-2315/2315F,76,Drainage Pump,S,2.2,3.0,50 mm (2 in),6,SOURCE_CONFIRMED
+LAP-2335/2335F,76,Drainage Pump,T,2.2,3.0,50 mm (2 in),6,SOURCE_CONFIRMED
+LAP-3215/3215F,76,Drainage Pump,S,1.5,2.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LAP-3235/3235F,76,Drainage Pump,T,1.5,2.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LAP-3315/3315F,76,Drainage Pump,S,2.2,3.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LAP-3335/3335F,76,Drainage Pump,T,2.2,3.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LAP-4315/4315F,76,Drainage Pump,S,2.2,3.0,100 mm (4 in),9,SOURCE_CONFIRMED
+LAP-4335/4335F,76,Drainage Pump,T,2.2,3.0,100 mm (4 in),9,SOURCE_CONFIRMED
+LFP-2115/2115F,76,Sewage Pump,S,0.75,1.0,50 mm (2 in),5,SOURCE_CONFIRMED
+LFP-2115U/2115UF,76,Sewage Pump,S,0.75,1.0,50 mm (2 in),5,SOURCE_CONFIRMED
+LFP-2135/2135F,76,Sewage Pump,T,0.75,1.0,50 mm (2 in),5,SOURCE_CONFIRMED
+LFP-2135U/2135UF,76,Sewage Pump,T,0.75,1.0,50 mm (2 in),5,SOURCE_CONFIRMED
+LFP-3215/3215F,76,Sewage Pump,S,1.5,2.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LFP-3215U/3215UF,76,Sewage Pump,S,1.5,2.0,80 mm (3 in),6,SOURCE_CONFIRMED
+LFP-3235/3235F,76,Sewage Pump,T,1.5,2.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LFP-3235U/3235UF,76,Sewage Pump,T,1.5,2.0,80 mm (3 in),6,SOURCE_CONFIRMED
+LFP-3315/3315F,76,Sewage Pump,S,2.2,3.0,80 mm (3 in),8,SOURCE_CONFIRMED
+LFP-3335/3335F,76,Sewage Pump,T,2.2,3.0,80 mm (3 in),8,SOURCE_CONFIRMED
+LAS 21A15/21A15F,78,Heavy Duty Construction Drainage Pump,S,1.1,1.5,50 mm (2 in),3,SOURCE_CONFIRMED
+LAS 21A35/21A35F,78,Heavy Duty Construction Drainage Pump,T,1.1,1.5,50 mm (2 in),3,SOURCE_CONFIRMED
+LAS 3215/3215F,78,Heavy Duty Construction Drainage Pump,S,1.5,2.0,80 mm (3 in),5,SOURCE_CONFIRMED
+LAS 3235/3235F,78,Heavy Duty Construction Drainage Pump,T,1.5,2.0,80 mm (3 in),5,SOURCE_CONFIRMED
+LAS 3315/3315F,78,Heavy Duty Construction Drainage Pump,S,2.2,3.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LAS 3335/3335F,78,Heavy Duty Construction Drainage Pump,T,2.2,3.0,80 mm (3 in),7,SOURCE_CONFIRMED
+LAS 3535,78,Heavy Duty Construction Drainage Pump,T,3.7,5.0,80 mm (3 in),10,SOURCE_CONFIRMED
+LAS 3735,78,Heavy Duty Construction Drainage Pump,T,5.5,7.5,80 mm (3 in),9,SOURCE_CONFIRMED
+LAS 41035,78,Heavy Duty Construction Drainage Pump,T,7.5,10.0,100 mm (4 in),12,SOURCE_CONFIRMED
+LAS 41535,78,Heavy Duty Construction Drainage Pump,T,11.0,15.0,100 mm (4 in),13,SOURCE_CONFIRMED
+LAS 42035,78,Heavy Duty Construction Drainage Pump,T,15.0,20.0,100 mm (4 in),13,SOURCE_CONFIRMED
+LAS 4735,78,Heavy Duty Construction Drainage Pump,T,5.5,7.5,80 mm (3 in),13,SOURCE_CONFIRMED
+LAS 61035,78,Heavy Duty Construction Drainage Pump,T,7.5,10.0,150 mm (6 in),8,SOURCE_CONFIRMED
+LAS 61535,78,Heavy Duty Construction Drainage Pump,T,11.0,15.0,150 mm (6 in),8,SOURCE_CONFIRMED
+LAS 6735,78,Heavy Duty Construction Drainage Pump,T,5.5,7.5,150 mm (6 in),7,SOURCE_CONFIRMED
+LLP-101035,78,Large Volume Water Pump,T,7.5,10.0,250 mm (10 in),5,SOURCE_CONFIRMED
+LLP-121535,78,Large Volume Water Pump,T,11.0,15.0,300 mm (12 in),3,SOURCE_CONFIRMED
+LLP-6335,78,Large Volume Water Pump,T,2.2,3.0,150 mm (6 in),5,SOURCE_CONFIRMED
+LLP-8735,78,Large Volume Water Pump,T,5.5,7.5,200 mm (8 in),5,SOURCE_CONFIRMED
+LBP 2015F,78,Stainless Steel Submersible Effluent Vortex Pump,S,0.37,0.5,50 mm (2 in),5,SOURCE_CONFIRMED
+LBP 2035/2035F,78,Stainless Steel Submersible Effluent Vortex Pump,T,0.37,0.5,50 mm (2 in),5,SOURCE_CONFIRMED
+LBP 2115F,78,Stainless Steel Submersible Effluent Vortex Pump,S,0.75,1.0,50 mm (2 in),6,SOURCE_CONFIRMED
+LBP 2135,78,Stainless Steel Submersible Effluent Vortex Pump,T,0.75,1.0,50 mm (2 in),6,SOURCE_CONFIRMED
+LBP 21A15F,78,Stainless Steel Submersible Effluent Vortex Pump,S,1.1,1.5,50 mm (2 in),8,SOURCE_CONFIRMED
+LBP 2215F,78,Stainless Steel Submersible Effluent Vortex Pump,S,1.5,2.0,50 mm (2 in),9,SOURCE_CONFIRMED

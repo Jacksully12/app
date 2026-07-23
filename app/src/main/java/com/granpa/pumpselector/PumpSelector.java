@@ -118,6 +118,7 @@ public class PumpSelector {
                 {"borewell_all", "Borewell Submersible"},
                 {"openwell_all", "Openwell Submersible"},
                 {"monoblock_all", "Centrifugal / Surface Monoblock"},
+                {"jet_all", "Jet Pumps"},
                 {"multistage_all", "Multistage Pumps"},
                 {"booster_all", "Booster / Pressure Pumps"},
                 {"dewatering_all", "Dewatering / Sewage"},
@@ -269,14 +270,8 @@ public class PumpSelector {
             else x.status = "Below target • -" + formatFlow(Math.abs(signed), req.unit) + " • " + level;
             found.add(x);
         }
-        Comparator<Result> rank = (a,b) -> {
-            int band=Integer.compare(resultBand(a), resultBand(b)); if(band!=0)return band;
-            int diff=Double.compare(a.diff,b.diff); if(diff!=0)return diff;
-            int hp=Double.compare(a.r.hp,b.r.hp); if(hp!=0)return hp;
-            int kw=Double.compare(a.r.kw,b.r.kw); if(kw!=0)return kw;
-            return a.r.model.compareToIgnoreCase(b.r.model);
-        };
-        Collections.sort(found, rank);
+        // Use the same ranking policy as the main selector so "best" is consistent.
+        Collections.sort(found, dealerBest());
         if (!found.isEmpty()) return found.size()>4 ? new ArrayList<>(found.subList(0,4)) : found;
         Collections.sort(outside, (a,b) -> {
             int diff=Double.compare(a.diff,b.diff); if(diff!=0)return diff;
@@ -305,15 +300,15 @@ public class PumpSelector {
     }
 
     public static Double flowAt(PumpRecord r, double head) {
-        ArrayList<double[]> pts = new ArrayList<>();
-        for (double[] p : r.curve) if (p != null && p.length >= 2) pts.add(new double[]{p[0], p[1]});
-        Collections.sort(pts, Comparator.comparingDouble(a -> a[0]));
-        if (pts.size() == 1) return Math.abs(pts.get(0)[0] - head) < 1e-4 ? pts.get(0)[1] : null;
-
-        for (int i = 0; i < pts.size() - 1; i++) {
-            double[] a = pts.get(i), b = pts.get(i + 1);
-            if (head >= Math.min(a[0], b[0]) - 1e-4 && head <= Math.max(a[0], b[0]) + 1e-4) {
-                if (Math.abs(b[0] - a[0]) < 1e-9) return Math.max(a[1], b[1]);
+        if (r == null || !Double.isFinite(head) || head < 0) return null;
+        ArrayList<double[]> unique = CurveUtils.interpolationPointsLPH(r.curve);
+        if (unique.size() < 2) return null;
+        for (double[] point : unique) {
+            if (Math.abs(point[0] - head) <= 1e-4) return point[1];
+        }
+        for (int i = 0; i < unique.size() - 1; i++) {
+            double[] a = unique.get(i), b = unique.get(i + 1);
+            if (head >= a[0] - 1e-4 && head <= b[0] + 1e-4) {
                 return a[1] + (head - a[0]) / (b[0] - a[0]) * (b[1] - a[1]);
             }
         }
@@ -325,7 +320,8 @@ public class PumpSelector {
         String n = r.normalizedCategory == null ? "OTHER" : r.normalizedCategory;
         if (s.equals("borewell_all")) return n.equals("BOREWELL_SUBMERSIBLE");
         if (s.equals("openwell_all")) return n.equals("OPENWELL_SUBMERSIBLE");
-        if (s.equals("monoblock_all")) return n.equals("SURFACE_MONOBLOCK") || n.equals("JET_PUMP");
+        if (s.equals("monoblock_all")) return n.equals("SURFACE_MONOBLOCK");
+        if (s.equals("jet_all")) return n.equals("JET_PUMP");
         if (s.equals("multistage_all")) return n.equals("MULTISTAGE");
         if (s.equals("booster_all")) return n.equals("BOOSTER");
         if (s.equals("dewatering_all")) return n.equals("SEWAGE_DEWATERING");
@@ -335,13 +331,19 @@ public class PumpSelector {
     }
 
     public static boolean phase(PumpRecord r, String want) {
-        if (want == null || want.equals("any")) return true;
+        if (want == null || want.trim().isEmpty()) return false;
+        if (want.equals("any")) return true;
 
         // Trust the row-level phase first. Category names such as "3 Phase Horizontal Multistage"
         // must not make a row-level single-phase model appear in the three-phase filter.
         String p = r == null || r.phase == null ? "" : r.phase.toUpperCase(Locale.US).trim();
-        boolean rowSingle = p.contains("S");
-        boolean rowThree = p.contains("T") || p.contains("3");
+        String[] phaseTokens = p.replaceAll("[^A-Z0-9]+", " ").trim().split("\\s+");
+        boolean rowSingle = false;
+        boolean rowThree = false;
+        for (String token : phaseTokens) {
+            if (token.equals("S") || token.equals("SINGLE") || token.equals("1")) rowSingle = true;
+            if (token.equals("T") || token.equals("THREE") || token.equals("3")) rowThree = true;
+        }
 
         if (rowSingle || rowThree) {
             if (want.equals("S")) return rowSingle;
@@ -362,10 +364,16 @@ public class PumpSelector {
     }
 
     public static boolean phase(String p, String want) {
-        if (want == null || want.equals("any")) return true;
-        p = (p == null ? "" : p).toUpperCase(Locale.US).trim();
-        boolean rowSingle = p.contains("S");
-        boolean rowThree = p.contains("T") || p.contains("3");
+        if (want == null || want.trim().isEmpty()) return false;
+        if (want.equals("any")) return true;
+        String value = (p == null ? "" : p).toUpperCase(Locale.US).trim();
+        String[] tokens = value.replaceAll("[^A-Z0-9]+", " ").trim().split("\\s+");
+        boolean rowSingle = false;
+        boolean rowThree = false;
+        for (String token : tokens) {
+            if (token.equals("S") || token.equals("SINGLE") || token.equals("1")) rowSingle = true;
+            if (token.equals("T") || token.equals("THREE") || token.equals("3")) rowThree = true;
+        }
         if (want.equals("S")) return rowSingle;
         if (want.equals("T")) return rowThree;
         return true;

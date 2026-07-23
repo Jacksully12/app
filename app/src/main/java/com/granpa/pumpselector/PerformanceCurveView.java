@@ -1,19 +1,639 @@
 package com.granpa.pumpselector;
-import android.content.Context;import android.graphics.*;import android.view.*;import java.util.*;
-public class PerformanceCurveView extends View{
- Paint major=new Paint(1),minor=new Paint(1),axis=new Paint(1),text=new Paint(1),line=new Paint(1),glow=new Paint(1),dot=new Paint(1); double[][] curve;Double sh,sf;String unit="LPH";ScaleGestureDetector scale;GestureDetector gestures;float zoom=1,panX=0,panY=0,lastX,lastY;boolean enabled=false;ZoomListener listener;
- public interface ZoomListener{void onZoomChanged(int percent);} public PerformanceCurveView(Context c){super(c);major.setColor(Color.rgb(205,216,229));major.setStrokeWidth(dp(1));minor.setColor(Color.rgb(229,235,243));minor.setStrokeWidth(dp(.7f));axis.setColor(Color.rgb(70,85,102));axis.setStrokeWidth(dp(1.5f));text.setColor(Ui.TEXT);text.setTextSize(sp(12));line.setColor(Color.rgb(0,96,216));line.setStyle(Paint.Style.STROKE);line.setStrokeWidth(dp(3.2f));line.setStrokeCap(Paint.Cap.ROUND);line.setStrokeJoin(Paint.Join.ROUND);glow.setColor(Color.argb(35,0,96,216));glow.setStyle(Paint.Style.STROKE);glow.setStrokeWidth(dp(8));dot.setColor(Color.rgb(255,132,0));
-  scale=new ScaleGestureDetector(c,new ScaleGestureDetector.SimpleOnScaleGestureListener(){public boolean onScale(ScaleGestureDetector d){if(!enabled)return false;float old=zoom;zoom=Math.max(1,Math.min(4,zoom*d.getScaleFactor()));float fx=d.getFocusX(),fy=d.getFocusY();if(zoom==1){panX=panY=0;}else if(old!=zoom){float k=zoom/old;panX=fx-(fx-panX)*k;panY=fy-(fy-panY)*k;clamp();}notifyZoom();invalidate();return true;}});
-  gestures=new GestureDetector(c,new GestureDetector.SimpleOnGestureListener(){public boolean onDoubleTap(MotionEvent e){if(!enabled)return false;if(zoom<1.05f){zoom=2;panX=getWidth()/2f-e.getX();panY=getHeight()/2f-e.getY();clamp();}else resetZoom();notifyZoom();invalidate();return true;}});
- }
- public void setDisplayUnit(String u){unit=PumpSelector.normalizeUnit(u);invalidate();} public void setData(double[][]c,Double h,Double f){curve=c;sh=h;sf=f;invalidate();} public void setPinchZoomEnabled(boolean e){enabled=e;setClickable(e);} public void setZoomListener(ZoomListener l){listener=l;} public void resetZoom(){zoom=1;panX=panY=0;notifyZoom();invalidate();} public void zoomIn(){zoom=Math.min(4,zoom*1.25f);clamp();notifyZoom();invalidate();} public void zoomOut(){zoom=Math.max(1,zoom/1.25f);if(zoom==1)panX=panY=0;clamp();notifyZoom();invalidate();} public int getZoomPercent(){return Math.round(zoom*100);} void notifyZoom(){if(listener!=null)listener.onZoomChanged(getZoomPercent());}
- public boolean onTouchEvent(MotionEvent e){if(!enabled)return super.onTouchEvent(e);gestures.onTouchEvent(e);scale.onTouchEvent(e);boolean pan=zoom>1.02f&&!scale.isInProgress();if((e.getPointerCount()>1||pan)&&getParent()!=null)getParent().requestDisallowInterceptTouchEvent(true);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){lastX=e.getX();lastY=e.getY();return true;}if(e.getActionMasked()==MotionEvent.ACTION_MOVE&&pan&&e.getPointerCount()==1){panX+=e.getX()-lastX;panY+=e.getY()-lastY;lastX=e.getX();lastY=e.getY();clamp();invalidate();return true;}if((e.getActionMasked()==MotionEvent.ACTION_UP||e.getActionMasked()==MotionEvent.ACTION_CANCEL)&&getParent()!=null)getParent().requestDisallowInterceptTouchEvent(false);return true;} void clamp(){if(zoom<=1||getWidth()==0){panX=panY=0;return;}float mx=(zoom-1)*getWidth()*.5f,my=(zoom-1)*getHeight()*.5f;panX=Math.max(-mx,Math.min(mx,panX));panY=Math.max(-my,Math.min(my,panY));}
- protected void onMeasure(int w,int h){setMeasuredDimension(MeasureSpec.getSize(w),resolveSize(dp(360),h));}
- protected void onDraw(Canvas c){super.onDraw(c);ArrayList<double[]>pts=valid();if(pts.size()<2)return;boolean has=sh!=null&&sf!=null&&!Double.isNaN(sh)&&!Double.isNaN(sf);double maxF=0,maxH=0;for(double[]p:pts){maxF=Math.max(maxF,p[1]);maxH=Math.max(maxH,p[0]);}if(has){maxF=Math.max(maxF,PumpSelector.fromLPH(sf,unit));maxH=Math.max(maxH,sh);}double axisF=roundUp(maxF*1.10,niceFlowStep(maxF)),axisH=roundUp(maxH*1.12,10);RectF plot=new RectF(dp(62),dp(24),getWidth()-dp(22),getHeight()-dp(78));RectF data=new RectF(plot.left+dp(10),plot.top+dp(10),plot.right-dp(10),plot.bottom-dp(10));c.save();if(enabled&&zoom>1){c.translate(panX,panY);c.scale(zoom,zoom,plot.centerX(),plot.centerY());}drawGrid(c,plot,axisF,axisH,has?PumpSelector.fromLPH(sf,unit):null);Path p=monotonePath(pts,axisF,axisH,data);c.drawPath(p,glow);c.drawPath(p,line);if(has)drawSelected(c,plot,data,axisF,axisH,PumpSelector.fromLPH(sf,unit),sh);c.restore();if(enabled){Paint h=new Paint(text);h.setColor(Ui.MUTED);h.setTextSize(sp(10));String m=zoom>1?"Drag to move • double-tap reset":"Pinch or double-tap to zoom";c.drawText(m,getWidth()-h.measureText(m)-dp(8),dp(14),h);}}
- ArrayList<double[]>valid(){TreeMap<Double,Double>m=new TreeMap<>();if(curve!=null)for(double[]q:curve)if(q!=null&&q.length>=2&&!Double.isNaN(q[0])&&!Double.isNaN(q[1])&&q[0]>=0&&q[1]>=0)m.put(q[0],Math.max(m.containsKey(q[0])?m.get(q[0]):0,q[1]));ArrayList<double[]>a=new ArrayList<>();double prev=Double.MAX_VALUE;for(Map.Entry<Double,Double>e:m.entrySet()){double f=PumpSelector.fromLPH(e.getValue(),unit);if(f<=prev*1.02+0.01){a.add(new double[]{e.getKey(),f});prev=f;}if(f<=0)break;}Collections.sort(a,Comparator.comparingDouble(x->x[1]));return a;}
- Path monotonePath(ArrayList<double[]>p,double mf,double mh,RectF r){int n=p.size();float[]x=new float[n],y=new float[n];for(int i=0;i<n;i++){x[i]=x(p.get(i)[1],mf,r);y[i]=y(p.get(i)[0],mh,r);}float[]d=new float[n-1],m=new float[n];for(int i=0;i<n-1;i++)d[i]=(y[i+1]-y[i])/Math.max(1f,x[i+1]-x[i]);m[0]=d[0];m[n-1]=d[n-2];for(int i=1;i<n-1;i++)m[i]=(d[i-1]+d[i])/2f;for(int i=0;i<n-1;i++){if(Math.abs(d[i])<1e-6){m[i]=m[i+1]=0;}else{float a=m[i]/d[i],b=m[i+1]/d[i],s=a*a+b*b;if(s>9){float k=3f/(float)Math.sqrt(s);m[i]=k*a*d[i];m[i+1]=k*b*d[i];}}}Path path=new Path();path.moveTo(x[0],y[0]);for(int i=0;i<n-1;i++){float h=x[i+1]-x[i];path.cubicTo(x[i]+h/3f,y[i]+m[i]*h/3f,x[i+1]-h/3f,y[i+1]-m[i+1]*h/3f,x[i+1],y[i+1]);}return path;}
- void drawGrid(Canvas c,RectF p,double mf,double mh,Double selected){Paint gt=new Paint(text);gt.setTextSize(sp(12));for(int i=1;i<20;i++){float gx=p.left+i*p.width()/20f,gy=p.bottom-i*p.height()/20f;c.drawLine(gx,p.top,gx,p.bottom,minor);c.drawLine(p.left,gy,p.right,gy,minor);}for(int i=0;i<=5;i++){float gx=p.left+i*p.width()/5f,gy=p.bottom-i*p.height()/5f;c.drawLine(gx,p.top,gx,p.bottom,major);c.drawLine(p.left,gy,p.right,gy,major);String fl=PumpSelector.formatFlowNumber(mf*i/5,unit);if(selected==null||Math.abs(mf*i/5-selected)>mf/18)c.drawText(fl,gx-gt.measureText(fl)/2,p.bottom+dp(27),gt);String hl=String.format(Locale.US,"%.0f",mh*i/5);c.drawText(hl,p.left-gt.measureText(hl)-dp(8),gy+dp(4),gt);}c.drawLine(p.left,p.top,p.left,p.bottom,axis);c.drawLine(p.left,p.bottom,p.right,p.bottom,axis);Paint lab=new Paint(text);lab.setTextSize(sp(13.5f));lab.setTypeface(Typeface.DEFAULT_BOLD);String xl="Flow Rate ("+PumpSelector.unitLabel(unit)+")";c.drawText(xl,p.centerX()-lab.measureText(xl)/2,getHeight()-dp(5),lab);c.save();c.rotate(-90,dp(18),p.centerY());c.drawText("Head (m)",dp(18),p.centerY(),lab);c.restore();}
- void drawSelected(Canvas c,RectF plot,RectF data,double mf,double mh,double f,double h){float sx=x(f,mf,data),sy=y(h,mh,data);Paint dash=new Paint(1);dash.setColor(Color.rgb(255,132,0));dash.setStrokeWidth(dp(1.2f));dash.setPathEffect(new DashPathEffect(new float[]{8,7},0));c.drawLine(plot.left,sy,sx,sy,dash);c.drawLine(sx,sy,sx,plot.bottom,dash);Paint halo=new Paint(1);halo.setColor(Color.argb(42,255,132,0));c.drawCircle(sx,sy,dp(16),halo);Paint white=new Paint(1);white.setColor(Color.WHITE);c.drawCircle(sx,sy,dp(11),white);c.drawCircle(sx,sy,dp(8),dot);badge(c,String.format(Locale.US,"%.1f m",h),plot.left,sy,true);badge(c,PumpSelector.formatFlowNumber(f,unit),sx,plot.bottom+dp(18),false);}
- void badge(Canvas c,String s,float x,float y,boolean left){Paint bg=new Paint(1);bg.setColor(Color.rgb(255,132,0));Paint t=new Paint(1);t.setColor(Color.WHITE);t.setTypeface(Typeface.DEFAULT_BOLD);t.setTextSize(sp(10.5f));float w=t.measureText(s)+dp(14),hh=dp(23);RectF r=left?new RectF(Math.max(dp(2),x-w-dp(5)),y-hh/2,x-dp(5),y+hh/2):new RectF(x-w/2,y-hh/2,x+w/2,y+hh/2);if(!left){if(r.left<dp(58))r.offset(dp(58)-r.left,0);if(r.right>getWidth()-dp(4))r.offset(getWidth()-dp(4)-r.right,0);}c.drawRoundRect(r,dp(5),dp(5),bg);c.drawText(s,r.centerX()-t.measureText(s)/2,r.centerY()+dp(4),t);}
- double niceFlowStep(double m){if(unit.equals("LPM")){if(m<=20)return 5;if(m<=60)return 10;if(m<=200)return 25;if(m<=600)return 100;if(m<=2000)return 250;return 1000;}if(unit.equals("LPH")){if(m<=1000)return 200;if(m<=3000)return 500;if(m<=10000)return 1000;if(m<=30000)return 5000;return 10000;}if(unit.equals("LPS"))return m<=10?1:5;return m<=10?1:10;}double roundUp(double v,double s){return Math.ceil(v/s)*s;}float x(double f,double m,RectF r){return(float)(r.left+f/m*r.width());}float y(double h,double m,RectF r){return(float)(r.bottom-h/m*r.height());}int dp(float v){return(int)(v*getResources().getDisplayMetrics().density+.5f);}float sp(float v){return v*getResources().getDisplayMetrics().scaledDensity;}
+
+import android.content.Context;
+import android.graphics.*;
+import android.view.*;
+import java.util.*;
+
+public class PerformanceCurveView extends View {
+    Paint major = new Paint(1), minor = new Paint(1), axis = new Paint(1);
+    Paint text = new Paint(1), line = new Paint(1), glow = new Paint(1);
+    Paint selectedDot = new Paint(1), sourceDot = new Paint(1);
+    double[][] curve;
+    Double selectedHead, selectedFlow;
+    String unit = "LPH";
+    ScaleGestureDetector scale;
+    GestureDetector gestures;
+    float zoom = 1, panX = 0, panY = 0, lastX, lastY;
+    boolean enabled = false;
+    ZoomListener listener;
+
+    public interface ZoomListener {
+        void onZoomChanged(int percent);
+    }
+
+    public PerformanceCurveView(Context context) {
+        super(context);
+        major.setColor(Color.rgb(205, 216, 229));
+        major.setStrokeWidth(dp(1));
+        minor.setColor(Color.rgb(229, 235, 243));
+        minor.setStrokeWidth(dp(.7f));
+        axis.setColor(Color.rgb(70, 85, 102));
+        axis.setStrokeWidth(dp(1.5f));
+        text.setColor(Ui.TEXT);
+        text.setTextSize(sp(12));
+
+        line.setColor(Color.rgb(0, 96, 216));
+        line.setStyle(Paint.Style.STROKE);
+        line.setStrokeWidth(dp(3.2f));
+        line.setStrokeCap(Paint.Cap.ROUND);
+        line.setStrokeJoin(Paint.Join.ROUND);
+
+        glow.setColor(Color.argb(35, 0, 96, 216));
+        glow.setStyle(Paint.Style.STROKE);
+        glow.setStrokeWidth(dp(8));
+
+        selectedDot.setColor(Color.rgb(255, 132, 0));
+        sourceDot.setColor(Color.rgb(0, 96, 216));
+        sourceDot.setStyle(Paint.Style.FILL);
+
+        scale = new ScaleGestureDetector(
+                context,
+                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    public boolean onScale(ScaleGestureDetector detector) {
+                        if (!enabled) return false;
+                        float old = zoom;
+                        zoom = Math.max(
+                                1,
+                                Math.min(4, zoom * detector.getScaleFactor())
+                        );
+                        float focusX = detector.getFocusX();
+                        float focusY = detector.getFocusY();
+                        if (zoom == 1) {
+                            panX = panY = 0;
+                        } else if (old != zoom) {
+                            float factor = zoom / old;
+                            panX = focusX - (focusX - panX) * factor;
+                            panY = focusY - (focusY - panY) * factor;
+                            clamp();
+                        }
+                        notifyZoom();
+                        invalidate();
+                        return true;
+                    }
+                }
+        );
+
+        gestures = new GestureDetector(
+                context,
+                new GestureDetector.SimpleOnGestureListener() {
+                    public boolean onDoubleTap(MotionEvent event) {
+                        if (!enabled) return false;
+                        if (zoom < 1.05f) {
+                            zoom = 2;
+                            panX = getWidth() / 2f - event.getX();
+                            panY = getHeight() / 2f - event.getY();
+                            clamp();
+                        } else {
+                            resetZoom();
+                        }
+                        notifyZoom();
+                        invalidate();
+                        return true;
+                    }
+                }
+        );
+    }
+
+    public void setDisplayUnit(String value) {
+        unit = PumpSelector.normalizeUnit(value);
+        invalidate();
+    }
+
+    public void setData(double[][] value, Double head, Double flow) {
+        curve = value;
+        selectedHead = head;
+        selectedFlow = flow;
+        invalidate();
+    }
+
+    public void setPinchZoomEnabled(boolean value) {
+        enabled = value;
+        setClickable(value);
+    }
+
+    public void setZoomListener(ZoomListener value) {
+        listener = value;
+    }
+
+    public void resetZoom() {
+        zoom = 1;
+        panX = panY = 0;
+        notifyZoom();
+        invalidate();
+    }
+
+    public void zoomIn() {
+        zoom = Math.min(4, zoom * 1.25f);
+        clamp();
+        notifyZoom();
+        invalidate();
+    }
+
+    public void zoomOut() {
+        zoom = Math.max(1, zoom / 1.25f);
+        if (zoom == 1) panX = panY = 0;
+        clamp();
+        notifyZoom();
+        invalidate();
+    }
+
+    public int getZoomPercent() {
+        return Math.round(zoom * 100);
+    }
+
+    void notifyZoom() {
+        if (listener != null) listener.onZoomChanged(getZoomPercent());
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        if (!enabled) return super.onTouchEvent(event);
+        gestures.onTouchEvent(event);
+        scale.onTouchEvent(event);
+
+        boolean pan = zoom > 1.02f && !scale.isInProgress();
+        if ((event.getPointerCount() > 1 || pan) && getParent() != null) {
+            getParent().requestDisallowInterceptTouchEvent(true);
+        }
+
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            lastX = event.getX();
+            lastY = event.getY();
+            return true;
+        }
+
+        if (
+                event.getActionMasked() == MotionEvent.ACTION_MOVE
+                && pan
+                && event.getPointerCount() == 1
+        ) {
+            panX += event.getX() - lastX;
+            panY += event.getY() - lastY;
+            lastX = event.getX();
+            lastY = event.getY();
+            clamp();
+            invalidate();
+            return true;
+        }
+
+        if (
+                (
+                        event.getActionMasked() == MotionEvent.ACTION_UP
+                        || event.getActionMasked() == MotionEvent.ACTION_CANCEL
+                )
+                && getParent() != null
+        ) {
+            getParent().requestDisallowInterceptTouchEvent(false);
+        }
+        return true;
+    }
+
+    void clamp() {
+        if (zoom <= 1 || getWidth() == 0) {
+            panX = panY = 0;
+            return;
+        }
+        float maxX = (zoom - 1) * getWidth() * .5f;
+        float maxY = (zoom - 1) * getHeight() * .5f;
+        panX = Math.max(-maxX, Math.min(maxX, panX));
+        panY = Math.max(-maxY, Math.min(maxY, panY));
+    }
+
+    protected void onMeasure(int width, int height) {
+        setMeasuredDimension(
+                MeasureSpec.getSize(width),
+                resolveSize(dp(360), height)
+        );
+    }
+
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        ArrayList<double[]> points = validatedSourcePoints();
+        if (points.size() < 2) {
+            drawUnavailable(
+                    canvas,
+                    curve != null && curve.length > 0
+                            ? "Curve data requires source review"
+                            : "Performance curve not available"
+            );
+            return;
+        }
+
+        boolean hasSelection = selectedHead != null
+                && selectedFlow != null
+                && !Double.isNaN(selectedHead)
+                && !Double.isNaN(selectedFlow);
+
+        double maximumFlow = 0;
+        double maximumHead = 0;
+        for (double[] point : points) {
+            maximumFlow = Math.max(maximumFlow, point[1]);
+            maximumHead = Math.max(maximumHead, point[0]);
+        }
+
+        if (hasSelection) {
+            maximumFlow = Math.max(
+                    maximumFlow,
+                    PumpSelector.fromLPH(selectedFlow, unit)
+            );
+            maximumHead = Math.max(maximumHead, selectedHead);
+        }
+
+        double axisFlow = roundUp(
+                maximumFlow * 1.10,
+                niceFlowStep(maximumFlow)
+        );
+        double axisHead = roundUp(maximumHead * 1.12, 10);
+
+        RectF plot = new RectF(
+                dp(62),
+                dp(24),
+                getWidth() - dp(22),
+                getHeight() - dp(78)
+        );
+        RectF data = new RectF(
+                plot.left + dp(10),
+                plot.top + dp(10),
+                plot.right - dp(10),
+                plot.bottom - dp(10)
+        );
+
+        canvas.save();
+        if (enabled && zoom > 1) {
+            canvas.translate(panX, panY);
+            canvas.scale(zoom, zoom, plot.centerX(), plot.centerY());
+        }
+
+        drawGrid(
+                canvas,
+                plot,
+                axisFlow,
+                axisHead,
+                hasSelection
+                        ? PumpSelector.fromLPH(selectedFlow, unit)
+                        : null
+        );
+
+        Path path = monotonePath(points, axisFlow, axisHead, data);
+        canvas.drawPath(path, glow);
+        canvas.drawPath(path, line);
+        drawSourcePoints(canvas, points, axisFlow, axisHead, data);
+
+        if (hasSelection) {
+            drawSelected(
+                    canvas,
+                    plot,
+                    data,
+                    axisFlow,
+                    axisHead,
+                    PumpSelector.fromLPH(selectedFlow, unit),
+                    selectedHead
+            );
+        }
+
+        canvas.restore();
+
+        Paint legend = new Paint(text);
+        legend.setColor(Ui.MUTED);
+        legend.setTextSize(sp(10));
+        String sourceLegend = "● Catalogue points";
+        canvas.drawText(sourceLegend, dp(64), dp(16), legend);
+
+        if (enabled) {
+            String message = zoom > 1
+                    ? "Drag to move • double-tap reset"
+                    : "Pinch or double-tap to zoom";
+            canvas.drawText(
+                    message,
+                    getWidth() - legend.measureText(message) - dp(8),
+                    dp(16),
+                    legend
+            );
+        }
+    }
+
+    ArrayList<double[]> validatedSourcePoints() {
+        return CurveUtils.validatedPoints(curve, unit);
+    }
+
+    void drawUnavailable(Canvas canvas, String message) {
+        Paint title = new Paint(text);
+        title.setTypeface(Typeface.DEFAULT_BOLD);
+        title.setTextSize(sp(15));
+        title.setColor(Ui.ORANGE);
+        canvas.drawText(
+                message,
+                getWidth() / 2f - title.measureText(message) / 2f,
+                getHeight() / 2f,
+                title
+        );
+    }
+
+    void drawSourcePoints(
+            Canvas canvas,
+            ArrayList<double[]> points,
+            double maximumFlow,
+            double maximumHead,
+            RectF data
+    ) {
+        Paint white = new Paint(1);
+        white.setColor(Color.WHITE);
+        for (double[] point : points) {
+            float x = x(point[1], maximumFlow, data);
+            float y = y(point[0], maximumHead, data);
+            canvas.drawCircle(x, y, dp(5.5f), white);
+            canvas.drawCircle(x, y, dp(3.4f), sourceDot);
+        }
+    }
+
+    Path monotonePath(
+            ArrayList<double[]> points,
+            double maximumFlow,
+            double maximumHead,
+            RectF data
+    ) {
+        int count = points.size();
+        float[] x = new float[count];
+        float[] y = new float[count];
+
+        for (int index = 0; index < count; index++) {
+            x[index] = x(points.get(index)[1], maximumFlow, data);
+            y[index] = y(points.get(index)[0], maximumHead, data);
+        }
+
+        float[] delta = new float[count - 1];
+        float[] tangent = new float[count];
+
+        for (int index = 0; index < count - 1; index++) {
+            delta[index] = (y[index + 1] - y[index])
+                    / Math.max(1f, x[index + 1] - x[index]);
+        }
+
+        tangent[0] = delta[0];
+        tangent[count - 1] = delta[count - 2];
+
+        for (int index = 1; index < count - 1; index++) {
+            tangent[index] = (delta[index - 1] + delta[index]) / 2f;
+        }
+
+        for (int index = 0; index < count - 1; index++) {
+            if (Math.abs(delta[index]) < 1e-6) {
+                tangent[index] = tangent[index + 1] = 0;
+            } else {
+                float a = tangent[index] / delta[index];
+                float b = tangent[index + 1] / delta[index];
+                float sum = a * a + b * b;
+                if (sum > 9) {
+                    float factor = 3f / (float) Math.sqrt(sum);
+                    tangent[index] = factor * a * delta[index];
+                    tangent[index + 1] = factor * b * delta[index];
+                }
+            }
+        }
+
+        Path path = new Path();
+        path.moveTo(x[0], y[0]);
+
+        for (int index = 0; index < count - 1; index++) {
+            float width = x[index + 1] - x[index];
+            path.cubicTo(
+                    x[index] + width / 3f,
+                    y[index] + tangent[index] * width / 3f,
+                    x[index + 1] - width / 3f,
+                    y[index + 1] - tangent[index + 1] * width / 3f,
+                    x[index + 1],
+                    y[index + 1]
+            );
+        }
+        return path;
+    }
+
+    void drawGrid(
+            Canvas canvas,
+            RectF plot,
+            double maximumFlow,
+            double maximumHead,
+            Double selected
+    ) {
+        Paint gridText = new Paint(text);
+        gridText.setTextSize(sp(12));
+
+        for (int index = 1; index < 20; index++) {
+            float gridX = plot.left + index * plot.width() / 20f;
+            float gridY = plot.bottom - index * plot.height() / 20f;
+            canvas.drawLine(gridX, plot.top, gridX, plot.bottom, minor);
+            canvas.drawLine(plot.left, gridY, plot.right, gridY, minor);
+        }
+
+        for (int index = 0; index <= 5; index++) {
+            float gridX = plot.left + index * plot.width() / 5f;
+            float gridY = plot.bottom - index * plot.height() / 5f;
+            canvas.drawLine(gridX, plot.top, gridX, plot.bottom, major);
+            canvas.drawLine(plot.left, gridY, plot.right, gridY, major);
+
+            String flowLabel = PumpSelector.formatFlowNumber(
+                    maximumFlow * index / 5,
+                    unit
+            );
+            if (
+                    selected == null
+                    || Math.abs(maximumFlow * index / 5 - selected)
+                    > maximumFlow / 18
+            ) {
+                canvas.drawText(
+                        flowLabel,
+                        gridX - gridText.measureText(flowLabel) / 2,
+                        plot.bottom + dp(27),
+                        gridText
+                );
+            }
+
+            String headLabel = String.format(
+                    Locale.US,
+                    "%.0f",
+                    maximumHead * index / 5
+            );
+            canvas.drawText(
+                    headLabel,
+                    plot.left - gridText.measureText(headLabel) - dp(8),
+                    gridY + dp(4),
+                    gridText
+            );
+        }
+
+        canvas.drawLine(plot.left, plot.top, plot.left, plot.bottom, axis);
+        canvas.drawLine(plot.left, plot.bottom, plot.right, plot.bottom, axis);
+
+        Paint label = new Paint(text);
+        label.setTextSize(sp(13.5f));
+        label.setTypeface(Typeface.DEFAULT_BOLD);
+
+        String xLabel = "Flow Rate (" + PumpSelector.unitLabel(unit) + ")";
+        canvas.drawText(
+                xLabel,
+                plot.centerX() - label.measureText(xLabel) / 2,
+                getHeight() - dp(5),
+                label
+        );
+
+        canvas.save();
+        canvas.rotate(-90, dp(18), plot.centerY());
+        canvas.drawText("Head (m)", dp(18), plot.centerY(), label);
+        canvas.restore();
+    }
+
+    void drawSelected(
+            Canvas canvas,
+            RectF plot,
+            RectF data,
+            double maximumFlow,
+            double maximumHead,
+            double flow,
+            double head
+    ) {
+        float selectedX = x(flow, maximumFlow, data);
+        float selectedY = y(head, maximumHead, data);
+
+        Paint dashed = new Paint(1);
+        dashed.setColor(Color.rgb(255, 132, 0));
+        dashed.setStrokeWidth(dp(1.2f));
+        dashed.setPathEffect(
+                new DashPathEffect(new float[]{8, 7}, 0)
+        );
+
+        canvas.drawLine(plot.left, selectedY, selectedX, selectedY, dashed);
+        canvas.drawLine(
+                selectedX,
+                selectedY,
+                selectedX,
+                plot.bottom,
+                dashed
+        );
+
+        Paint halo = new Paint(1);
+        halo.setColor(Color.argb(42, 255, 132, 0));
+        canvas.drawCircle(selectedX, selectedY, dp(16), halo);
+
+        Paint white = new Paint(1);
+        white.setColor(Color.WHITE);
+        canvas.drawCircle(selectedX, selectedY, dp(11), white);
+        canvas.drawCircle(selectedX, selectedY, dp(8), selectedDot);
+
+        badge(
+                canvas,
+                String.format(Locale.US, "%.1f m", head),
+                plot.left,
+                selectedY,
+                true
+        );
+        badge(
+                canvas,
+                PumpSelector.formatFlowNumber(flow, unit),
+                selectedX,
+                plot.bottom + dp(18),
+                false
+        );
+    }
+
+    void badge(
+            Canvas canvas,
+            String value,
+            float x,
+            float y,
+            boolean left
+    ) {
+        Paint background = new Paint(1);
+        background.setColor(Color.rgb(255, 132, 0));
+
+        Paint label = new Paint(1);
+        label.setColor(Color.WHITE);
+        label.setTypeface(Typeface.DEFAULT_BOLD);
+        label.setTextSize(sp(10.5f));
+
+        float width = label.measureText(value) + dp(14);
+        float height = dp(23);
+
+        RectF rectangle = left
+                ? new RectF(
+                        Math.max(dp(2), x - width - dp(5)),
+                        y - height / 2,
+                        x - dp(5),
+                        y + height / 2
+                )
+                : new RectF(
+                        x - width / 2,
+                        y - height / 2,
+                        x + width / 2,
+                        y + height / 2
+                );
+
+        if (!left) {
+            if (rectangle.left < dp(58)) {
+                rectangle.offset(dp(58) - rectangle.left, 0);
+            }
+            if (rectangle.right > getWidth() - dp(4)) {
+                rectangle.offset(
+                        getWidth() - dp(4) - rectangle.right,
+                        0
+                );
+            }
+        }
+
+        canvas.drawRoundRect(rectangle, dp(5), dp(5), background);
+        canvas.drawText(
+                value,
+                rectangle.centerX() - label.measureText(value) / 2,
+                rectangle.centerY() + dp(4),
+                label
+        );
+    }
+
+    double niceFlowStep(double maximum) {
+        if (unit.equals("LPM")) {
+            if (maximum <= 20) return 5;
+            if (maximum <= 60) return 10;
+            if (maximum <= 200) return 25;
+            if (maximum <= 600) return 100;
+            if (maximum <= 2000) return 250;
+            return 1000;
+        }
+
+        if (unit.equals("LPH")) {
+            if (maximum <= 1000) return 200;
+            if (maximum <= 3000) return 500;
+            if (maximum <= 10000) return 1000;
+            if (maximum <= 30000) return 5000;
+            return 10000;
+        }
+
+        if (unit.equals("LPS")) return maximum <= 10 ? 1 : 5;
+        return maximum <= 10 ? 1 : 10;
+    }
+
+    double roundUp(double value, double step) {
+        return Math.ceil(value / step) * step;
+    }
+
+    float x(double flow, double maximum, RectF rectangle) {
+        return (float) (
+                rectangle.left + flow / maximum * rectangle.width()
+        );
+    }
+
+    float y(double head, double maximum, RectF rectangle) {
+        return (float) (
+                rectangle.bottom - head / maximum * rectangle.height()
+        );
+    }
+
+    int dp(float value) {
+        return (int) (
+                value * getResources().getDisplayMetrics().density + .5f
+        );
+    }
+
+    float sp(float value) {
+        return value * getResources().getDisplayMetrics().scaledDensity;
+    }
 }

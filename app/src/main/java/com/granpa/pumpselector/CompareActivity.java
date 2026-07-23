@@ -54,9 +54,9 @@ public class CompareActivity extends Activity {
 
         card.addView(Ui.label(this, "Phase"));
         phase = Ui.spinner(this, options(new String[][]{
-                {"any", "Any phase", "Show single and three phase models"},
-                {"S", "Single phase", "Usually 220 V supply"},
-                {"T", "Three phase", "Usually 380/415 V supply"}
+                {"", "Select electrical phase", "Required for a like-for-like comparison"},
+                {"S", "Single phase", "Usually 220–240 V supply"},
+                {"T", "Three phase", "Usually 380–415 V supply"}
         }));
         Ui.mb(this, phase, 18);
         card.addView(phase);
@@ -72,6 +72,7 @@ public class CompareActivity extends Activity {
         setContentView(Ui.scroll(this, root));
 
         compare.setOnClickListener(v -> openCompareResults());
+        if (b != null) restoreState(b);
     }
 
     void openCompareResults() {
@@ -80,6 +81,10 @@ public class CompareActivity extends Activity {
 
         if (Double.isNaN(h) || h < 0 || Double.isNaN(f) || f <= 0) {
             Toast.makeText(this, "Enter valid head and flow values", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (sel(phase).isEmpty()) {
+            Toast.makeText(this, "Select single phase or three phase for comparison", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -96,7 +101,8 @@ public class CompareActivity extends Activity {
         ArrayList<Option> o = new ArrayList<>();
         o.add(new Option("borewell_all", "Borewell Submersible", "Main category", true));
         o.add(new Option("openwell_all", "Openwell Submersible", "Main category", true));
-        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Self priming, jet, centrifugal, monoblock/monobloc", true));
+        o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Self priming, centrifugal, monoblock/monobloc", true));
+        o.add(new Option("jet_all", "Jet Pumps", "Jet-pump families only", true));
         o.add(new Option("multistage_all", "Multistage Pumps", "Vertical/openwell/horizontal multistage", true));
         o.add(new Option("booster_all", "Booster / Pressure Pumps", "Booster and pressure pump sections", true));
         o.add(new Option("dewatering_all", "Dewatering / Sewage", "Drainage, sewage and similar pumps", true));
@@ -109,6 +115,38 @@ public class CompareActivity extends Activity {
         return o;
     }
 
-    String sel(Spinner s) { return ((Option) s.getSelectedItem()).value; }
+    String sel(Spinner s) {
+        Object value = s == null ? null : s.getSelectedItem();
+        return value instanceof Option ? ((Option) value).value : "";
+    }
+
+    void selectValue(Spinner spinner, String value) {
+        if (spinner == null || value == null) return;
+        for (int i = 0; i < spinner.getCount(); i++) {
+            Object item = spinner.getItemAtPosition(i);
+            if (item instanceof Option && value.equals(((Option) item).value)) {
+                spinner.setSelection(i);
+                return;
+            }
+        }
+    }
+
+    void restoreState(Bundle state) {
+        head.setText(state.getString("head", head.getText().toString()));
+        flow.setText(state.getString("flow", flow.getText().toString()));
+        selectValue(unit, state.getString("unit", sel(unit)));
+        selectValue(cat, state.getString("cat", sel(cat)));
+        selectValue(phase, state.getString("phase", sel(phase)));
+    }
+
+    @Override protected void onSaveInstanceState(Bundle out) {
+        out.putString("head", head == null ? "" : head.getText().toString());
+        out.putString("flow", flow == null ? "" : flow.getText().toString());
+        out.putString("unit", sel(unit));
+        out.putString("cat", sel(cat));
+        out.putString("phase", sel(phase));
+        super.onSaveInstanceState(out);
+    }
+
     double val(EditText e) { try { return Double.parseDouble(e.getText().toString().trim()); } catch (Exception ex) { return Double.NaN; } }
 }

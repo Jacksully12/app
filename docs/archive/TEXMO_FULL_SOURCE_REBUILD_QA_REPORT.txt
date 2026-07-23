@@ -1,0 +1,37 @@
+TEXMO FULL SOURCE REBUILD QA — v5.6.0
+============================================================
+
+Source: Texmo-Diary-data (1).xlsx
+Source rows represented: 1,819
+Selectable model variants: 1820
+Needs review: 0
+
+The workbook was treated as the source of truth for:
+- model
+- row-level phase
+- HP and kW
+- stages
+- head points
+- discharge points
+- original discharge unit
+- pipe/delivery size
+
+Normalization:
+- LPH remains unchanged.
+- LPM is multiplied by 60.
+- LPS is multiplied by 3,600.
+- m³/hour is multiplied by 1,000.
+
+Special source-confirmed handling:
+- F22: 1.5 HP / 1.1 kW.
+- SP300SM: 3 HP / 2.2 kW.
+- Page 32 merged construction-dewatering cells use the user-confirmed table.
+- SMES90/09 TO 10 is split into two model variants.
+
+Known fixtures:
+- SRS50/10: maximum 25,020 LPH.
+- AVS 10-1: maximum 13,000 LPH.
+- AHS 02 / 03: maximum 3,000 LPH.
+- AMH 50: maximum 16,200 LPH.
+- JRT1/16: Single Phase.
+- AMH 50: Three Phase.

@@ -1,0 +1,40 @@
+GRANPA PUMP SELECTOR v5.6.0 — PACKAGE MANIFEST
+============================================================
+
+Package type: APK-ready native Android Studio/Gradle source
+APK compiled in this environment: No
+
+TEXMO
+- Source workbook rows: 1,819
+- Selectable model variants: 1820
+- Source-review records: 0
+- One combined source row was split into SMES90/09 and SMES90/10.
+- Curves were regenerated using the actual LPH/LPM/LPS/m³-hour units.
+- Row-level phase values were reapplied.
+
+LUBI
+- Total records: 1734
+- Selectable: 1699
+- Source-review records: 35
+- The 42 previously malformed rows were reconstructed.
+- Two LHMS and eight powered LBM variants were added.
+- Page 77 and two severely shifted LSD rows remain excluded.
+- LBH/LBL and parts of pages 76/78 still require complete extraction.
+
+KSB
+- Total records: 1273
+- Selectable: 1226
+- Source-review records: 47
+- The 47 agricultural review rows remain excluded rather than guessed.
+
+SAFETY CHANGES
+- Invalid/non-monotonic curves are rejected by selection logic.
+- The chart does not silently remove invalid source points.
+- Catalogue points are shown as visible markers.
+- Invalid curves show a source-review message.
+- The closest-outside-tolerance comparison fallback is preserved.
+
+BRANCH NOTE
+- This package is based on the latest complete v5.5 source branch available.
+- Newer Manual Shortlist / Comparison Highlights screens shown in later
+  screenshots may belong to another branch and are not guaranteed here.

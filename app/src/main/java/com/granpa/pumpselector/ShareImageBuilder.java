@@ -13,6 +13,9 @@ import java.util.*;
 
 public class ShareImageBuilder {
     public static Bitmap build(Activity a, PumpRecord r, boolean has, double head, double flow, String unit) {
+        if (!CurveUtils.canShare(r)) {
+            throw new IllegalArgumentException("Record is not approved for customer sharing");
+        }
         unit = PumpSelector.normalizeUnit(unit);
 
         int w = 1080, h = 1500;
@@ -155,14 +158,16 @@ public class ShareImageBuilder {
         RectF plot = new RectF(outer.left + 95, outer.top + 82, outer.right - 35, outer.bottom - 160);
         RectF dataPlot = new RectF(plot.left + 16, plot.top + 16, plot.right - 16, plot.bottom - 16);
 
-        ArrayList<double[]> real = new ArrayList<>();
-        if (r.curve != null) {
-            for (double[] q : r.curve) {
-                if (q != null && q.length >= 2) real.add(new double[]{q[0], PumpSelector.fromLPH(q[1], unit)});
-            }
+        ArrayList<double[]> real = CurveUtils.validatedPoints(r.curve, unit);
+        if (real.size() < 2) {
+            Paint warning = new Paint(1);
+            warning.setColor(Ui.ORANGE);
+            warning.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            warning.setTextSize(28);
+            String message = "Curve requires source review";
+            c.drawText(message, outer.centerX() - warning.measureText(message) / 2f, outer.centerY(), warning);
+            return;
         }
-        Collections.sort(real, Comparator.comparingDouble(a -> a[1]));
-        if (real.isEmpty()) return;
 
         ArrayList<double[]> pts = real;
 
@@ -238,6 +243,17 @@ public class ShareImageBuilder {
         Path path = monotonePath(pts, axisF, axisH, dataPlot);
         Paint glow=new Paint(cp);glow.setStrokeWidth(12);glow.setColor(Color.argb(32,0,96,216));c.drawPath(path,glow);c.drawPath(path,cp);
 
+        Paint sourceHalo = new Paint(1);
+        sourceHalo.setColor(Color.WHITE);
+        Paint sourceDot = new Paint(1);
+        sourceDot.setColor(Color.rgb(0, 96, 216));
+        for (double[] point : real) {
+            float px = x(point[1], axisF, dataPlot);
+            float py = y(point[0], axisH, dataPlot);
+            c.drawCircle(px, py, 9, sourceHalo);
+            c.drawCircle(px, py, 5.5f, sourceDot);
+        }
+
         if (has) {
             double flowDisplay = PumpSelector.fromLPH(flow, unit);
             float sx = x(flowDisplay, axisF, dataPlot), sy = y(head, axisH, dataPlot);
@@ -272,7 +288,7 @@ public class ShareImageBuilder {
         Paint leg = new Paint(1);
         leg.setTextSize(23);
         leg.setColor(Ui.TEXT);
-        c.drawText("Selected operating point", outer.left + 115, outer.bottom - 42, leg);
+        c.drawText(has ? "Catalogue points • Selected operating point" : "Catalogue source points", outer.left + 115, outer.bottom - 42, leg);
     }
 
     static void drawHeadBadge(Canvas c, String label, float axisX, float centerY) {
@@ -368,6 +384,10 @@ public class ShareImageBuilder {
     }
 
     public static void share(Activity a, PumpRecord r, boolean has, double head, double flow, boolean whats, String unit) {
+        if (!CurveUtils.canShare(r)) {
+            Toast.makeText(a, "This record is not source-approved for customer sharing", Toast.LENGTH_LONG).show();
+            return;
+        }
         try {
             Bitmap b = build(a, r, has, head, flow, unit);
             File f = saveCache(a, b);
@@ -398,31 +418,56 @@ public class ShareImageBuilder {
     }
 
     public static void download(Activity a, PumpRecord r, boolean has, double head, double flow, String unit) {
+        if (!CurveUtils.canShare(r)) {
+            Toast.makeText(a, "This record is not source-approved for customer download", Toast.LENGTH_LONG).show();
+            return;
+        }
         try {
             Bitmap b = build(a, r, has, head, flow, unit);
-            String name = "Granpa_" + safe(r.model).replaceAll("[^A-Za-z0-9_-]", "_") + ".png";
+            String name = fileName(r);
 
-            if (Build.VERSION.SDK_INT >= 29) {
-                ContentValues cv = new ContentValues();
-                cv.put(MediaStore.Images.Media.DISPLAY_NAME, name);
-                cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-                cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Granpa");
+            if (Build.VERSION.SDK_INT < 29) {
+                Toast.makeText(a, "Choose a save location from the model details screen", Toast.LENGTH_LONG).show();
+                return;
+            }
+            ContentValues cv = new ContentValues();
+            cv.put(MediaStore.Images.Media.DISPLAY_NAME, name);
+            cv.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+            cv.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/Granpa");
 
-                Uri uri = a.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
-                OutputStream os = a.getContentResolver().openOutputStream(uri);
-                b.compress(Bitmap.CompressFormat.PNG, 100, os);
-                os.close();
-            } else {
-                File dir = a.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                if (!dir.exists()) dir.mkdirs();
+            Uri uri = a.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
+            if (uri == null) throw new IOException("MediaStore insert failed");
+            try (OutputStream os = a.getContentResolver().openOutputStream(uri)) {
+                if (os == null || !b.compress(Bitmap.CompressFormat.PNG, 100, os)) {
+                    throw new IOException("Unable to write image");
+                }
+            }
+            Toast.makeText(a, "Image saved to Pictures/Granpa", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(a, "Unable to save image", Toast.LENGTH_LONG).show();
+        }
+    }
 
-                File f = new File(dir, name);
-                FileOutputStream os = new FileOutputStream(f);
-                b.compress(Bitmap.CompressFormat.PNG, 100, os);
-                os.close();
+    public static String fileName(PumpRecord record) {
+        String model = record == null ? "Pump" : safe(record.model);
+        return "Granpa_" + model.replaceAll("[^A-Za-z0-9_-]", "_") + ".png";
+    }
+
+    public static void downloadToUri(Activity a, PumpRecord r, boolean has, double head,
+                                     double flow, String unit, Uri target) {
+        if (!CurveUtils.canShare(r) || target == null) {
+            Toast.makeText(a, "This record is not available for customer download", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            Bitmap bitmap = build(a, r, has, head, flow, unit);
+            try (OutputStream output = a.getContentResolver().openOutputStream(target)) {
+                if (output == null || !bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)) {
+                    throw new IOException("Unable to write image");
+                }
             }
             Toast.makeText(a, "Image saved", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
+        } catch (Exception error) {
             Toast.makeText(a, "Unable to save image", Toast.LENGTH_LONG).show();
         }
     }
@@ -484,7 +529,8 @@ public class ShareImageBuilder {
         if (c.contains("avrs") || c.contains("multistage")) return "Multistage";
         if (c.contains("openwell")) return "Openwell\nSubmersible";
         if (c.contains("borewell")) return "Borewell\nSubmersible";
-        if (c.contains("monoblock") || c.contains("centrifugal") || c.contains("agricultural") || c.contains("jet") || c.contains("self priming")) return "Surface\nMonoblock";
+        if (c.contains("jet")) return "Jet Pump";
+        if (c.contains("monoblock") || c.contains("centrifugal") || c.contains("agricultural") || c.contains("self priming")) return "Surface\nMonoblock";
         if (c.contains("dewatering") || c.contains("sewage")) return "Dewatering";
         return safe(c).replace(" - ", "\n");
     }

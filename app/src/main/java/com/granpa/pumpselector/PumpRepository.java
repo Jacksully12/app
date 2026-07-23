@@ -13,6 +13,7 @@ public class PumpRepository {
 
     private static final HashMap<String, ArrayList<PumpRecord>> cache = new HashMap<>();
     private static final HashMap<String, JSONObject> metaCache = new HashMap<>();
+    private static final HashMap<String, String> loadErrors = new HashMap<>();
 
     public static String normalizeAsset(String asset) {
         if (asset == null || asset.trim().isEmpty()) return TEXMO_ASSET;
@@ -59,9 +60,7 @@ public class PumpRepository {
         ArrayList<PumpRecord> rows = new ArrayList<>();
         JSONObject metadata = new JSONObject();
 
-        try {
-            InputStream in = c.getAssets().open(asset);
-
+        try (InputStream in = c.getAssets().open(asset)) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buf = new byte[16384];
             int n;
@@ -76,9 +75,11 @@ public class PumpRepository {
                 PumpRecord r = PumpRecord.fromJson(arr.getJSONObject(i));
                 if (!Double.isNaN(r.hp) && (r.curve.length > 0 || r.isMotor())) rows.add(r);
             }
+            loadErrors.remove(asset);
         } catch (Exception e) {
             rows = new ArrayList<>();
             metadata = new JSONObject();
+            loadErrors.put(asset, e.getClass().getSimpleName() + ": " + String.valueOf(e.getMessage()));
         }
 
         cache.put(asset, rows);
@@ -112,8 +113,34 @@ public class PumpRepository {
                 max = Math.max(max, r.page);
             }
         }
-        if (rows.isEmpty()) return brand + " • No records loaded";
-        int review=0; for(PumpRecord r:rows) if(!r.selectable) review++; return brand + " • " + rows.size() + " records • Pages " + min + "–" + max + (review>0 ? " • " + review + " need review" : " • QA checked") + " • Offline";
+        if (rows.isEmpty()) {
+            String error = loadErrors.get(asset);
+            return brand + " • No records loaded" + (error == null ? "" : " • " + error);
+        }
+        int review = 0, anomalies = 0, catalogueOnly = 0;
+        for (PumpRecord r : rows) {
+            if ("SOURCE_ANOMALY".equals(r.dataStatus)) anomalies++;
+            else if ("SOURCE_CONFIRMED_CATALOGUE_ONLY".equals(r.dataStatus)) catalogueOnly++;
+            else if (!r.selectable || "NEEDS_REVIEW".equals(r.dataStatus)) review++;
+        }
+        String qa = review > 0 ? " • " + review + " need review" : " • QA checked";
+        if (anomalies > 0) qa += " • " + anomalies + " source anomalies excluded";
+        if (catalogueOnly > 0) qa += " • " + catalogueOnly + " catalogue-only";
+        return brand + " • " + rows.size() + " records • Pages " + min + "–" + max + qa + " • Offline";
+    }
+
+    public static void preloadAll(Context context, Runnable complete) {
+        Context app = context.getApplicationContext();
+        new Thread(() -> {
+            getRecords(app, TEXMO_ASSET);
+            getRecords(app, LUBI_ASSET);
+            getRecords(app, KSB_ASSET);
+            if (complete != null) new android.os.Handler(android.os.Looper.getMainLooper()).post(complete);
+        }, "pump-data-preload").start();
+    }
+
+    public static synchronized String loadError(String asset) {
+        return loadErrors.get(normalizeAsset(asset));
     }
 
     public static String brandName(String asset) {

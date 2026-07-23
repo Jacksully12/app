@@ -1,0 +1,25 @@
+GRANPA PUMP SELECTOR v5.8.0 — PACKAGE MANIFEST
+============================================================
+
+Package type: APK-ready Android Studio/Gradle source
+Compiled APK included: No
+
+TEXMO
+- 1,820 selectable model variants
+- 0 source-review rows
+
+LUBI
+- 1816 selectable records
+- 0 source-review rows
+- Page 69 LBH and Pages 76/78 supplied tables integrated
+- Remaining missing coverage: Pages 70–73
+
+KSB
+- 1,273 records
+- 1,226 selectable
+- 47 agricultural source-review rows remain excluded
+
+BRANCH NOTE
+- This project is based on the latest complete source branch available.
+- Newer Manual Shortlist / Comparison Highlights screenshots may belong to
+  another branch and are not guaranteed in this package.

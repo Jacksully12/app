@@ -13,6 +13,8 @@ public class CatalogueActivity extends Activity {
     EditText search;
     Spinner cat, phase;
     TextView count;
+    final Handler searchHandler = new Handler(Looper.getMainLooper());
+    final Runnable delayedRefresh = this::refresh;
     String asset = PumpRepository.TEXMO_ASSET;
     String brand = "TEXMO";
 
@@ -55,7 +57,10 @@ public class CatalogueActivity extends Activity {
 
         TextWatcher w = new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
-            public void onTextChanged(CharSequence s, int st, int before, int count) { refresh(); }
+            public void onTextChanged(CharSequence s, int st, int before, int count) {
+                searchHandler.removeCallbacks(delayedRefresh);
+                searchHandler.postDelayed(delayedRefresh, 160);
+            }
             public void afterTextChanged(Editable e) {}
         };
         search.addTextChangedListener(w);
@@ -67,8 +72,14 @@ public class CatalogueActivity extends Activity {
         cat.setOnItemSelectedListener(refreshListener);
         phase.setOnItemSelectedListener(refreshListener);
 
-        selectValue(cat, getIntent().getStringExtra("initialCat"));
-        selectValue(phase, getIntent().getStringExtra("initialPhase"));
+        if (b != null) {
+            search.setText(b.getString("search", ""));
+            selectValue(cat, b.getString("cat", "all"));
+            selectValue(phase, b.getString("phase", "any"));
+        } else {
+            selectValue(cat, getIntent().getStringExtra("initialCat"));
+            selectValue(phase, getIntent().getStringExtra("initialPhase"));
+        }
 
         list.setOnItemClickListener((p, v, pos, id) -> {
             PumpSelector.Result r = adapter.getResult(pos);
@@ -108,7 +119,8 @@ public class CatalogueActivity extends Activity {
             o.add(new Option("all", "All pump types", "Main category • full catalogue", true));
             o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
             o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, centrifugal and agricultural monoblock", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, centrifugal and agricultural monoblock", true));
+            o.add(new Option("jet_all", "Jet Pumps", "Main category • shallow-well and pressure jet pumps", true));
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • AVRS, vertical inline and horizontal multistage", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • sewage and dewatering pumps", true));
             o.add(new Option("motors_all", "Motors", "Main category • 35 bare and flange motor models", true));
@@ -116,7 +128,8 @@ public class CatalogueActivity extends Activity {
             o.add(new Option("all", "All pump types", "Main category • full Lubi catalogue", true));
             o.add(new Option("borewell_all", "Borewell Submersible", "Main category • borewell sections", true));
             o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet and monoblock sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming and monoblock sections", true));
+            o.add(new Option("jet_all", "Jet Pumps", "Main category • shallow-well jet pump sections", true));
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • horizontal and vertical multistage", true));
             o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage, sewage and dewatering", true));
@@ -124,7 +137,8 @@ public class CatalogueActivity extends Activity {
             o.add(new Option("all", "All pump types", "Main category • full KSB catalogue", true));
             o.add(new Option("borewell_all", "Borewell Submersible", "Main category • water-filled and oil-filled borewell sections", true));
             o.add(new Option("openwell_all", "Openwell Submersible", "Main category • openwell sections", true));
-            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, jet, monobloc and surface sections", true));
+            o.add(new Option("monoblock_all", "Centrifugal / Surface Monoblock", "Main category • self priming, monobloc and surface sections", true));
+            o.add(new Option("jet_all", "Jet Pumps", "Main category • PERIJET and other jet-pump sections", true));
             o.add(new Option("multistage_all", "Multistage Pumps", "Main category • multistage sections", true));
             o.add(new Option("booster_all", "Booster / Pressure Pumps", "Main category • booster and pressure sections", true));
             o.add(new Option("dewatering_all", "Dewatering / Sewage", "Main category • drainage and sewage sections", true));
@@ -148,5 +162,17 @@ public class CatalogueActivity extends Activity {
     String sel(Spinner s) {
         Object x = s == null ? null : s.getSelectedItem();
         return x instanceof Option ? ((Option) x).value : "any";
+    }
+
+    @Override protected void onSaveInstanceState(Bundle out) {
+        out.putString("search", search == null ? "" : search.getText().toString());
+        out.putString("cat", sel(cat));
+        out.putString("phase", sel(phase));
+        super.onSaveInstanceState(out);
+    }
+
+    @Override protected void onDestroy() {
+        searchHandler.removeCallbacks(delayedRefresh);
+        super.onDestroy();
     }
 }

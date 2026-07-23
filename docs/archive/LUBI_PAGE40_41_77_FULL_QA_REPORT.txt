@@ -1,0 +1,21 @@
+LUBI PAGE 40, 41 AND 77 SOURCE REPAIR — v5.7.0
+============================================================
+
+Source pages repaired:
+- Page 40: LSD-233 Stage 6 and Stage 10
+- Page 41: LSD-240 Stage 5
+- Page 77: all LHP heavy-duty sewage and LGP grinder rows
+
+Results:
+- Lubi records before: 1,734
+- Newly added source rows: 3
+  - LHP-3535U2
+  - LGP-1235 / 1235F
+  - LGP-1335 / 1335F
+- Lubi records after: 1737
+- Selectable records: 1737
+- Current source-review rows: 0
+
+Coverage still pending:
+- LBH/LBL centrifugal monobloc ranges on pages 69–72.
+- Remaining families on pages 76 and 78.

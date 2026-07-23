@@ -15,8 +15,8 @@ public class SplashActivity extends Activity {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER);
-        root.setPadding(Ui.dp(this, 28), Ui.topSafe(this), Ui.dp(this, 28), Ui.dp(this, 28));
         root.setBackgroundColor(Ui.BG);
+        Ui.applySystemBars(this, root, 28, 18, 28, 28);
 
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.app_logo);
@@ -36,7 +36,7 @@ public class SplashActivity extends Activity {
         root.addView(brand, new LinearLayout.LayoutParams(-1, -2));
 
         TextView sub = new TextView(this);
-        sub.setText("Pump Selector");
+        sub.setText("Pump Selector • Loading catalogues…");
         sub.setTextColor(Ui.MUTED);
         sub.setTextSize(17);
         sub.setGravity(Gravity.CENTER);
@@ -56,10 +56,15 @@ public class SplashActivity extends Activity {
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(this, BrandSelectionActivity.class));
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            finish();
-        }, 1250);
+        long started = android.os.SystemClock.uptimeMillis();
+        PumpRepository.preloadAll(this, () -> {
+            long elapsed = android.os.SystemClock.uptimeMillis() - started;
+            long remaining = Math.max(0, 700 - elapsed);
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                startActivity(new Intent(this, BrandSelectionActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                finish();
+            }, remaining);
+        });
     }
 }

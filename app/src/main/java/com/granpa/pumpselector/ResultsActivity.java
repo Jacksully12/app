@@ -288,6 +288,7 @@ public class ResultsActivity extends Activity {
         if (c.equals("borewell_all")) return "Borewell Submersible";
         if (c.equals("openwell_all")) return "Openwell Submersible";
         if (c.equals("monoblock_all")) return "Centrifugal / Surface Monoblock";
+        if (c.equals("jet_all")) return "Jet Pumps";
         if (c.equals("multistage_all")) return "Multistage Pumps";
         if (c.equals("booster_all")) return "Booster / Pressure Pumps";
         if (c.equals("dewatering_all")) return "Dewatering / Sewage";
